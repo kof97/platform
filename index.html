@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+	<title>API test platform</title>
+
+	<link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.1.0/css/bootstrap.min.css">
+	<link rel="stylesheet" href="dist/css/style.min.css">
+
+	<!--[if lt IE9]> 
+		<script src="http://apps.bdimg.com/libs/html5shiv/3.7/html5shiv.min.js"></script>
+	<![endif]-->
+
+</head>
+<body>
+	<nav class="navbar navbar-static-top shadow">
+		<header class="container">
+			<a href="" class="logo">
+				<strong>SPA</strong> for developers |
+			</a>
+			<a href="">OPEN API</a>
+			<a href="">文档</a>
+			<a href="" class="nav-select">工具</a>
+			<a href="">新闻</a>
+			<a href="">支持中心</a>
+			<a href="">社区</a>
+
+		</header>
+	</nav>
+
+	<div class="container">
+		<nav class="navbar navbar-default">
+			<span class="tools-name"><strong>API 自测工具</strong></span>
+		</nav>
+
+		<div class="row"></div>
+
+		<div class="row">
+			<div class="input-group">
+				<span class="input-group-addon">访问口令：</span>
+				<input type="text" class="form-control" name="token" placeholder="Token">
+				<span class="input-group-btn">
+					<button class="btn btn-default" type="button" id="token">Get Token</button>
+				</span>
+				<div class="get-token shadow">
+					
+				</div>
+			</div>
+
+			<div class="input-group api-options">
+
+				<div class="options">
+					<span>测试环境 (Environment)：</span>
+					<input type="radio" name="environment" value="http://sandbox.api.e.qq.com" checked> 沙箱(Sandbox)
+					<input type="radio" name="environment" value="http://api.e.qq.com"> 正式(Online)
+				</div>
+				
+				<div class="options">
+					<span>接口版本 (Version)：</span> 
+					<select class="btn btn-default" name="version">
+						<option selected="selected" value="v3">V3</option>
+
+					</select>
+				</div>
+
+				<div class="options">
+					<span>API模块 (API Category)：</span> 
+					<select class="btn btn-default" name="module">
+						<option selected="selected" value="0">--请选择API模块--</option>
+		
+					</select>
+				</div>
+
+				<div class="options">
+					<span>API名称 (API Name)：</span> 
+					<select class="btn btn-default" name="api">
+						<option selected="selected" value="0">--请选择API--</option>
+
+					</select>
+				</div>
+
+			</div>
+
+		</div>
+
+		<div class="row">
+			<div class="input-group">
+				<span class="input-group-addon" id="method">{method}</span>
+				<input type="text" class="form-control" name="url" placeholder="Url">
+				<span class="input-group-btn">
+					<button class="btn btn-primary" type="button">submit</button>
+				</span>
+			</div>
+		</div>
+
+		<div class="row"></div>
+
+		<div class="row data-options shadow">
+			<li class="disabled">GET</li>
+			<li class="disabled">POST</li>
+			<li class="selected">headers</li>
+		</div>
+		
+		<div>
+			<div class="row shadow" id="get-data">
+				<span><a href="javascript:void(0)">Add a Get Field</a></span><span class="get-warning"></span>
+
+				<div class="get-list">
+
+				</div>
+			</div>
+
+			<div class="row shadow" id="post-data">
+				<span><a href="javascript:void(0)">Add a Post Field</a></span><span class="post-warning"></span>
+
+				<div class="post-list">
+
+				</div>
+			</div>
+
+			<div class="row shadow" id="header-data">
+				<span><a href="javascript:void(0)">Add a Header</a></span><span class="header-warning"></span>
+
+				<div class="header-list">
+
+				</div>
+			</div>
+		</div>
+		
+		<div class="row"></div>
+
+		<div class="row message">
+			<div class="info pull-left">
+				<li><strong>参数列表</strong><span><strong>required</strong></span></li>
+				<div id="request-list">
+					
+				</div>
+				<div class="note shadow">
+
+				</div>
+			</div>
+
+			<div class="response pull-right">
+				
+				<pre id="response-data">
+
+				</pre>
+
+			</div>
+		</div>
+
+	</div>
+
+	<footer>
+		<div class="container">
+			<div class="footer-list">
+				<span><strong>PRODUCTS</strong></span>
+				<li><a href="">博客</a></li>
+				<li><a href="">开发者路线图</a></li>
+				<li><a href="">案例分析</a></li>
+				<li><a href="">JavaScript 测试控制台</a></li>
+			</div>
+			<div class="footer-list">
+				<span><strong>SDKS</strong></span>
+				<li><a href="">博客</a></li>
+				<li><a href="">开发者路线图</a></li>
+				<li><a href="">案例分析</a></li>
+				<li><a href="">JavaScript 测试控制台</a></li>
+			</div>
+			<div class="footer-list">
+				<span><strong>TOOLS</strong></span>
+				<li><a href="">博客</a></li>
+				<li><a href="">开发者路线图</a></li>
+				<li><a href="">案例分析</a></li>
+				<li><a href="">JavaScript 测试控制台</a></li>
+				<li><a href="">API 升级工具</a></li>
+				<li><a href="">测试控制台</a></li>
+			</div>
+			<div class="footer-list">
+				<span><strong>SUPPORT</strong></span>
+				<li><a href="">博客</a></li>
+				<li><a href="">开发者路线图</a></li>
+				<li><a href="">案例分析</a></li>
+				<li><a href="">JavaScript 测试控制台</a></li>
+			</div>
+
+			<div class="footer-bottom">
+				<a href="">简介</a>
+				<a href="">创建广告</a>
+				<a href="">工作机会</a>
+				<a href="">开放平台政策</a>
+				<a href="">隐私权政策</a>
+				<a href="">条款</a>
+
+				<span class="mark pull-right">SPA © 2016 中文(简体)</span>
+			</div>
+
+		</div>
+	</footer>
+</body>
+</html>
+
+<script src="dist/js/script.js"></script>
