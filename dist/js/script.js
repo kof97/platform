@@ -10157,6 +10157,7 @@ interface.on("change", function() {
 				"dataType": dataType,
 				"isRequired": isRequired
 			};
+			
 		func.getExtendsType(requestName);
 		if (isRequired === "yes") {
 			if (method === "POST") {
