@@ -10080,15 +10080,20 @@ var $ = require("./common/jquery"),
 	idl = require("./common/idl-data"),
 	selector = require("./common/selector");
 
+var list = [];
+
 // module lists
 idl.mod.each(function(i, data) {
 	var _data = $(data),
 		moduleName = _data.attr("name"),
 		moduleTitle = _data.find("documentation > title:eq(0)").text();
 
-	selector.modules.append("<option value='" + moduleName + "'>" + moduleTitle + "</option>");
+	list.push("<option value='" + moduleName + "'>" + moduleTitle + "</option>");
 
 });
+
+selector.modules.append(list.join(""));
+list = [];
 
 // 一级联动
 selector.modules.on("change", function() {
@@ -10112,16 +10117,18 @@ selector.modules.on("change", function() {
 			interfaceName = _data.attr("service"),
 			interfaceTitle = _data.find("documentation > title:eq(0)").text();
 
-		selector.interfaces.append("<option value='" + interfaceName + "'>" + interfaceTitle + "</option>");
+		list.push("<option value='" + interfaceName + "'>" + interfaceTitle + "</option>");
 	});
+
+	selector.interfaces.append(list.join(""));
+	list = [];
 
 });
 
 // 二级联动
 selector.interfaces.on("change", function() {
 	var interfaceName = $(this).val(),
-		moduleName = selector.modules.val(),
-		list = [];
+		moduleName = selector.modules.val();
 
 	func.createUrl();
 
@@ -10189,7 +10196,7 @@ selector.interfaces.on("change", function() {
 	// list.reverse();
 	list.sort(function(a, b) {
 		return ($(a).find("span").last().text() > $(b).find("span").last().text()) ? -1 : 1;
-	});
+	}).join("");
 
 	selector.requestList.append(list);
 
@@ -10212,20 +10219,20 @@ var $ = require("./common/jquery"),
 
 // remove the remove
 selector.dom.on("click", "div", function() {
-	$(".post-list .array-big-options")
+	$(".array-big-options")
 		.css("border", "1px solid #fff")
 		.find("a").fadeOut(100);
 
-	$(".array-item .add-params").slideUp(100);
+	$(".add-params").slideUp(100);
 
 });
 
 selector.dom.on("click", "div", function() {
-	$(".post-list .struct-big-options")
+	$(".struct-big-options")
 		.css("border", "1px solid #fff")
 		.find("a").fadeOut(100);
 
-	$(".struct-item .add-params").slideUp(100);
+	$(".add-params").slideUp(100);
 
 });
 
@@ -10248,7 +10255,7 @@ selector.postList
 		_this.css("border", "1px solid #A6C8FF")
 			 .find("a").fadeIn(100);
 
-		_this.find(".array-item .add-params").slideDown(100);
+		_this.find(".add-params").slideDown(100);
 
 	})
 
@@ -10275,7 +10282,7 @@ selector.postList
 		_this.css("border", "1px solid #A6C8FF")
 			 .find("a").fadeIn(100);
 
-		_this.find(".struct-item .add-params").slideDown(100);
+		_this.find(".add-params").slideDown(100);
 
 	})
 
@@ -10421,12 +10428,11 @@ selector.postList
 				_this.find("option[value='" + value + "']").remove();
 
 		}
-		
+
 		_this.val("0");
 		$(content).insertBefore(_this.parent());
 
 	});
-
 
 },{"./common/functions":4,"./common/jquery":7,"./common/selector":8}],4:[function(require,module,exports){
 var $ = require("./jquery"),
@@ -10571,11 +10577,12 @@ var func = {
 			items = [],
 			options = [];
 
-		elements.each(function(i, ele) {
-			var elementName = $(ele).attr("name"),
-				extendType = $(ele).attr("type").split(".").pop(),
+		elements.each(function(i, data) {
+			var _data = $(data),
+				elementName = _data.attr("name"),
+				extendType = _data.attr("type").split(".").pop(),
 				dataType = func.getType(extendType),
-				isRequired = $(ele).attr("require"),
+				isRequired = _data.attr("require"),
 
 				content = "";
 
@@ -10741,7 +10748,7 @@ var func = {
 	},
 
 	methodAction: function(method) {
-		$("#method").html(method);
+		selector.method.html(method);
 
 		var num = 0,
 			that = null;
@@ -10755,7 +10762,7 @@ var func = {
 			return 0;
 		}
 
-		that = $(".data-tab-options li:eq(" + num + ")");
+		that = selector.dataTabOption.find("li:eq(" + num + ")");
 
 		func.toggleTab(num, that);
 
@@ -10763,7 +10770,7 @@ var func = {
 
 	initTab: function() {
 		var num = 2;
-			that = $(".data-tab-options li:eq(" + num + ")");
+			that = selector.dataTabOption.find("li:eq(" + num + ")");
 
 		that.siblings().addClass("disabled");
 		that.siblings().removeClass("selected");
@@ -10773,21 +10780,21 @@ var func = {
 	},
 
 	toggleTab: function(num, that) {
-		var selector = "";
+		var selectors;
 
 		switch (num) {
 			case 0:
-				selector = "#get-data";
+				selectors = selector.getData;
 				that.next().addClass("disabled");
 				break;
 
 			case 1:
-				selector = "#post-data";
+				selectors = selector.postData;
 				that.prev().addClass("disabled");
 				break;
 
 			case 2:
-				selector = "#header-data";
+				selectors = selector.headerData;
 				break;
 
 			default: 
@@ -10798,8 +10805,8 @@ var func = {
 		that.removeClass("disabled");
 		that.siblings().removeClass("selected");
 
-		$(selector).siblings().hide();
-		$(selector).slideDown(300);
+		selectors.siblings().hide();
+		selectors.slideDown(300);
 
 	},
 
@@ -10986,7 +10993,7 @@ module.exports = {
 	"types": types,
 
 	"service": service,
-	"mod": mod,
+	"mod": mod
 
 }
 
@@ -11023,6 +11030,10 @@ var selector = {
 	"interfaces": $("select[name='api']"),
 	"versions": $("select[name='version']"),
 
+	"method": $("#method"),
+
+	"dataTabOption": $(".data-tab-options"),
+
 	"postData": $("#post-data"),
 	"postList": $(".post-list"),
 	"postWarning": $(".post-warning"),
@@ -11037,7 +11048,7 @@ var selector = {
 
 	"requestList": $("#request-list"),
 
-	"noteData": $(".info > .note"),
+	"noteData": $(".info .note")
 
 }
 
@@ -11045,9 +11056,10 @@ module.exports = selector;
 
 },{"./jquery":7}],9:[function(require,module,exports){
 var $ = require("./common/jquery"),
-	func = require("./common/functions");
+	func = require("./common/functions"),
+	selector = require("./common/selector");
 
-$(".data-tab-options > li").on("click", function() {
+selector.dataTabOption.find("li").on("click", function() {
 	var _this = $(this),
 		classNow = this.class;
 
@@ -11059,7 +11071,7 @@ $(".data-tab-options > li").on("click", function() {
 
 });
 
-},{"./common/functions":4,"./common/jquery":7}],10:[function(require,module,exports){
+},{"./common/functions":4,"./common/jquery":7,"./common/selector":8}],10:[function(require,module,exports){
 var $ = require("./common/jquery"),
 	func = require("./common/functions"),
 	selector = require("./common/selector");
@@ -11084,7 +11096,7 @@ selector.getData.find("span > a").on("click", function() {
 selector.requestList.on("click", "li[method='GET']", function() {
 	var _this = $(this);
 
-	if (_this.attr("class") === "selected") {
+	if (this.class === "selected") {
 		return 0;
 	}
 
@@ -11181,7 +11193,7 @@ selector.requestList
 	.on("click", "li[method='POST']", function() {
 		var _this = $(this);
 
-		if (_this.attr("class") === "selected") {
+		if (this.class === "selected") {
 			return 0;
 		}
 
