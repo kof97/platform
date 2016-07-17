@@ -10077,12 +10077,11 @@ return jQuery;
 },{}],2:[function(require,module,exports){
 var $ = require("./common/jquery"),
 	func = require("./common/functions"),
-	idl = require("./common/idl"),
+	idl = require("./common/idl-data"),
 	selector = require("./common/selector");
 
 // module lists
-var moduleData = $(idl).find("service > module");
-moduleData.each(function(i, data) {
+idl.mod.each(function(i, data) {
 	var _data = $(data),
 		moduleName = _data.attr("name"),
 		moduleTitle = _data.find("documentation > title:eq(0)").text();
@@ -10093,7 +10092,8 @@ moduleData.each(function(i, data) {
 
 // 一级联动
 selector.modules.on("change", function() {
-	var moduleName = $(this).val();
+	var moduleName = $(this).val(),
+		interfaceData = idl.mod.filter("[name='" + moduleName + "']").find("interface");
 
 	selector.interfaces.html('<option selected="selected" value="0">--请选择API--</option>');
 
@@ -10107,7 +10107,6 @@ selector.modules.on("change", function() {
 		return 0;
 	}
 
-	var interfaceData = $(idl).find("service > module[name='" + moduleName + "']").find("interface");
 	interfaceData.each(function(i, data) {
 		var _data = $(data),
 			interfaceName = _data.attr("service"),
@@ -10134,9 +10133,9 @@ selector.interfaces.on("change", function() {
 		return 0;
 	}
 
-	var requestData = $(idl).find("service > module[name='" + moduleName + "']")
-							.find("interface[service='" + interfaceName + "']")
-							.find("request"),
+	var requestData =  idl.mod.filter("[name='" + moduleName + "']")
+							  .find("interface[service='" + interfaceName + "']")
+							  .find("request"),
 		method = requestData.attr("source"),
 		requestData = requestData.find("element");
 
@@ -10174,15 +10173,15 @@ selector.interfaces.on("change", function() {
 		}
 
 		list.push('<li ' + selected + ' \
-				   			data-' + method.toLowerCase() + '-name="' + requestName + '" \
-				   			data-type="' + dataType + '" \
-				   			method="' + method + '">\
-				   		<lable class="checked" ' + visibility + '>✓</lable>\
-				   		<a href="javascript:void(0)">' + requestName + '</a>\
-				   		<span data-' + method.toLowerCase() + '-name="' + requestName + '" \
-				   			data-extends="' + extendType + '" \
-				   			class="note-icon"></span>\
-				   		<span>' + isRequired + '</span>\
+							data-' + method.toLowerCase() + '-name="' + requestName + '" \
+							data-type="' + dataType + '" \
+							method="' + method + '">\
+						<lable class="checked" ' + visibility + '>✓</lable>\
+						<a href="javascript:void(0)">' + requestName + '</a>\
+						<span data-' + method.toLowerCase() + '-name="' + requestName + '" \
+							data-extends="' + extendType + '" \
+							class="note-icon"></span>\
+						<span>' + isRequired + '</span>\
 				   </li>');
 
 	});
@@ -10206,7 +10205,7 @@ selector.versions.on("change", function() {
 
 });
 
-},{"./common/functions":4,"./common/idl":5,"./common/jquery":6,"./common/selector":7}],3:[function(require,module,exports){
+},{"./common/functions":4,"./common/idl-data":5,"./common/jquery":7,"./common/selector":8}],3:[function(require,module,exports){
 var $ = require("./common/jquery"),
 	func = require("./common/functions"),
 	selector = require("./common/selector");
@@ -10429,7 +10428,7 @@ selector.postList
 	});
 
 
-},{"./common/functions":4,"./common/jquery":6,"./common/selector":7}],4:[function(require,module,exports){
+},{"./common/functions":4,"./common/jquery":7,"./common/selector":8}],4:[function(require,module,exports){
 var $ = require("./jquery"),
 	idl = require("./idl"),
 	selector = require("./selector");
@@ -10974,9 +10973,28 @@ func.createUrl();
 
 module.exports = func;
 
-},{"./idl":5,"./jquery":6,"./selector":7}],5:[function(require,module,exports){
+},{"./idl":6,"./jquery":7,"./selector":8}],5:[function(require,module,exports){
 var $ = require("./jquery"),
-	idl = null;
+	idl = require("./idl"),
+	source = $(idl);
+
+var types = source.find("types"),
+
+	service = source.find("service"),
+	mod = service.find("module");
+
+module.exports = {
+
+	"types": types,
+
+	"service": service,
+	"mod": mod,
+
+}
+
+
+},{"./idl":6,"./jquery":7}],6:[function(require,module,exports){
+var $ = require("./jquery");
 
 $.ajax({
 	url: './dist/api/luna.idl.xml',
@@ -10984,18 +11002,16 @@ $.ajax({
 	dataType: 'xml',
 	async: false,
 	success: function(xml) {
-
 		module.exports = xml;
 	}
 });
 
-},{"./jquery":6}],6:[function(require,module,exports){
+},{"./jquery":7}],7:[function(require,module,exports){
 var $ = require("jquery");
 
 module.exports = $;
-},{"jquery":1}],7:[function(require,module,exports){
+},{"jquery":1}],8:[function(require,module,exports){
 var $ = require("./jquery");
-
 
 var selector = {
 
@@ -11025,15 +11041,11 @@ var selector = {
 
 	"noteData": $(".info > .note"),
 
-
-
-
-
 }
 
 module.exports = selector;
 
-},{"./jquery":6}],8:[function(require,module,exports){
+},{"./jquery":7}],9:[function(require,module,exports){
 var $ = require("./common/jquery"),
 	func = require("./common/functions");
 
@@ -11049,7 +11061,7 @@ $(".data-tab-options > li").on("click", function() {
 
 });
 
-},{"./common/functions":4,"./common/jquery":6}],9:[function(require,module,exports){
+},{"./common/functions":4,"./common/jquery":7}],10:[function(require,module,exports){
 var $ = require("./common/jquery"),
 	func = require("./common/functions"),
 	selector = require("./common/selector");
@@ -11099,7 +11111,7 @@ selector.requestList.on("click", "li[method='GET']", function() {
 
 });
 
-},{"./common/functions":4,"./common/jquery":6,"./common/selector":7}],10:[function(require,module,exports){
+},{"./common/functions":4,"./common/jquery":7,"./common/selector":8}],11:[function(require,module,exports){
 var $ = require("./common/jquery"),
 	func = require("./common/functions"),
 	selector = require("./common/selector");
@@ -11120,7 +11132,7 @@ selector.headerData.find("span > a").on("click", function() {
 
 });
 
-},{"./common/functions":4,"./common/jquery":6,"./common/selector":7}],11:[function(require,module,exports){
+},{"./common/functions":4,"./common/jquery":7,"./common/selector":8}],12:[function(require,module,exports){
 var $ = require("./common/jquery");
 
 require("./token");
@@ -11145,7 +11157,7 @@ $.ajax({
 	}
 });
 
-},{"./api-select":2,"./array-struct-options":3,"./common/jquery":6,"./data-tabs":8,"./get-options":9,"./header-options":10,"./post-options":12,"./token":13}],12:[function(require,module,exports){
+},{"./api-select":2,"./array-struct-options":3,"./common/jquery":7,"./data-tabs":9,"./get-options":10,"./header-options":11,"./post-options":13,"./token":14}],13:[function(require,module,exports){
 var $ = require("./common/jquery"),
 	func = require("./common/functions"),
 	selector = require("./common/selector");
@@ -11209,7 +11221,7 @@ selector.requestList
 
 	});
 
-},{"./common/functions":4,"./common/jquery":6,"./common/selector":7}],13:[function(require,module,exports){
+},{"./common/functions":4,"./common/jquery":7,"./common/selector":8}],14:[function(require,module,exports){
 var $ = require("./common/jquery"),
 	func = require("./common/functions"),
 	selector = require("./common/selector");
@@ -11230,7 +11242,7 @@ selector.tokenItem.on("click", "button", function() {
 
 });
 
-},{"./common/functions":4,"./common/jquery":6,"./common/selector":7}]},{},[11])
+},{"./common/functions":4,"./common/jquery":7,"./common/selector":8}]},{},[12])
 
 
 //# sourceMappingURL=script.js.map
