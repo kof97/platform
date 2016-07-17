@@ -10280,7 +10280,7 @@ selector.postList
 	})
 
 	.on("click", ".struct-big-options > a", function() {
-		func.removeGetField(this, 2);
+		func.removePostField(this, 2);
 		
 	})
 
@@ -10685,7 +10685,7 @@ var func = {
 
 	removePostField: function(that, flag = 1) {
 		var that = $(that),
-			list = $("#request-list > li[data-post-name='" + that.attr("data-post-name") + "']");
+			list = selector.requestList.find("li[data-post-name='" + that.attr("data-post-name") + "']");
 		selector.postWarning.html("");
 		selector.postWarning.hide();
 
@@ -10702,7 +10702,7 @@ var func = {
 
 	removeGetField: function(that, flag = 1) {
 		var that = $(that),
-			list = $("#request-list > li[data-get-name='" + that.attr("data-get-name") + "']");
+			list = selector.requestList.find("li[data-get-name='" + that.attr("data-get-name") + "']");
 		selector.getWarning.html("");
 		selector.getWarning.hide();
 
@@ -10755,7 +10755,7 @@ var func = {
 			return 0;
 		}
 
-		that = $(".data-tab-options > li:eq(" + num + ")");
+		that = $(".data-tab-options li:eq(" + num + ")");
 
 		func.toggleTab(num, that);
 
@@ -10763,7 +10763,7 @@ var func = {
 
 	initTab: function() {
 		var num = 2;
-			that = $(".data-tab-options > li:eq(" + num + ")");
+			that = $(".data-tab-options li:eq(" + num + ")");
 
 		that.siblings().addClass("disabled");
 		that.siblings().removeClass("selected");
@@ -10894,7 +10894,7 @@ var func = {
 	},
 
 	getType: function(extendType) {
-		var type = idl.types.children("[name='" + extendType + "']").attr("extends");
+		var type = idl.types.find("[name='" + extendType + "']").attr("extends");
 
 		return type;
 
@@ -11049,7 +11049,7 @@ var $ = require("./common/jquery"),
 
 $(".data-tab-options > li").on("click", function() {
 	var _this = $(this),
-		classNow = _this.attr("class");
+		classNow = this.class;
 
 	if (classNow === "disabled" || classNow === "selected") {
 		return 0;
