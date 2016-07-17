@@ -10156,30 +10156,38 @@ interface.on("change", function() {
 				"value": "",
 				"dataType": dataType,
 				"isRequired": isRequired
-			};
+			},
+
+			visibility = "",
+			selected = "";
 			
-		func.getExtendsType(requestName);
 		if (isRequired === "yes") {
+			visibility = 'style="visibility: visible"';
+			selected = 'class="selected"';
+
 			if (method === "POST") {
 				func.addPostField(opt);
 			} else {
 				func.addGetField(opt);
 			}
+			
+		}
 
-			requestList.append('<li class="selected" \
+		requestList.append('<li ' + selected + ' \
 									data-' + method.toLowerCase() + '-name="' + requestName + '" \
 									data-type="' + dataType + '" \
 									method="' + method + '">\
-								<lable class="checked" style="visibility: visible">✓</lable>\
+								<lable class="checked" ' + visibility + '>✓</lable>\
 								<a href="javascript:void(0)">' + requestName + '</a>\
 								<span data-' + method.toLowerCase() + '-name="' + requestName + '" \
 									data-extends="' + extendType + '" \
 									class="note-icon"></span>\
-								<span>' + isRequired + '</span></li>');
-		}
+								<span>' + isRequired + '</span>\
+							</li>');
+
 	});
 
-	requestData.each(function(i, data) {
+/*	requestData.each(function(i, data) {
 		var requestName = $(data).attr("name"),
 			extendType = $(data).attr("type"),
 			isRequired = $(data).attr("require"),
@@ -10199,7 +10207,7 @@ interface.on("change", function() {
 									class="note-icon"></span>\
 								<span>' + isRequired + '</span></li>');
 		}
-	});
+	});*/
 
 });
 
@@ -10466,7 +10474,8 @@ var func = {
 				"isRequired": ""
 			}, opt),
 			maxSize = 20,
-			postWarning = $(".post-warning");
+			postWarning = $(".post-warning"),
+			postOption = "";
 
 		if ($(".post-option").length >= maxSize) {
 
@@ -10493,8 +10502,7 @@ var func = {
 
 			default:
 				var isReadonly = "readonly",
-					removeOption = "",
-					postOption = "";
+					removeOption = "";
 
 				if (conf.isRequired === "no") {
 					removeOption = '<a data-post-name="' + conf.name + '" href="javascript:void(0)">Remove</a>';
@@ -10514,8 +10522,6 @@ var func = {
 									' + removeOption + '\
 								  </div>';
 		}
-
-		
 
 		postList.append(postOption);
 
@@ -10692,7 +10698,6 @@ var func = {
 									<input type="text" name="" placeholder="Value">\
 									<span class="warning-params">*</span>\
 								   </div>';
-
 				}
 
 				items.push(content);
@@ -10748,10 +10753,6 @@ var func = {
 						  </div>';
 
 		postList.append(postOption);
-
-	},
-
-	addStruct: function() {
 
 	},
 
@@ -10834,7 +10835,6 @@ var func = {
 
 			default: 
 				return 0;
-				break;
 		}
 
 		that.addClass("selected");
@@ -10857,34 +10857,6 @@ var func = {
 		}
 
 		var data = that.attr("data-extends").split(".").pop();
-
-		// console.log(data);
-
-		/*var readModule = $(idl).find("service > module[name='" + moduleName + "']"),
-			readInterface = readModule.find("interface[service='']"),
-			readSimpleTypes = readModule.find("types > [name='" + data + "']");
-
-		console.log(data);
-		
-		//console.log(readSimpleTypes.find("attribute[name='description']").attr("value"));
-		/*console.log($(idl).find("types > [name='" + data + "']").find("attribute[name='description']").attr("value"));
-		// console.log($(idl).find("types > [name='" + data + "']").find("attribute[name='description']").attr("value"));
-		
-
-		var postInfo = $(idl).find("types > simpleType[name='" + that.attr("data-post-name") + "']") ||
-						$(idl).find("types > complexType[name='" + that.attr("data-post-name") + "']"),
-			postDetail = $(idl).find("service > module[name='" + moduleName + "']")
-							   .find("types > simpleType[name='" + that.attr("data-post-name") + "']");
-
-		var description = $(postInfo).find("attribute[name='description']").attr("value") || "",
-			type = $(postInfo).attr("extends") || "",
-			restraint = $(postInfo).find("attribute[name='restraint']").attr("value") || "",
-			list = $(postDetail).find("attribute[name='list']").attr("value") || "",
-
-			description1 = $(postDetail).find("attribute[name='description']").attr("value") || "",
-			type1 = $(postDetail).attr("extends") || "",
-			restraint1 = $(postDetail).find("attribute[name='restraint']").attr("value") || "",
-			*/
 
 		var paramInfo = types.find("[name='" + data + "']"),
 			type = paramInfo.attr("extends"),
