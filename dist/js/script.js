@@ -10172,16 +10172,16 @@ selector.interfaces.on("change", function() {
 		}
 
 		list.push('<li ' + selected + ' \
-									data-' + method.toLowerCase() + '-name="' + requestName + '" \
-									data-type="' + dataType + '" \
-									method="' + method + '">\
-								<lable class="checked" ' + visibility + '>✓</lable>\
-								<a href="javascript:void(0)">' + requestName + '</a>\
-								<span data-' + method.toLowerCase() + '-name="' + requestName + '" \
-									data-extends="' + extendType + '" \
-									class="note-icon"></span>\
-								<span>' + isRequired + '</span>\
-							</li>');
+				   			data-' + method.toLowerCase() + '-name="' + requestName + '" \
+				   			data-type="' + dataType + '" \
+				   			method="' + method + '">\
+				   		<lable class="checked" ' + visibility + '>✓</lable>\
+				   		<a href="javascript:void(0)">' + requestName + '</a>\
+				   		<span data-' + method.toLowerCase() + '-name="' + requestName + '" \
+				   			data-extends="' + extendType + '" \
+				   			class="note-icon"></span>\
+				   		<span>' + isRequired + '</span>\
+				   </li>');
 
 	});
 
@@ -10206,10 +10206,11 @@ $("select[name='version']").on("change", function() {
 
 },{"./common/functions":4,"./common/idl":5,"./common/jquery":6,"./common/selector":7}],3:[function(require,module,exports){
 var $ = require("./common/jquery"),
-	func = require("./common/functions");
+	func = require("./common/functions"),
+	selector = require("./common/selector");
 
 // remove the remove
-$(document).on("click", "div", function() {
+selector.dom.on("click", "div", function() {
 	$(".post-list .array-big-options")
 		.css("border", "1px solid #fff")
 		.find("a").fadeOut(100);
@@ -10218,7 +10219,7 @@ $(document).on("click", "div", function() {
 
 });
 
-$(document).on("click", "div", function() {
+selector.dom.on("click", "div", function() {
 	$(".post-list .struct-big-options")
 		.css("border", "1px solid #fff")
 		.find("a").fadeOut(100);
@@ -10227,7 +10228,7 @@ $(document).on("click", "div", function() {
 
 });
 
-$(".post-list")
+selector.postList
 	/**
 	 * 
 	 * 
@@ -10426,7 +10427,7 @@ $(".post-list")
 	});
 
 
-},{"./common/functions":4,"./common/jquery":6}],4:[function(require,module,exports){
+},{"./common/functions":4,"./common/jquery":6,"./common/selector":7}],4:[function(require,module,exports){
 var $ = require("./jquery"),
 	idl = require("./idl"),
 	selector = require("./selector");
@@ -10755,7 +10756,7 @@ var func = {
 			return 0;
 		}
 
-		that = $(".data-options > li:eq(" + num + ")");
+		that = $(".data-tab-options > li:eq(" + num + ")");
 
 		func.toggleTab(num, that);
 
@@ -10763,7 +10764,7 @@ var func = {
 
 	initTab: function() {
 		var num = 2;
-			that = $(".data-options > li:eq(" + num + ")");
+			that = $(".data-tab-options > li:eq(" + num + ")");
 
 		that.siblings().addClass("disabled");
 		that.siblings().removeClass("selected");
@@ -10996,6 +10997,9 @@ var $ = require("./jquery");
 
 var selector = {
 
+	"dom": $(document),
+
+	"token": $("#token"),
 	"tokenItem": $(".get-token"),
 
 	"modules": $("select[name='module']"),
@@ -11010,6 +11014,7 @@ var selector = {
 	"getList": $(".get-list"),
 	"getWarning": $(".get-warning"),
 
+	"headerData": $("#header-data"),
 	"headerList": $(".header-list"),
 	"headerWarning": $(".header-warning"),
 
@@ -11029,7 +11034,7 @@ module.exports = selector;
 var $ = require("./common/jquery"),
 	func = require("./common/functions");
 
-$(".data-options > li").on("click", function() {
+$(".data-tab-options > li").on("click", function() {
 	var _this = $(this),
 		classNow = _this.attr("class");
 
@@ -11043,25 +11048,27 @@ $(".data-options > li").on("click", function() {
 
 },{"./common/functions":4,"./common/jquery":6}],9:[function(require,module,exports){
 var $ = require("./common/jquery"),
-	func = require("./common/functions");
+	func = require("./common/functions"),
+	selector = require("./common/selector");
 
 // Remove a Field
-$(".get-list:eq(0)").on("click", ".get-option > a", function() {
+selector.getList.on("click", ".get-option > a", function() {
 	func.removeGetField(this);
 
 });
 
 // Add a Field
-$("#get-data > span > a").on("click", function() {
+selector.getData.find("span > a").on("click", function() {
 	if (func.checkGetItems() === 0) {
 		return 0;
 	}
 
 	func.addGetField();
+
 });
 
 // selected
-$("#request-list").on("click", "li[method='GET']", function() {
+selector.requestList.on("click", "li[method='GET']", function() {
 	var _this = $(this);
 
 	if (_this.attr("class") === "selected") {
@@ -11089,18 +11096,19 @@ $("#request-list").on("click", "li[method='GET']", function() {
 
 });
 
-},{"./common/functions":4,"./common/jquery":6}],10:[function(require,module,exports){
+},{"./common/functions":4,"./common/jquery":6,"./common/selector":7}],10:[function(require,module,exports){
 var $ = require("./common/jquery"),
-	func = require("./common/functions");
+	func = require("./common/functions"),
+	selector = require("./common/selector");
 
 // Remove a Field
-$(".header-list:eq(0)").on("click", ".header-option > a", function() {
+selector.headerList.on("click", ".header-option > a", function() {
 	func.removeHeaderField(this);
 
 });
 
 // Add a Field
-$("#header-data > span > a").on("click", function() {
+selector.headerData.find("span > a").on("click", function() {
 	if (func.checkHeaderItems() === 0) {
 		return 0;
 	}
@@ -11109,7 +11117,7 @@ $("#header-data > span > a").on("click", function() {
 
 });
 
-},{"./common/functions":4,"./common/jquery":6}],11:[function(require,module,exports){
+},{"./common/functions":4,"./common/jquery":6,"./common/selector":7}],11:[function(require,module,exports){
 var $ = require("./common/jquery");
 
 require("./token");
@@ -11136,16 +11144,17 @@ $.ajax({
 
 },{"./api-select":2,"./array-struct-options":3,"./common/jquery":6,"./data-tabs":8,"./get-options":9,"./header-options":10,"./post-options":12,"./token":13}],12:[function(require,module,exports){
 var $ = require("./common/jquery"),
-	func = require("./common/functions");
+	func = require("./common/functions"),
+	selector = require("./common/selector");
 
 // Remove a Field
-$(".post-list:eq(0)").on("click", ".post-option > a", function() {
+selector.postList.on("click", ".post-option > a", function() {
 	func.removePostField(this);
 	
 });
 
 // Add a Field
-$("#post-data > span > a").on("click", function() {
+selector.postData.find("span > a").on("click", function() {
 	if (func.checkPostItems() === 0) {
 		return 0;
 	}
@@ -11155,54 +11164,59 @@ $("#post-data > span > a").on("click", function() {
 });
 
 // selected
-$("#request-list").on("click", "li[method='POST']", function() {
-	var _this = $(this);
+selector.requestList
+	.on("click", "li[method='POST']", function() {
+		var _this = $(this);
 
-	if (_this.attr("class") === "selected") {
-		return 0;
-	}
+		if (_this.attr("class") === "selected") {
+			return 0;
+		}
 
-	if (func.checkPostItems() === 0) {
-		return 0;
-	}
+		if (func.checkPostItems() === 0) {
+			return 0;
+		}
 
-	var dataType = _this.attr("data-type"),
-		name = _this.find("a").text(),
-		isRequired = _this.find("span:eq(1)").text(),
-		opt = {
-			"name": name,
-			"value": "",
-			"dataType": dataType,
-			"isRequired": isRequired
-		};
+		var dataType = _this.attr("data-type"),
+			name = _this.find("a").text(),
+			isRequired = _this.find("span:eq(1)").text(),
+			opt = {
+				"name": name,
+				"value": "",
+				"dataType": dataType,
+				"isRequired": isRequired
+			};
 
-	if (isRequired === "no") {
-		func.addPostField(opt);
-	}
+		if (isRequired === "no") {
+			func.addPostField(opt);
+		}
 
-	_this.addClass("selected");
-	_this.find(".checked").css("visibility", "visible");
-	
-});
+		_this.addClass("selected");
+		_this.find(".checked").css("visibility", "visible");
+		
+	})
 
-// show note
-$("#request-list").on("mouseover", ".note-icon", function() {
-	func.showNote(this, "note");
+	// show note
+	.on("mouseover", ".note-icon", function() {
+		func.showNote(this);
 
-}).on("mouseout", ".note-icon", function() {
-	func.hideNote();
+	})
 
-});
+	.on("mouseout", ".note-icon", function() {
+		func.hideNote();
 
-},{"./common/functions":4,"./common/jquery":6}],13:[function(require,module,exports){
+	});
+
+},{"./common/functions":4,"./common/jquery":6,"./common/selector":7}],13:[function(require,module,exports){
 var $ = require("./common/jquery"),
-	func = require("./common/functions");
+	func = require("./common/functions"),
+	selector = require("./common/selector");
 
-$("#token").on("click", function() {
+selector.token.on("click", function() {
 	func.showTokenItem(this);
+
 });
 
-$(".get-token").on("click", "button", function() {
+selector.tokenItem.on("click", "button", function() {
 	var status = func.getToken();
 
 	if (status === false) {
@@ -11213,7 +11227,7 @@ $(".get-token").on("click", "button", function() {
 
 });
 
-},{"./common/functions":4,"./common/jquery":6}]},{},[11])
+},{"./common/functions":4,"./common/jquery":6,"./common/selector":7}]},{},[11])
 
 
 //# sourceMappingURL=script.js.map
