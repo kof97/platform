@@ -10600,6 +10600,7 @@ var func = {
 
 		elements.each(function(i, ele) {
 			var elementName = $(ele).attr("name"),
+				extendType = $(ele).attr("type").split(".").pop(),
 				isRequired = $(ele).attr("require");
 
 			if (isRequired === "yes") {
