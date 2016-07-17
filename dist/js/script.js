@@ -10316,8 +10316,9 @@ $(".post-list")
 	.on("change", ".add-params select", function() {
 		var _this = $(this),
 			value = _this.val(),
-			extendType = _this.attr("data-extends"),
-			dataType = _this.attr("data-type"),
+			option = _this.find("option[value='" + value + "']"),
+			extendType = option.attr("data-extends"),
+			dataType = option.attr("data-type"),
 			content = "";
 
 		switch (value) {
@@ -10371,24 +10372,59 @@ $(".post-list")
 				break;
 
 			default:
-				var extendType = func.getExtendsType(value),
-					type = "";
-				if (value === extendType) {
 
+				switch (dataType) {
 
-				} else {
-					
-					//console.log(value);
+					case "array":
+						content = '<div class="array-options">\
+									<input readonly type="text" name="' + value + '" value="' + value + '">: \
+									<span class="array-lable">[</span>\
+									<div class="array-item">\
+										<div class="add-params">\
+											<select>\
+												<option value="0" selected>-- Please Select Params --</option>\
+												<option value="1">-- Add a Item --</option>\
+												<option value="2">-- Add a Array --</option>\
+												<option value="3">-- Add a Struct --</option>\
+											</select>\
+										</div>\
+									</div>\
+									<span class="array-lable">]</span>\
+									<a class="remove-params" href="javascript:(0)">×</a>\
+								   </div>';
+						break;
+
+					case "struct":
+						var elements = func.getStructElements(extendType);
+						content = '<div class="struct-options">\
+									<input readonly type="text" name="' + value + '" value="' + value + '">: \
+									<span class="struct-lable">{</span>\
+									<div class="struct-item">\
+										' + elements.items + '\
+										<div class="add-params">\
+											<select>\
+												<option value="0" selected>-- Please Select Params --</option>\
+												<option value="1">-- Add a Item --</option>\
+												<option value="2">-- Add a Array --</option>\
+												<option value="3">-- Add a Struct --</option>\
+												' + elements.options + '\
+											</select>\
+										</div>\
+									</div>\
+									<span class="struct-lable">}</span>\
+									<a class="remove-params" href="javascript:(0)">×</a>\
+								   </div>';
+						break;
+
+					default: 
+						content = '<div>\
+									<input readonly type="text" name="' + value + '" value="' + value + '">: \
+									<input type="text" name="" placeholder="Value">\
+									<a class="remove-params" struct-element-name="' + value + '" href="javascript:(0)">×</a>\
+								   </div>';
 
 				}
 
-//console.log(func.getExtendsType(value));
-
-				content = '<div>\
-							<input readonly type="text" name="' + value + '" value="' + value + '">: \
-							<input type="text" name="" placeholder="Value">\
-							<a class="remove-params" struct-element-name="' + value + '" href="javascript:(0)">×</a>\
-						   </div>';
 				_this.find("option[value='" + value + "']").remove();
 
 		}
@@ -10603,14 +10639,14 @@ var func = {
 		elements.each(function(i, ele) {
 			var elementName = $(ele).attr("name"),
 				extendType = $(ele).attr("type").split(".").pop(),
-				type = func.getType(extendType),
+				dataType = func.getType(extendType),
 				isRequired = $(ele).attr("require"),
 
 				content = "";
 
 			if (isRequired === "yes") {
 
-				switch (type) {
+				switch (dataType) {
 
 					case "array":
 						content = '<div class="array-options">\
@@ -10627,7 +10663,6 @@ var func = {
 										</div>\
 									</div>\
 									<span class="array-lable">]</span>\
-									<a class="remove-params" href="javascript:(0)">×</a>\
 								   </div>';
 						break;
 
@@ -10646,7 +10681,6 @@ var func = {
 										</div>\
 									</div>\
 									<span class="struct-lable">}</span>\
-									<a class="remove-params" href="javascript:(0)">×</a>\
 								   </div>';
 						break;
 
