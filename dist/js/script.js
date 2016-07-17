@@ -10492,25 +10492,27 @@ var func = {
 				break;
 
 			default:
+				var isReadonly = "readonly",
+					removeOption = "",
+					postOption = "";
+
 				if (conf.isRequired === "no") {
-					var postOption = '<div class="post-option"> \
-										<input readonly type="text" name="' + conf.name + '" value="' + conf.name + '" placeholder="Name"> \
-										<input type="text" value="' + conf.value + '" placeholder="Value"> \
-										<a data-post-name="' + conf.name + '" href="javascript:void(0)">Remove</a> \
-									  </div>';
+					removeOption = '<a data-post-name="' + conf.name + '" href="javascript:void(0)">Remove</a>';
+
 				} else if (conf.isRequired === "yes") {
-					var postOption = '<div class="post-option"> \
-										<input readonly type="text" name="' + conf.name + '" value="' + conf.name + '" placeholder="Name"> \
-										<input type="text" value="' + conf.value + '" placeholder="Value"> \
-										<span>*</span> \
-									  </div>';
+					removeOption = '<span>*</span>';
+
 				} else {
-					var postOption = '<div class="post-option"> \
-										<input type="text" name="" value="" placeholder="Name"> \
-										<input type="text" value="" placeholder="Value"> \
-										<a href="javascript:void(0)">Remove</a> \
-									  </div>';
+					isReadonly = "";
+					removeOption = '<a href="javascript:void(0)">Remove</a>';
+
 				}
+
+				postOption = '<div class="post-option">\
+									<input ' + isReadonly + ' type="text" name="' + conf.name + '" value="' + conf.name + '" placeholder="Name">\
+									<input type="text" value="' + conf.value + '" placeholder="Value">\
+									' + removeOption + '\
+								  </div>';
 		}
 
 		
