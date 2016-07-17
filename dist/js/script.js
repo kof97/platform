@@ -10299,7 +10299,7 @@ $(".post-list")
 	 */
 	.on("click", ".remove-params", function() {
 		var _this = $(this),
-			elementName = _this.attr("struct-element-name") || "";
+			elementName = _this.attr("data-element-name") || "";
 
 		if (elementName != "") {
 
@@ -10390,7 +10390,7 @@ $(".post-list")
 										</div>\
 									</div>\
 									<span class="array-lable">]</span>\
-									<a class="remove-params" href="javascript:(0)">×</a>\
+									<a class="remove-params" data-element-name="' + value + '" href="javascript:(0)">×</a>\
 								   </div>';
 						break;
 
@@ -10412,7 +10412,7 @@ $(".post-list")
 										</div>\
 									</div>\
 									<span class="struct-lable">}</span>\
-									<a class="remove-params" href="javascript:(0)">×</a>\
+									<a class="remove-params" data-element-name="' + value + '" href="javascript:(0)">×</a>\
 								   </div>';
 						break;
 
@@ -10420,7 +10420,7 @@ $(".post-list")
 						content = '<div>\
 									<input readonly type="text" name="' + value + '" value="' + value + '">: \
 									<input type="text" name="" placeholder="Value">\
-									<a class="remove-params" struct-element-name="' + value + '" href="javascript:(0)">×</a>\
+									<a class="remove-params" data-element-name="' + value + '" href="javascript:(0)">×</a>\
 								   </div>';
 
 				}
