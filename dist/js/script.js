@@ -11061,7 +11061,7 @@ var $ = require("./common/jquery"),
 
 selector.dataTabOption.find("li").on("click", function() {
 	var _this = $(this),
-		classNow = this.class;
+		classNow = _this.attr("class");
 
 	if (classNow === "disabled" || classNow === "selected") {
 		return 0;
@@ -11096,7 +11096,7 @@ selector.getData.find("span > a").on("click", function() {
 selector.requestList.on("click", "li[method='GET']", function() {
 	var _this = $(this);
 
-	if (this.class === "selected") {
+	if (_this.attr("class") === "selected") {
 		return 0;
 	}
 
@@ -11193,7 +11193,7 @@ selector.requestList
 	.on("click", "li[method='POST']", function() {
 		var _this = $(this);
 
-		if (this.class === "selected") {
+		if (_this.attr("class") === "selected") {
 			return 0;
 		}
 
