@@ -10083,8 +10083,9 @@ var $ = require("./common/jquery"),
 // module lists
 var moduleData = $(idl).find("service > module");
 moduleData.each(function(i, data) {
-	var moduleName = $(data).attr("name"),
-		moduleTitle = $(data).find("documentation > title:eq(0)").text();
+	var _data = $(data),
+		moduleName = _data.attr("name"),
+		moduleTitle = _data.find("documentation > title:eq(0)").text();
 
 	selector.modules.append("<option value='" + moduleName + "'>" + moduleTitle + "</option>");
 
@@ -10108,9 +10109,9 @@ selector.modules.on("change", function() {
 
 	var interfaceData = $(idl).find("service > module[name='" + moduleName + "']").find("interface");
 	interfaceData.each(function(i, data) {
-		var interfaceName = $(data).attr("service"),
-			interfaceTitle = $(data).find("documentation > title:eq(0)").text(),
-			requestType = $(data).attr("reqType");
+		var _data = $(data),
+			interfaceName = _data.attr("service"),
+			interfaceTitle = _data.find("documentation > title:eq(0)").text();
 
 		selector.interfaces.append("<option value='" + interfaceName + "'>" + interfaceTitle + "</option>");
 	});
@@ -10142,9 +10143,10 @@ selector.interfaces.on("change", function() {
 	func.methodAction(method);
 
 	requestData.each(function(i, data) {
-		var requestName = $(data).attr("name"),
-			extendType = $(data).attr("type"),
-			isRequired = $(data).attr("require"),
+		var _data = $(data),
+			requestName = _data.attr("name"),
+			extendType = _data.attr("type"),
+			isRequired = _data.attr("require"),
 
 			ext = extendType.split(".").pop(),
 			dataType = func.getType(ext),
@@ -10194,12 +10196,12 @@ selector.interfaces.on("change", function() {
 
 });
 
-$("input[type='radio'][name='environment']").on("change", function() {
+selector.environments.on("change", function() {
 	func.createUrl();
 
 });
 
-$("select[name='version']").on("change", function() {
+selector.versions.on("change", function() {
 	func.createUrl();
 
 });
@@ -11002,6 +11004,7 @@ var selector = {
 	"token": $("#token"),
 	"tokenItem": $(".get-token"),
 
+	"environments": $("input[type='radio'][name='environment']"),
 	"modules": $("select[name='module']"),
 	"interfaces": $("select[name='api']"),
 	"versions": $("select[name='version']"),
