@@ -10435,12 +10435,27 @@ selector.postList
 	});
 
 },{"./common/functions":4,"./common/jquery":7,"./common/selector":8}],4:[function(require,module,exports){
+/**
+ * 公共函数定义
+ * 
+ * 
+ */
+
 var $ = require("./jquery"),
 	idl = require("./idl-data"),
 	selector = require("./selector");
 
 var func = {
 
+	/**
+	 * @description 添加 post 字段
+	 * @param opt {json}
+	 * @param name {string} 字段名
+	 * @param value {string} 值
+	 * @param dataType {string} 字段类型
+	 * @param isRequired {string} 是否必填字段
+	 * @return void
+	 */
 	addPostField: function(opt = {}) {
 		var conf = $.extend({}, {
 				"name": "",
@@ -10488,6 +10503,11 @@ var func = {
 
 	},
 
+	/**
+	 * 添加 get 字段
+	 *
+	 *
+	 */
 	addGetField: function(opt = {}) {
 		var conf = $.extend({}, {
 					"name": "",
@@ -10519,6 +10539,11 @@ var func = {
 
 	},
 
+	/**
+	 * 添加 header 信息
+	 *
+	 *
+	 */
 	addHeaderField: function(opt = {}) {
 		var conf = $.extend({}, {
 					"name": "",
@@ -10535,6 +10560,11 @@ var func = {
 
 	},
 
+	/**
+	 * 添加 post 里面的 array 类型字段
+	 *
+	 *
+	 */
 	addArrayField: function(opt = {}) {
 		var conf = $.extend({}, {
 					"name": "",
@@ -10569,6 +10599,11 @@ var func = {
 
 	},
 
+	/**
+	 * 获取 struct 类型的子元素字段，可以递归操作
+	 *
+	 *
+	 */
 	getStructElements: function(name) {
 		name = (selector.requestList.find("span[data-post-name='" + name + "']").attr("data-extends") || name).split(".").pop();
 		
@@ -10653,6 +10688,11 @@ var func = {
 
 	},
 
+	/**
+	 * 添加 post 里面的 struct 类型字段
+	 *
+	 *
+	 */
 	addStructField: function(opt = {}) {
 		var conf = $.extend({}, {
 					"name": "",
@@ -10690,6 +10730,11 @@ var func = {
 
 	},
 
+	/**
+	 * 移除 post 字段
+	 * @param that {dom object} 移除对象，this
+	 * @param flag {int} 移除层次，默认为1
+	 */
 	removePostField: function(that, flag = 1) {
 		var that = $(that),
 			list = selector.requestList.find("li[data-post-name='" + that.attr("data-post-name") + "']");
@@ -10707,6 +10752,11 @@ var func = {
 
 	},
 
+	/**
+	 * 移除 get 字段
+	 * @param that {dom object} 移除对象，this
+	 * @param flag {int} 移除层次，默认为1
+	 */
 	removeGetField: function(that, flag = 1) {
 		var that = $(that),
 			list = selector.requestList.find("li[data-get-name='" + that.attr("data-get-name") + "']");
@@ -10724,6 +10774,11 @@ var func = {
 
 	},
 
+	/**
+	 * 移除 header 信息
+	 * @param that {dom object} 移除对象，this
+	 * @param flag {int} 移除层次，默认为1
+	 */
 	removeHeaderField: function(that, flag = 1) {
 		var that = $(that);
 
@@ -10738,6 +10793,11 @@ var func = {
 
 	},
 
+	/**
+	 * 
+	 * 
+	 * 
+	 */
 	clearField: function() {
 		selector.postData.hide();
 		selector.postList.html("");
@@ -10919,7 +10979,6 @@ var func = {
 		var maxSize = 10;
 
 		if ($(".header-option").length >= maxSize) {
-
 			selector.headerWarning.html("最多添加 " + maxSize + " 个选项");
 			selector.headerWarning.show();
 
@@ -10938,7 +10997,6 @@ var func = {
 		var maxSize = 20;
 
 		if ($(".post-option").length >= maxSize) {
-
 			selector.postWarning.html("最多添加 " + maxSize + " 个选项");
 			selector.postWarning.show();
 
@@ -10957,7 +11015,6 @@ var func = {
 		var maxSize = 20;
 
 		if ($(".get-option").length >= maxSize) {
-
 			selector.getWarning.html("最多添加 " + maxSize + " 个选项");
 			selector.getWarning.show();
 
@@ -11236,21 +11293,38 @@ var $ = require("./common/jquery"),
 	func = require("./common/functions"),
 	selector = require("./common/selector");
 
-selector.token.on("click", function() {
-	func.showTokenItem(this);
-
-});
-
-selector.tokenItem.on("click", "button", function() {
-	var status = func.getToken();
-
-	if (status === false) {
-		return 0;
-	}
-
+selector.dom.on("click", "div", function() {
 	func.hideTokenItem();
 
 });
+
+selector.token
+	.on("click", function() {
+		func.showTokenItem(this);
+
+	})
+
+	.on("click", function() {
+		event.stopPropagation();
+
+	});
+
+selector.tokenItem
+	.on("click", "button", function() {
+		var status = func.getToken();
+
+		if (status === false) {
+			return 0;
+		}
+
+		func.hideTokenItem();
+
+	})
+
+	.on("click", function() {
+		event.stopPropagation();
+
+	});
 
 },{"./common/functions":4,"./common/jquery":7,"./common/selector":8}]},{},[12])
 
