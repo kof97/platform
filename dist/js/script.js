@@ -10430,10 +10430,8 @@ selector.postList
 
 },{"./common/functions":4,"./common/jquery":7,"./common/selector":8}],4:[function(require,module,exports){
 var $ = require("./jquery"),
-	idl = require("./idl"),
+	idl = require("./idl-data"),
 	selector = require("./selector");
-
-var types = $(idl).find("types");
 
 var func = {
 
@@ -10568,7 +10566,7 @@ var func = {
 	getStructElements: function(name) {
 		name = (selector.requestList.find("span[data-post-name='" + name + "']").attr("data-extends") || name).split(".").pop();
 		
-		var paramInfo = types.find("[name='" + name + "']"),
+		var paramInfo = idl.types.find("[name='" + name + "']"),
 			elements = paramInfo.find("element"),
 			items = [],
 			options = [];
@@ -10817,7 +10815,7 @@ var func = {
 
 		var data = that.attr("data-extends").split(".").pop();
 
-		var paramInfo = types.find("[name='" + data + "']"),
+		var paramInfo = idl.types.find("[name='" + data + "']"),
 			type = paramInfo.attr("extends"),
 			description = paramInfo.find("attribute[name='description']").attr("value"),
 			restraint = paramInfo.find("attribute[name='restraint']").attr("value"),
@@ -10896,14 +10894,14 @@ var func = {
 	},
 
 	getType: function(extendType) {
-		var type = $(idl).find("types > [name='" + extendType + "']").attr("extends");
+		var type = idl.types.children("[name='" + extendType + "']").attr("extends");
 
 		return type;
 
 	},
 
 	getExtendsType: function(name) {
-		var type = $(idl).find("service element[name='" + name + "']").attr("type"),
+		var type = idl.service.find("element[name='" + name + "']").attr("type"),
 			extendType = type.split(".").pop();
 
 		return extendType;
@@ -10973,7 +10971,7 @@ func.createUrl();
 
 module.exports = func;
 
-},{"./idl":6,"./jquery":7,"./selector":8}],5:[function(require,module,exports){
+},{"./idl-data":5,"./jquery":7,"./selector":8}],5:[function(require,module,exports){
 var $ = require("./jquery"),
 	idl = require("./idl"),
 	source = $(idl);
