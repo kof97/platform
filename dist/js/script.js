@@ -10604,7 +10604,10 @@ var func = {
 				type = func.getType(extendType),
 				isRequired = $(ele).attr("require");
 
-			if (type == "struct" || type == "array") {
+			if (type === "struct" || type === "array") {
+				console.log(elementName);
+				console.log(extendType);
+				console.log(type);
 				console.log(321);
 			}
 
