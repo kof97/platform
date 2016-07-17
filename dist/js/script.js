@@ -10123,7 +10123,8 @@ modules.on("change", function() {
 // 二级联动
 interface.on("change", function() {
 	var interfaceName = $(this).val(),
-		moduleName = modules.val();
+		moduleName = modules.val(),
+		list = [];
 
 	func.createUrl();
 
@@ -10173,7 +10174,7 @@ interface.on("change", function() {
 			
 		}
 
-		requestList.append('<li ' + selected + ' \
+		list.push('<li ' + selected + ' \
 									data-' + method.toLowerCase() + '-name="' + requestName + '" \
 									data-type="' + dataType + '" \
 									method="' + method + '">\
@@ -10187,38 +10188,23 @@ interface.on("change", function() {
 
 	});
 
-/*	requestData.each(function(i, data) {
-		var requestName = $(data).attr("name"),
-			extendType = $(data).attr("type"),
-			isRequired = $(data).attr("require"),
+	// list.reverse();
+	list.sort(function(a, b) {
+		return ($(a).find("span").last().text() > $(b).find("span").last().text()) ? -1 : 1;
+	});
 
-			ext = extendType.split(".").pop(),
-			dataType = func.getType(ext);
-
-		if (isRequired === "no") {
-
-			requestList.append('<li data-' + method.toLowerCase() + '-name="' + requestName + '" \
-									data-type="' + dataType + '" \
-									method="' + method + '">\
-								<lable class="checked">✓</lable>\
-								<a href="javascript:void(0)">' + requestName + '</a>\
-								<span data-' + method.toLowerCase() + '-name="' + requestName + '" \
-									data-extends="' + extendType + '" \
-									class="note-icon"></span>\
-								<span>' + isRequired + '</span></li>');
-		}
-	});*/
+	requestList.append(list);
 
 });
 
 $("input[type='radio'][name='environment']").on("change", function() {
-
 	func.createUrl();
+
 });
 
 $("select[name='version']").on("change", function() {
-
 	func.createUrl();
+	
 });
 
 },{"./common/functions":4,"./common/idl":5,"./common/jquery":6}],3:[function(require,module,exports){
@@ -10268,7 +10254,7 @@ $(".post-list")
 	})
 
 	.on("click", ".array-big-options > a", function() {
-		func.removeField(this, 2);
+		func.removeGetField(this, 2);
 		
 	})
 
@@ -10295,7 +10281,7 @@ $(".post-list")
 	})
 
 	.on("click", ".struct-big-options > a", function() {
-		func.removeField(this, 2);
+		func.removeGetField(this, 2);
 		
 	})
 
@@ -10445,24 +10431,10 @@ $(".post-list")
 
 },{"./common/functions":4,"./common/jquery":6}],4:[function(require,module,exports){
 var $ = require("./jquery"),
-	idl = require("./idl");
+	idl = require("./idl"),
+	selector = require("./selector");
 
-var postData = $("#post-data"),
-	postList = $(".post-list:eq(0)"),
-	getData = $("#get-data"),
-	getList = $(".get-list:eq(0)"),
-	headerList = $(".header-list:eq(0)"),
-
-	requestList = $("#request-list"),
-
-	noteData = $(".info > .note"),
-	modules = $("select[name='module']"),
-	api = $("select[name='api']"),
-	version = $("select[name='version']"),
-
-	tokenItem = $(".get-token"),
-
-	types = $(idl).find("types");
+var types = $(idl).find("types");
 
 var func = {
 
@@ -10473,21 +10445,7 @@ var func = {
 				"dataType": "",
 				"isRequired": ""
 			}, opt),
-			maxSize = 20,
-			postWarning = $(".post-warning"),
-			postOption = "";
-
-		if ($(".post-option").length >= maxSize) {
-
-			postWarning.html("最多添加 " + maxSize + " 个选项");
-			postWarning.show();
-
-			return 0;
-
-		} else {
-			postWarning.hide();
-			postWarning.html("");
-		}
+			postOption = "";		
 
 		switch (conf.dataType) {
 			case "struct":
@@ -10523,7 +10481,7 @@ var func = {
 								  </div>';
 		}
 
-		postList.append(postOption);
+		selector.postList.append(postOption);
 
 	},
 
@@ -10532,21 +10490,7 @@ var func = {
 					"name": "",
 					"value": "",
 					"isRequired": ""
-				}, opt),
-			maxSize = 20,
-			getWarning = $(".get-warning");
-
-		if ($(".get-option").length >= maxSize) {
-
-			getWarning.html("最多添加 " + maxSize + " 个选项");
-			getWarning.show();
-
-			return 0;
-
-		} else {
-			getWarning.hide();
-			getWarning.html("");
-		}
+				}, opt);
 
 		if (conf.isRequired === "no") {
 			var getOption = '<div class="get-option"> \
@@ -10568,7 +10512,7 @@ var func = {
 							 </div>';
 		}
 
-		getList.append(getOption);
+		selector.getList.append(getOption);
 
 	},
 
@@ -10576,21 +10520,7 @@ var func = {
 		var conf = $.extend({}, {
 					"name": "",
 					"value": ""
-				}, opt),
-			maxSize = 20,
-			headerWarning = $(".header-warning");
-
-		if ($(".header-option").length >= maxSize) {
-
-			headerWarning.html("最多添加 " + maxSize + " 个选项");
-			headerWarning.show();
-
-			return 0;
-
-		} else {
-			headerWarning.hide();
-			headerWarning.html("");
-		}
+				}, opt);
 
 		var headerOption = '<div class="header-option"> \
 								<input type="text" name="" value="" placeholder="Key"> \
@@ -10598,7 +10528,7 @@ var func = {
 								<a href="javascript:void(0)">Remove</a> \
 							</div>';
 
-		headerList.append(headerOption);
+		selector.headerList.append(headerOption);
 
 	},
 
@@ -10632,12 +10562,12 @@ var func = {
 							</div>\
 						  </div>';
 
-		postList.append(postOption);
+		selector.postList.append(postOption);
 
 	},
 
 	getStructElements: function(name) {
-		name = (requestList.find("span[data-post-name='" + name + "']").attr("data-extends") || name).split(".").pop();
+		name = (selector.requestList.find("span[data-post-name='" + name + "']").attr("data-extends") || name).split(".").pop();
 		
 		var paramInfo = types.find("[name='" + name + "']"),
 			elements = paramInfo.find("element"),
@@ -10752,16 +10682,15 @@ var func = {
 							</div>\
 						  </div>';
 
-		postList.append(postOption);
+		selector.postList.append(postOption);
 
 	},
 
-	removeField: function(that, flag = 1) {
-		var postWarning = $(".post-warning"),
-			that = $(that),
+	removePostField: function(that, flag = 1) {
+		var that = $(that),
 			list = $("#request-list > li[data-post-name='" + that.attr("data-post-name") + "']");
-		postWarning.html("");
-		postWarning.hide();
+		selector.postWarning.html("");
+		selector.postWarning.hide();
 
 		if (flag === 1) {
 			that.parent().remove();
@@ -10774,12 +10703,43 @@ var func = {
 
 	},
 
-	clearField: function() {
-		postData.hide();
-		postList.html("");
+	removeGetField: function(that, flag = 1) {
+		var that = $(that),
+			list = $("#request-list > li[data-get-name='" + that.attr("data-get-name") + "']");
+		selector.getWarning.html("");
+		selector.getWarning.hide();
 
-		getData.hide();
-		getList.html("");
+		if (flag === 1) {
+			that.parent().remove();
+		} else {
+			that.parent().parent().remove();
+		}
+
+		list.removeClass("selected");
+		list.find(".checked").css("visibility", "hidden");
+
+	},
+
+	removeHeaderField: function(that, flag = 1) {
+		var that = $(that);
+
+		selector.headerWarning.html("");
+		selector.headerWarning.hide();
+
+		if (flag === 1) {
+			that.parent().remove();
+		} else {
+			that.parent().parent().remove();
+		}
+
+	},
+
+	clearField: function() {
+		selector.postData.hide();
+		selector.postList.html("");
+
+		selector.getData.hide();
+		selector.getList.html("");
 
 	},
 
@@ -10849,8 +10809,8 @@ var func = {
 	showNote: function(that) {
 		that = $(that);
 
-		var moduleName = modules.val(),
-			interfaceName = api.val();
+		var moduleName = selector.modules.val(),
+			interfaceName = selector.interfaces.val();
 
 		if (moduleName === "0") {
 			return 0;
@@ -10867,27 +10827,27 @@ var func = {
 					  "<li><strong>类 型: </strong>" + type + "</li>" + 
 					  "<li><strong>限 制: </strong>" + restraint + "</li>";
 
-		noteData.append(content);
+		selector.noteData.append(content);
 
-		noteData.css("left", that.offset().left + 20 + "px");
-		noteData.css("top", that.offset().top + "px");
-		noteData.show();
+		selector.noteData.css("left", that.offset().left + 20 + "px");
+		selector.noteData.css("top", that.offset().top + "px");
+		selector.noteData.show();
 
 	},
 
 	hideNote: function() {
-		noteData.hide();
-		noteData.html("");
+		selector.noteData.hide();
+		selector.noteData.html("");
 
 	},
 
 	createUrl: function() {
 		var environment = $("input[type='radio'][name='environment']:checked");
-			mod = modules.val() === "0" ? "{mod}" : modules.val();
-			act = api.val() === "0" ? "{act}" : api.val();
+			mod = selector.modules.val() === "0" ? "{mod}" : selector.modules.val();
+			act = selector.interfaces.val() === "0" ? "{act}" : selector.interfaces.val();
 
 		var url = environment.val() + "/luna/" + 
-				  version.val() + "/" + 
+				  selector.versions.val() + "/" + 
 				  mod + "/" + 
 				  act;
 
@@ -10901,18 +10861,18 @@ var func = {
 					   <input type="password" class="form-control" name="appkey" placeholder="Appkey"> \
 					   <button class="btn btn-primary" type="button">Get Token</button>';
 
-		tokenItem.html(content);
+		selector.tokenItem.html(content);
 
-		tokenItem.css("right", that.width() + "px");
-		tokenItem.css("top", that.height() * 2.5 + "px");
+		selector.tokenItem.css("right", that.width() + "px");
+		selector.tokenItem.css("top", that.height() * 2.5 + "px");
 
-		tokenItem.fadeIn(500);
+		selector.tokenItem.fadeIn(500);
 
 	},
 
 	getToken: function() {
-		var appid = tokenItem.find("input[name='appid']").val(),
-			appkey = tokenItem.find("input[name='appkey']").val();
+		var appid = selector.tokenItem.find("input[name='appid']").val(),
+			appkey = selector.tokenItem.find("input[name='appkey']").val();
 
 		if (appid.trim() === "" || appkey.trim() === "") {
 			return false;
@@ -10931,8 +10891,8 @@ var func = {
 	},
 
 	hideTokenItem: function() {
-		tokenItem.hide();
-		tokenItem.html("");
+		selector.tokenItem.hide();
+		selector.tokenItem.html("");
 
 	},
 
@@ -10951,13 +10911,70 @@ var func = {
 
 	},
 
+	checkHeaderItems: function() {
+		var maxSize = 10;
+
+		if ($(".header-option").length >= maxSize) {
+
+			selector.headerWarning.html("最多添加 " + maxSize + " 个选项");
+			selector.headerWarning.show();
+
+			return 0;
+
+		} else {
+			selector.headerWarning.hide();
+			selector.headerWarning.html("");
+
+			return 1;
+		}
+
+	},
+
+	checkPostItems: function() {
+		var maxSize = 20;
+
+		if ($(".post-option").length >= maxSize) {
+
+			selector.postWarning.html("最多添加 " + maxSize + " 个选项");
+			selector.postWarning.show();
+
+			return 0;
+
+		} else {
+			selector.postWarning.hide();
+			selector.postWarning.html("");
+		
+			return 1;
+		}
+
+	},
+
+	checkGetItems: function() {
+		var maxSize = 20;
+
+		if ($(".get-option").length >= maxSize) {
+
+			selector.getWarning.html("最多添加 " + maxSize + " 个选项");
+			selector.getWarning.show();
+
+			return 0;
+
+		} else {
+			selector.getWarning.hide();
+			selector.getWarning.html("");
+
+			return 1;
+		}
+
+	},
+
 }
 
 func.createUrl();
 
 module.exports = func;
 
-},{"./idl":5,"./jquery":6}],5:[function(require,module,exports){
+},{"./idl":5,"./jquery":6,"./selector":7}],5:[function(require,module,exports){
 var $ = require("./jquery"),
 	idl = null;
 
@@ -10977,6 +10994,41 @@ var $ = require("jquery");
 
 module.exports = $;
 },{"jquery":1}],7:[function(require,module,exports){
+var $ = require("./jquery");
+
+
+var selector = {
+
+	"tokenItem": $(".get-token"),
+
+	"modules": $("select[name='module']"),
+	"interfaces": $("select[name='api']"),
+	"versions": $("select[name='version']"),
+
+	"postData": $("#post-data"),
+	"postList": $(".post-list"),
+	"postWarning": $(".post-warning"),
+
+	"getData": $("#get-data"),
+	"getList": $(".get-list"),
+	"getWarning": $(".get-warning"),
+
+	"headerList": $(".header-list"),
+	"headerWarning": $(".header-warning"),
+
+	"requestList": $("#request-list"),
+
+	"noteData": $(".info > .note"),
+
+
+
+
+
+}
+
+module.exports = selector;
+
+},{"./jquery":6}],8:[function(require,module,exports){
 var $ = require("./common/jquery"),
 	func = require("./common/functions");
 
@@ -10990,27 +11042,21 @@ $(".data-options > li").on("click", function() {
 	
 });
 
-},{"./common/functions":4,"./common/jquery":6}],8:[function(require,module,exports){
+},{"./common/functions":4,"./common/jquery":6}],9:[function(require,module,exports){
 var $ = require("./common/jquery"),
 	func = require("./common/functions");
 
 // Remove a Field
 $(".get-list:eq(0)").on("click", ".get-option > a", function() {
-	var getWarning = $(".get-warning"),
-		that = $("#request-list > li[data-get-name='" + $(this).attr("data-get-name") + "']")
-
-	getWarning.html("");
-	getWarning.hide();
-
-	$(this).parent().remove();
-
-	that.removeClass("selected");
-	that.find(".checked").css("visibility", "hidden");
+	func.removeGetField(this);
 
 });
 
 // Add a Field
 $("#get-data > span > a").on("click", function() {
+	if (func.checkGetItems() === 0) {
+		return 0;
+	}
 
 	func.addGetField();
 });
@@ -11018,6 +11064,10 @@ $("#get-data > span > a").on("click", function() {
 // selected
 $("#request-list").on("click", "li[method='GET']", function() {
 	if ($(this).attr("class") === "selected") {
+		return 0;
+	}
+
+	if (func.checkGetItems() === 0) {
 		return 0;
 	}
 
@@ -11037,28 +11087,27 @@ $("#request-list").on("click", "li[method='GET']", function() {
 	
 });
 
-},{"./common/functions":4,"./common/jquery":6}],9:[function(require,module,exports){
+},{"./common/functions":4,"./common/jquery":6}],10:[function(require,module,exports){
 var $ = require("./common/jquery"),
 	func = require("./common/functions");
 
 // Remove a Field
 $(".header-list:eq(0)").on("click", ".header-option > a", function() {
-	var headerWarning = $(".header-warning");
-
-	headerWarning.html("");
-	headerWarning.hide();
-
-	$(this).parent().remove();
+	func.removeHeaderField(this);
 
 });
 
 // Add a Field
 $("#header-data > span > a").on("click", function() {
+	if (func.checkHeaderItems() === 0) {
+		return 0;
+	}
+
 	func.addHeaderField();
 	
 });
 
-},{"./common/functions":4,"./common/jquery":6}],10:[function(require,module,exports){
+},{"./common/functions":4,"./common/jquery":6}],11:[function(require,module,exports){
 var $ = require("./common/jquery");
 
 require("./token");
@@ -11083,18 +11132,21 @@ $.ajax({
 	}
 });
 
-},{"./api-select":2,"./array-struct-options":3,"./common/jquery":6,"./data-tabs":7,"./get-options":8,"./header-options":9,"./post-options":11,"./token":12}],11:[function(require,module,exports){
+},{"./api-select":2,"./array-struct-options":3,"./common/jquery":6,"./data-tabs":8,"./get-options":9,"./header-options":10,"./post-options":12,"./token":13}],12:[function(require,module,exports){
 var $ = require("./common/jquery"),
 	func = require("./common/functions");
 
 // Remove a Field
 $(".post-list:eq(0)").on("click", ".post-option > a", function() {
-	func.removeField(this);
+	func.removePostField(this);
 	
 });
 
 // Add a Field
 $("#post-data > span > a").on("click", function() {
+	if (func.checkPostItems() === 0) {
+		return 0;
+	}
 
 	func.addPostField();
 });
@@ -11104,6 +11156,10 @@ $("#request-list").on("click", "li[method='POST']", function() {
 	var _this = $(this);
 
 	if (_this.attr("class") === "selected") {
+		return 0;
+	}
+
+	if (func.checkPostItems() === 0) {
 		return 0;
 	}
 
@@ -11135,7 +11191,7 @@ $("#request-list").on("mouseover", ".note-icon", function() {
 
 });
 
-},{"./common/functions":4,"./common/jquery":6}],12:[function(require,module,exports){
+},{"./common/functions":4,"./common/jquery":6}],13:[function(require,module,exports){
 var $ = require("./common/jquery"),
 	func = require("./common/functions");
 
@@ -11157,7 +11213,7 @@ $(".get-token").on("click", "button", function() {
 
 
 
-},{"./common/functions":4,"./common/jquery":6}]},{},[10])
+},{"./common/functions":4,"./common/jquery":6}]},{},[11])
 
 
 //# sourceMappingURL=script.js.map
