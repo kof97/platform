@@ -10872,6 +10872,10 @@ var func = {
 
 	},
 
+	getType: function(extendType) {
+		$(idl).find("types > [name='" + extendType + "']").attr("extends");
+	},
+
 	getExtendsType: function(name) {
 		var type = $(idl).find("service element[name='" + name + "']").attr("type"),
 			extendType = type.split(".").pop();
