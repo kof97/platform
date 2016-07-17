@@ -10145,10 +10145,10 @@ interface.on("change", function() {
 
 	requestData.each(function(i, data) {
 		var requestName = $(data).attr("name"),
-			dataExtends = $(data).attr("type"),
+			extendType = $(data).attr("type"),
 			isRequired = $(data).attr("require"),
 
-			ext = dataExtends.split(".").pop(),
+			ext = extendType.split(".").pop(),
 			dataType = func.getType(ext),
 
 			opt = {
@@ -10173,7 +10173,7 @@ interface.on("change", function() {
 								<lable class="checked" style="visibility: visible">✓</lable>\
 								<a href="javascript:void(0)">' + requestName + '</a>\
 								<span data-' + method.toLowerCase() + '-name="' + requestName + '" \
-									data-extends="' + dataExtends + '" \
+									data-extends="' + extendType + '" \
 									class="note-icon"></span>\
 								<span>' + isRequired + '</span></li>');
 		}
@@ -10181,10 +10181,10 @@ interface.on("change", function() {
 
 	requestData.each(function(i, data) {
 		var requestName = $(data).attr("name"),
-			dataExtends = $(data).attr("type"),
+			extendType = $(data).attr("type"),
 			isRequired = $(data).attr("require"),
 
-			ext = dataExtends.split(".").pop(),
+			ext = extendType.split(".").pop(),
 			dataType = func.getType(ext);
 
 		if (isRequired === "no") {
@@ -10195,7 +10195,7 @@ interface.on("change", function() {
 								<lable class="checked">✓</lable>\
 								<a href="javascript:void(0)">' + requestName + '</a>\
 								<span data-' + method.toLowerCase() + '-name="' + requestName + '" \
-									data-extends="' + dataExtends + '" \
+									data-extends="' + extendType + '" \
 									class="note-icon"></span>\
 								<span>' + isRequired + '</span></li>');
 		}
@@ -10316,6 +10316,8 @@ $(".post-list")
 	.on("change", ".add-params select", function() {
 		var _this = $(this),
 			value = _this.val(),
+			extendType = _this.attr("data-extends"),
+			dataType = _this.attr("data-type"),
 			content = "";
 
 		switch (value) {
@@ -10369,9 +10371,9 @@ $(".post-list")
 				break;
 
 			default:
-				var extendTpye = func.getExtendsType(value),
+				var extendType = func.getExtendsType(value),
 					type = "";
-				if (value === extendTpye) {
+				if (value === extendType) {
 
 
 				} else {
@@ -10602,23 +10604,69 @@ var func = {
 			var elementName = $(ele).attr("name"),
 				extendType = $(ele).attr("type").split(".").pop(),
 				type = func.getType(extendType),
-				isRequired = $(ele).attr("require");
+				isRequired = $(ele).attr("require"),
 
-			if (type === "struct" || type === "array") {
-				console.log(elementName);
-				console.log(extendType);
-				console.log(type);
-				console.log(321);
-			}
+				content = "";
 
 			if (isRequired === "yes") {
-				items.push('<div>\
-								<input readonly type="text" name="' + elementName + '" value="' + elementName + '">: \
-								<input type="text" name="" placeholder="Value">\
-								<span class="warning-params">*</span>\
-							</div>');
+
+				switch (type) {
+
+					case "array":
+						content = '<div class="array-options">\
+									<input readonly type="text" name="' + elementName + '" value="' + elementName + '">: \
+									<span class="array-lable">[</span>\
+									<div class="array-item">\
+										<div class="add-params">\
+											<select>\
+												<option value="0" selected>-- Please Select Params --</option>\
+												<option value="1">-- Add a Item --</option>\
+												<option value="2">-- Add a Array --</option>\
+												<option value="3">-- Add a Struct --</option>\
+											</select>\
+										</div>\
+									</div>\
+									<span class="array-lable">]</span>\
+									<a class="remove-params" href="javascript:(0)">×</a>\
+								   </div>';
+						break;
+
+					case "struct":
+						content = '<div class="struct-options">\
+									<input readonly type="text" name="' + elementName + '" value="' + elementName + '">: \
+									<span class="struct-lable">{</span>\
+									<div class="struct-item">\
+										<div class="add-params">\
+											<select>\
+												<option value="0" selected>-- Please Select Params --</option>\
+												<option value="1">-- Add a Item --</option>\
+												<option value="2">-- Add a Array --</option>\
+												<option value="3">-- Add a Struct --</option>\
+											</select>\
+										</div>\
+									</div>\
+									<span class="struct-lable">}</span>\
+									<a class="remove-params" href="javascript:(0)">×</a>\
+								   </div>';
+						break;
+
+					default: 
+						content = '<div>\
+									<input readonly type="text" name="' + elementName + '" value="' + elementName + '">: \
+									<input type="text" name="" placeholder="Value">\
+									<span class="warning-params">*</span>\
+								   </div>';
+
+				}
+
+				items.push(content);
+
 			} else {
-				options.push('<option value="' + elementName + '">' + elementName + '</option>');
+				options.push('<option value="' + elementName + '" \
+									  data-extends="' + extendType + '" \
+									  data-type="' + dataType + '">\
+								' + elementName + '\
+							  </option>');
 			}
 			
 		});
