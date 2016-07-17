@@ -10077,11 +10077,8 @@ return jQuery;
 },{}],2:[function(require,module,exports){
 var $ = require("./common/jquery"),
 	func = require("./common/functions"),
-	idl = require("./common/idl");
-
-var modules = $("select[name='module']"),
-	interface = $("select[name='api']"),
-	requestList = $("#request-list");
+	idl = require("./common/idl"),
+	selector = require("./common/selector");
 
 // module lists
 var moduleData = $(idl).find("service > module");
@@ -10089,20 +10086,20 @@ moduleData.each(function(i, data) {
 	var moduleName = $(data).attr("name"),
 		moduleTitle = $(data).find("documentation > title:eq(0)").text();
 
-	modules.append("<option value='" + moduleName + "'>" + moduleTitle + "</option>");
+	selector.modules.append("<option value='" + moduleName + "'>" + moduleTitle + "</option>");
 
 });
 
 // 一级联动
-modules.on("change", function() {
+selector.modules.on("change", function() {
 	var moduleName = $(this).val();
 
-	interface.html('<option selected="selected" value="0">--请选择API--</option>');
+	selector.interfaces.html('<option selected="selected" value="0">--请选择API--</option>');
 
 	func.createUrl();
 
 	func.clearField();
-	requestList.html("");
+	selector.requestList.html("");
 
 	if (moduleName === "0") {
 		func.initTab();
@@ -10115,21 +10112,21 @@ modules.on("change", function() {
 			interfaceTitle = $(data).find("documentation > title:eq(0)").text(),
 			requestType = $(data).attr("reqType");
 
-		interface.append("<option value='" + interfaceName + "'>" + interfaceTitle + "</option>");
+		selector.interfaces.append("<option value='" + interfaceName + "'>" + interfaceTitle + "</option>");
 	});
 
 });
 
 // 二级联动
-interface.on("change", function() {
+selector.interfaces.on("change", function() {
 	var interfaceName = $(this).val(),
-		moduleName = modules.val(),
+		moduleName = selector.modules.val(),
 		list = [];
 
 	func.createUrl();
 
 	func.clearField();
-	requestList.html("");
+	selector.requestList.html("");
 
 	if (interfaceName === "0") {
 		func.initTab();
@@ -10193,7 +10190,7 @@ interface.on("change", function() {
 		return ($(a).find("span").last().text() > $(b).find("span").last().text()) ? -1 : 1;
 	});
 
-	requestList.append(list);
+	selector.requestList.append(list);
 
 });
 
@@ -10204,10 +10201,10 @@ $("input[type='radio'][name='environment']").on("change", function() {
 
 $("select[name='version']").on("change", function() {
 	func.createUrl();
-	
+
 });
 
-},{"./common/functions":4,"./common/idl":5,"./common/jquery":6}],3:[function(require,module,exports){
+},{"./common/functions":4,"./common/idl":5,"./common/jquery":6,"./common/selector":7}],3:[function(require,module,exports){
 var $ = require("./common/jquery"),
 	func = require("./common/functions");
 
@@ -11033,13 +11030,15 @@ var $ = require("./common/jquery"),
 	func = require("./common/functions");
 
 $(".data-options > li").on("click", function() {
-	var classNow = $(this).attr("class");
+	var _this = $(this),
+		classNow = _this.attr("class");
+
 	if (classNow === "disabled" || classNow === "selected") {
 		return 0;
 	}
 
-	func.toggleTab($(this).index(), $(this));
-	
+	func.toggleTab(_this.index(), _this);
+
 });
 
 },{"./common/functions":4,"./common/jquery":6}],9:[function(require,module,exports){
@@ -11063,7 +11062,9 @@ $("#get-data > span > a").on("click", function() {
 
 // selected
 $("#request-list").on("click", "li[method='GET']", function() {
-	if ($(this).attr("class") === "selected") {
+	var _this = $(this);
+
+	if (_this.attr("class") === "selected") {
 		return 0;
 	}
 
@@ -11071,20 +11072,21 @@ $("#request-list").on("click", "li[method='GET']", function() {
 		return 0;
 	}
 
-	var name = $(this).find("a").text(),
-		isRequired = $(this).find("span:eq(1)").text(),
+	var name = _this.find("a").text(),
+		isRequired = _this.find("span:eq(1)").text(),
 
 		opt = {
-				"name": name,
-				"isRequired": isRequired
-			};
+			"name": name,
+			"isRequired": isRequired
+		};
+
 	if (isRequired === "no") {
 		func.addGetField(opt);
 	}
 
-	$(this).addClass("selected");
-	$(this).find(".checked").css("visibility", "visible");
-	
+	_this.addClass("selected");
+	_this.find(".checked").css("visibility", "visible");
+
 });
 
 },{"./common/functions":4,"./common/jquery":6}],10:[function(require,module,exports){
@@ -11104,7 +11106,7 @@ $("#header-data > span > a").on("click", function() {
 	}
 
 	func.addHeaderField();
-	
+
 });
 
 },{"./common/functions":4,"./common/jquery":6}],11:[function(require,module,exports){
@@ -11149,6 +11151,7 @@ $("#post-data > span > a").on("click", function() {
 	}
 
 	func.addPostField();
+
 });
 
 // selected
@@ -11207,11 +11210,8 @@ $(".get-token").on("click", "button", function() {
 	}
 
 	func.hideTokenItem();
+
 });
-
-
-
-
 
 },{"./common/functions":4,"./common/jquery":6}]},{},[11])
 
