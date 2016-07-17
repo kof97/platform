@@ -10149,7 +10149,7 @@ interface.on("change", function() {
 			isRequired = $(data).attr("require"),
 
 			ext = dataExtends.split(".").pop(),
-			dataType = $(idl).find("types > [name='" + ext + "']").attr("extends"),
+			dataType = func.getType(ext),
 
 			opt = {
 				"name": requestName,
@@ -10185,7 +10185,7 @@ interface.on("change", function() {
 			isRequired = $(data).attr("require"),
 
 			ext = dataExtends.split(".").pop(),
-			dataType = $(idl).find("types > [name='" + ext + "']").attr("extends");
+			dataType = func.getType(ext);
 
 		if (isRequired === "no") {
 
@@ -10601,7 +10601,12 @@ var func = {
 		elements.each(function(i, ele) {
 			var elementName = $(ele).attr("name"),
 				extendType = $(ele).attr("type").split(".").pop(),
+				type = func.getType(extendType),
 				isRequired = $(ele).attr("require");
+
+			if (type == "struct" || type == "array") {
+				console.log(321);
+			}
 
 			if (isRequired === "yes") {
 				items.push('<div>\
@@ -10873,7 +10878,10 @@ var func = {
 	},
 
 	getType: function(extendType) {
-		$(idl).find("types > [name='" + extendType + "']").attr("extends");
+		var type = $(idl).find("types > [name='" + extendType + "']").attr("extends");
+
+		return type;
+
 	},
 
 	getExtendsType: function(name) {
