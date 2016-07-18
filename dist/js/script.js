@@ -11124,7 +11124,7 @@ var func = {
 	},
 
 	analyzeUrl: function(url) {
-		url = "http://sandbox.api.e.qq.com/luna/v3/account/get_transaction_detail?token=&advertiser_id=4234&account_type=2341&date_range=11111111&kof=kof97";
+		url = "http://sandbox.api.e.qq.com/luna/v3/account/get_transaction_detail?token=MTIsMTIsMTQ2ODgzMzkxNSwwMmIzNjAxNDIwN2YyZjEwN2YxYTAwMGNlNDc5YjYyNTc4NDY4ZmE1&advertiser_id=4234&account_type=2341&date_range=11111111&kof=kof97";
 
 		var checked = url.indexOf("<") == -1 || 
 					  url.indexOf(">") == -1 || 
@@ -11152,6 +11152,7 @@ var func = {
 			params = url.substr(divideIndex + 1).split("&"),
 			// token = params.shift(),
 
+			item = "",
 			getOptions = [];
 
 		console.log(params);
@@ -11173,13 +11174,21 @@ var func = {
 		selector.modules.val(mod).change();
 		selector.interfaces.val(act).change();
 
-
-
-console.log(hostname);
-
 		var paramsLength = params.length;
 		for (var i = 0; i < paramsLength; i++) {
-			
+			item = params[i].split("=");
+
+			if (item[0] === "token") {
+				selector.token.val(item[1]);
+				continue;
+			}
+//console.log(selector.getList.find("input[name='" + item[0] + "']").val());
+			if ((selector.getList.find("input[name='" + item[0] + "']").val() || "") != "") {
+				console.log(321);
+			}
+
+
+			console.log(item);
 		}
 
 
