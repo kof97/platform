@@ -11124,7 +11124,7 @@ var func = {
 	},
 
 	analyzeUrl: function(url) {
-		url = "http://sandbox.api.e.qq.com/luna/v3/account/get_transaction_detail?token=MTIsMTIsMTQ2ODgzMzkxNSwwMmIzNjAxNDIwN2YyZjEwN2YxYTAwMGNlNDc5YjYyNTc4NDY4ZmE1&advertiser_id=4234&account_type=2341&date_range=11111111&kof=kof97";
+		url = "http://sandbox.api.e.qq.com/luna/v3/account/get_transaction_detail?token=MTIsMTIsMTQ2ODgzMzkxNSwwMmIzNjAxNDIwN2YyZjEwN2YxYTAwMGNlNDc5YjYyNTc4NDY4ZmE1&page=00000000000&advertiser_id=4234&account_type=2341&date_range=11111111&kof=kof97";
 
 		var checked = url.indexOf("<") == -1 || 
 					  url.indexOf(">") == -1 || 
@@ -11153,7 +11153,8 @@ var func = {
 			// token = params.shift(),
 
 			item,
-			require,
+			required,
+			notRequired,
 			getOptions = [];
 
 		switch (hostname) {
@@ -11182,18 +11183,21 @@ var func = {
 				continue;
 			}
 
-			var require = selector.getList.find("input[name='" + item[0] + "']");
-			if ((require.val() || "") != "") {
-				require.next().val(item[1]);
+			required = selector.getList.find("input[name='" + item[0] + "']");
+			if ((required.val() || "") != "") {
+				required.next().val(item[1]);
 
 				continue;
 			}
 
+			notRequired = selector.requestList.find("li[data-get-name='" + item[0] + "']");
+			if ((notRequired.attr("data-get-name") || "") != "") {
+				notRequired.click();
+			} else {
+				func.addGetField({'name': item[0], 'value': item[1]});
+			}
 
-
-			console.log(item);
 		}
-
 
 	},
 
