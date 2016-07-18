@@ -10337,7 +10337,8 @@ selector.postList
 			content = "",
 			opt = {
 				"name": value,
-				"isRequired": ""
+				"isRequired": "",
+				"extendType": extendType
 			};
 
 		switch (value) {
@@ -10353,26 +10354,12 @@ selector.postList
 
 			// struct
 			case "3":
-				content = '<div class="struct-options">\
-							<input type="text" name="" placeholder="Key">: \
-							<span class="struct-lable">{</span>\
-							<div class="struct-item">\
-								<div class="add-params">\
-									<select>\
-										<option value="0" selected>-- Please Select Params --</option>\
-										<option value="1">-- Add a Item --</option>\
-										<option value="2">-- Add a Array --</option>\
-										<option value="3">-- Add a Struct --</option>\
-									</select>\
-								</div>\
-							</div>\
-							<span class="struct-lable">}</span>\
-							<a class="remove-params" href="javascript:(0)">×</a>\
-						   </div>';
+				content = func.getStructItem(opt);
 				break;
 
 			default:
 				opt.isRequired = "no";
+
 				switch (dataType) {
 
 					case "array":
@@ -10380,25 +10367,7 @@ selector.postList
 						break;
 
 					case "struct":
-						var elements = func.getStructElements(extendType);
-						content = '<div class="struct-options">\
-									<input readonly type="text" name="' + value + '" value="' + value + '">: \
-									<span class="struct-lable">{</span>\
-									<div class="struct-item">\
-										' + elements.items + '\
-										<div class="add-params">\
-											<select>\
-												<option value="0" selected>-- Please Select Params --</option>\
-												<option value="1">-- Add a Item --</option>\
-												<option value="2">-- Add a Array --</option>\
-												<option value="3">-- Add a Struct --</option>\
-												' + elements.options + '\
-											</select>\
-										</div>\
-									</div>\
-									<span class="struct-lable">}</span>\
-									<a class="remove-params" data-element-name="' + value + '" href="javascript:(0)">×</a>\
-								   </div>';
+						content = func.getStructItem(opt);
 						break;
 
 					default: 
@@ -10685,12 +10654,15 @@ var func = {
 	getStructItem: function(opt) {
 		var conf = $.extend({}, {
 					"name": "",
-					"isRequired": ""
+					"isRequired": "",
+					"extendType": ""
 				}, opt),
 
 			content = "",
 			removeOption = "",
-			isReadonly = "readonly";
+			isReadonly = "readonly",
+			items = "",
+			options = "";
 
 		switch (conf.isRequired) {
 			case "yes":
@@ -10698,6 +10670,9 @@ var func = {
 				break;
 
 			case "no":
+				var elements = func.getStructElements(conf.extendType);
+				items = elements.items;
+				options = elements.options;
 				removeOption = '<a class="remove-params" data-element-name="' + conf.name + '" href="javascript:(0)">×</a>';
 				break;
 
@@ -10707,7 +10682,24 @@ var func = {
 				removeOption = '<a class="remove-params" href="javascript:(0)">×</a>';
 		}
 
-		content = '';
+		content = '<div class="struct-options">\
+					<input ' + isReadonly + ' type="text" name="' + conf.name + '" value="' + conf.name + '" placeholder="Key">: \
+					<span class="struct-lable">{</span>\
+					<div class="struct-item">\
+						' + items + '\
+						<div class="add-params">\
+							<select>\
+								<option value="0" selected>-- Please Select Params --</option>\
+								<option value="1">-- Add a Item --</option>\
+								<option value="2">-- Add a Array --</option>\
+								<option value="3">-- Add a Struct --</option>\
+								' + options + '\
+							</select>\
+						</div>\
+					</div>\
+					<span class="struct-lable">}</span>\
+					' + removeOption + '\
+				   </div>';
 
 		return content;
 
@@ -10743,39 +10735,11 @@ var func = {
 				switch (dataType) {
 
 					case "array":
-						content = '<div class="array-options">\
-									<input readonly type="text" name="' + elementName + '" value="' + elementName + '">: \
-									<span class="array-lable">[</span>\
-									<div class="array-item">\
-										<div class="add-params">\
-											<select>\
-												<option value="0" selected>-- Please Select Params --</option>\
-												<option value="1">-- Add a Item --</option>\
-												<option value="2">-- Add a Array --</option>\
-												<option value="3">-- Add a Struct --</option>\
-											</select>\
-										</div>\
-									</div>\
-									<span class="array-lable">]</span>\
-								   </div>';
+						content = func.getArrayItem(opt);
 						break;
 
 					case "struct":
-						content = '<div class="struct-options">\
-									<input readonly type="text" name="' + elementName + '" value="' + elementName + '">: \
-									<span class="struct-lable">{</span>\
-									<div class="struct-item">\
-										<div class="add-params">\
-											<select>\
-												<option value="0" selected>-- Please Select Params --</option>\
-												<option value="1">-- Add a Item --</option>\
-												<option value="2">-- Add a Array --</option>\
-												<option value="3">-- Add a Struct --</option>\
-											</select>\
-										</div>\
-									</div>\
-									<span class="struct-lable">}</span>\
-								   </div>';
+						content = func.getStructItem(opt);
 						break;
 
 					default: 
