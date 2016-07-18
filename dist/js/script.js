@@ -11042,10 +11042,10 @@ var func = {
 	},
 
 	/**
-	 * 解析获取 get 参数
+	 * 获取 get 参数
 	 * @return {string}
 	 */
-	analyzeGet: function() {
+	getGetOptions: function() {
 		var items = [],
 
 			key = "",
@@ -11086,7 +11086,7 @@ var func = {
 	 */
 	getUrl: function() {
 		var content = "";
-		content = func.getBaseUrl() + "?" + func.analyzeGet();
+		content = func.getBaseUrl() + "?" + func.getGetOptions();
 
 		return content;
 
@@ -11123,8 +11123,14 @@ var func = {
 		});*/
 	},
 
+	/**
+	 * 解析 URL 到页面各个部分
+	 *
+	 *
+	 */
 	analyzeUrl: function(url) {
 		url = "http://sandbox.api.e.qq.com/luna/v3/account/get_transaction_detail?token=MTIsMTIsMTQ2ODgzMzkxNSwwMmIzNjAxNDIwN2YyZjEwN2YxYTAwMGNlNDc5YjYyNTc4NDY4ZmE1&page=00000000000&advertiser_id=4234&account_type=2341&date_range=11111111&kof=kof97";
+		//url = "http://sandbox.api.e.qq.com/luna/v3/utility/get_estimation";
 
 		var checked = url.indexOf("<") == -1 || 
 					  url.indexOf(">") == -1 || 
@@ -11142,6 +11148,7 @@ var func = {
 			flagEndIndex = flagStartIndex + flagLength,
 
 			divideIndex = url.indexOf("?"),
+			divideIndex = divideIndex === -1 ? url.length : divideIndex,
 
 			pathLength = divideIndex - flagEndIndex,
 
@@ -11149,13 +11156,8 @@ var func = {
 			path = url.substr(flagEndIndex, pathLength).split("/"),
 			mod = path[0],
 			act = path[1],
-			params = url.substr(divideIndex + 1).split("&"),
-			// token = params.shift(),
 
-			item,
-			required,
-			notRequired,
-			getOptions = [];
+			param = url.substr(divideIndex + 1);
 
 		switch (hostname) {
 			case "http://sandbox.api.e.qq.com":
@@ -11173,7 +11175,29 @@ var func = {
 		selector.modules.val(mod).change();
 		selector.interfaces.val(act).change();
 
-		var paramsLength = params.length;
+		if (selector.method.text() === "POST") {
+			return 0;
+		}
+
+		func.analyzeGet(param);
+
+	},
+
+	/**
+	 * 解析 get 参数
+	 * @param param {string} URL 参数
+	 * 
+	 */
+	analyzeGet: function(param) {
+		var params = param.split("&"),
+
+			item,
+			required,
+			notRequired,
+			getOptions = [],
+
+			paramsLength = params.length;
+
 		for (var i = 0; i < paramsLength; i++) {
 			item = params[i].split("=");
 
@@ -11191,12 +11215,17 @@ var func = {
 			}
 
 			notRequired = selector.requestList.find("li[data-get-name='" + item[0] + "']");
+
 			if ((notRequired.attr("data-get-name") || "") != "") {
-				notRequired.click();
+				func.addGetField({'name': item[0], 'value': item[1], "isRequired": "no"});
+
+				notRequired.addClass("selected");
+				notRequired.find(".checked").css("visibility", "visible");
+
 			} else {
 				func.addGetField({'name': item[0], 'value': item[1]});
-			}
 
+			}
 		}
 
 	},
