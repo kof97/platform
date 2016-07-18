@@ -10217,6 +10217,7 @@ selector.interfaces.on("change", function() {
 	}).join("");
 
 	selector.requestList.append(list);
+	list = [];
 
 });
 
@@ -10430,23 +10431,25 @@ var func = {
 				var isReadonly = "readonly",
 					removeOption = "";
 
-				if (conf.isRequired === "no") {
-					removeOption = '<a data-post-name="' + conf.name + '" href="javascript:void(0)">Remove</a>';
+				switch (conf.isRequired) {
+					case "yes":
+						removeOption = '<span>*</span>';
+						break;
 
-				} else if (conf.isRequired === "yes") {
-					removeOption = '<span>*</span>';
+					case "no":
+						removeOption = '<a data-post-name="' + conf.name + '" href="javascript:void(0)">Remove</a>';
+						break;
 
-				} else {
-					isReadonly = "";
-					removeOption = '<a href="javascript:void(0)">Remove</a>';
-
+					default:
+						isReadonly = "";
+						removeOption = '<a href="javascript:void(0)">Remove</a>';
 				}
 
 				postOption = '<div class="post-option">\
-									<input ' + isReadonly + ' type="text" name="' + conf.name + '" value="' + conf.name + '" placeholder="Name">\
-									<input type="text" value="' + conf.value + '" placeholder="Value">\
-									' + removeOption + '\
-								  </div>';
+								<input ' + isReadonly + ' type="text" name="' + conf.name + '" value="' + conf.name + '" placeholder="Name">\
+								<input type="text" value="' + conf.value + '" placeholder="Value">\
+								' + removeOption + '\
+							  </div>';
 		}
 
 		selector.postList.append(postOption);
@@ -10456,34 +10459,35 @@ var func = {
 	/**
 	 * 添加 get 字段
 	 *
-	 *
 	 */
 	addGetField: function(opt = {}) {
 		var conf = $.extend({}, {
 					"name": "",
 					"value": "",
 					"isRequired": ""
-				}, opt);
+				}, opt),
 
-		if (conf.isRequired === "no") {
-			var getOption = '<div class="get-option"> \
-								<input readonly type="text" name="' + conf.name + '" value="' + conf.name + '" placeholder="Name"> \
-								<input type="text" value="' + conf.value + '" placeholder="Value"> \
-								<a data-get-name="' + conf.name + '" href="javascript:void(0)">Remove</a> \
-							  </div>';
-		} else if (conf.isRequired === "yes") {
-			var getOption = '<div class="get-option"> \
-								<input readonly type="text" name="' + conf.name + '" value="' + conf.name + '" placeholder="Name"> \
-								<input type="text" value="' + conf.value + '" placeholder="Value"> \
-								<span>*</span> \
-							 </div>';
-		} else {
-			var getOption = '<div class="get-option"> \
-								<input type="text" name="" value="" placeholder="Name"> \
-								<input type="text" value="" placeholder="Value"> \
-								<a href="javascript:void(0)">Remove</a> \
-							 </div>';
+			removeOption = "",
+			getOption = "";
+
+		switch (conf.isRequired) {
+			case "yes":
+				removeOption = '<span>*</span>';
+				break;
+
+			case "no":
+				removeOption = '<a data-get-name="' + conf.name + '" href="javascript:void(0)">Remove</a>';
+				break;
+
+			default:
+				removeOption = '<a href="javascript:void(0)">Remove</a>';
 		}
+
+		getOption = '<div class="get-option">\
+						<input type="text" name="' + conf.name + '" value="' + conf.name + '" placeholder="Name"> \
+						<input type="text" value="' + conf.value + '" placeholder="Value"> \
+						' + removeOption + '\
+					 </div>';
 
 		selector.getList.append(getOption);
 
@@ -10491,7 +10495,6 @@ var func = {
 
 	/**
 	 * 添加 header 信息
-	 *
 	 *
 	 */
 	addHeaderField: function(opt = {}) {
@@ -10512,7 +10515,6 @@ var func = {
 
 	/**
 	 * 添加 post 里面的 array 类型字段
-	 *
 	 *
 	 */
 	addArrayField: function(opt = {}) {
@@ -10769,7 +10771,6 @@ var func = {
 	/**
 	 * 添加 post 里面的 struct 类型字段
 	 *
-	 *
 	 */
 	addStructField: function(opt = {}) {
 		var conf = $.extend({}, {
@@ -10876,7 +10877,6 @@ var func = {
 	/**
 	 * 清除 post get 所有字段
 	 * 
-	 * 
 	 */
 	clearField: function() {
 		selector.postData.hide();
@@ -10915,7 +10915,6 @@ var func = {
 
 	/**
 	 * 初始化数据切换菜单
-	 * 
 	 * 
 	 */
 	initTab: function() {
@@ -11002,7 +11001,6 @@ var func = {
 	/**
 	 * 隐藏注释
 	 * 
-	 * 
 	 */
 	hideNote: function() {
 		selector.noteData.hide();
@@ -11013,9 +11011,8 @@ var func = {
 	/**
 	 * 根据填写数据生成对应请求 URL
 	 * 
-	 * 
 	 */
-	createUrl: function() {
+	getUrl: function() {
 		var environment = $("input[type='radio'][name='environment']:checked");
 			mod = selector.modules.val() === "0" ? "{mod}" : selector.modules.val();
 			act = selector.interfaces.val() === "0" ? "{act}" : selector.interfaces.val();
@@ -11025,9 +11022,24 @@ var func = {
 				  mod + "/" + 
 				  act;
 
+		return url;
+
+	},
+
+	analyzeGet: function() {
+		selector.getList.find(".getOption");
+	},
+
+	/**
+	 * 填充 URL
+	 * 
+	 */
+	createUrl: function() {
+		var url = func.getUrl();
+
 		$("input[name='url']").val(url);
 
-	}, 
+	},
 
 	/**
 	 * 显示 token 表单
@@ -11052,7 +11064,6 @@ var func = {
 	/**
 	 * 根据用户的 appid 和 appkey 获取token
 	 * 
-	 * 
 	 */
 	getToken: function() {
 		var appid = selector.tokenItem.find("input[name='appid']").val(),
@@ -11076,7 +11087,6 @@ var func = {
 
 	/**
 	 * 隐藏 token 填写框
-	 * 
 	 * 
 	 */
 	hideTokenItem: function() {
@@ -11113,7 +11123,6 @@ var func = {
 	/**
 	 * 检查 header 填写字段
 	 * 
-	 * 
 	 */
 	checkHeaderItems: function() {
 		var maxSize = 10;
@@ -11136,7 +11145,6 @@ var func = {
 	/**
 	 * 检查 post 填写字段
 	 * 
-	 * 
 	 */
 	checkPostItems: function() {
 		var maxSize = 20;
@@ -11158,7 +11166,6 @@ var func = {
 
 	/**
 	 * 检查 get 填写字段
-	 * 
 	 * 
 	 */
 	checkGetItems: function() {
@@ -11497,8 +11504,10 @@ selector.tokenItem
 	});
 
 },{"./common/functions":4,"./common/jquery":7,"./common/selector":8}],15:[function(require,module,exports){
+var $ = require("./common/jquery");
 
-},{}]},{},[12])
+
+},{"./common/jquery":7}]},{},[12])
 
 
 //# sourceMappingURL=script.js.map
