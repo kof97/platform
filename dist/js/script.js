@@ -10419,11 +10419,13 @@ var func = {
 		switch (conf.dataType) {
 			case "struct":
 				func.addStructField(opt);
+				func.toggleTab(1);
 				return 0;
 				break;
 
 			case "array":
 				func.addArrayField(opt);
+				func.toggleTab(1);
 				return 0;
 				break;
 
@@ -10453,6 +10455,8 @@ var func = {
 		}
 
 		selector.postList.append(postOption);
+
+		func.toggleTab(1);
 
 	},
 
@@ -10490,6 +10494,8 @@ var func = {
 					 </div>';
 
 		selector.getList.append(getOption);
+
+		func.toggleTab(0);
 
 	},
 
@@ -10895,8 +10901,7 @@ var func = {
 	methodAction: function(method) {
 		selector.method.html(method);
 
-		var num = 0,
-			that = null;
+		var num = 0;
 
 		method = method.toLowerCase();
 		if (method === "get") {
@@ -10907,9 +10912,7 @@ var func = {
 			return 0;
 		}
 
-		that = selector.dataTabOption.find("li:eq(" + num + ")");
-
-		func.toggleTab(num, that);
+		func.toggleTab(num);
 
 	},
 
@@ -10918,13 +10921,13 @@ var func = {
 	 * 
 	 */
 	initTab: function() {
-		var num = 2;
+		var num = 2,
 			that = selector.dataTabOption.find("li:eq(" + num + ")");
 
 		that.siblings().addClass("disabled");
 		that.siblings().removeClass("selected");
 
-		func.toggleTab(num, that);
+		func.toggleTab(num);
 
 	},
 
@@ -10933,8 +10936,9 @@ var func = {
 	 * @param num {number} ｛0|get, 1|post, 2|header｝
 	 * @param that {dom object}
 	 */
-	toggleTab: function(num, that) {
-		var selectors;
+	toggleTab: function(num) {
+		var selectors,
+			that = selector.dataTabOption.find("li:eq(" + num + ")");
 
 		switch (num) {
 			case 0:
@@ -11010,7 +11014,7 @@ var func = {
 
 	/**
 	 * 根据填写数据生成对应请求 URL
-	 * 
+	 * @return {string} url
 	 */
 	getUrl: function() {
 		var environment = $("input[type='radio'][name='environment']:checked");
@@ -11028,6 +11032,8 @@ var func = {
 
 	analyzeGet: function() {
 		selector.getList.find(".getOption");
+
+
 	},
 
 	/**
@@ -11299,7 +11305,7 @@ selector.dataTabOption.find("li").on("click", function() {
 		return 0;
 	}
 
-	func.toggleTab(_this.index(), _this);
+	func.toggleTab(_this.index());
 
 });
 
