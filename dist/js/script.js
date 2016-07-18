@@ -11155,9 +11155,6 @@ var func = {
 			item = "",
 			getOptions = [];
 
-		console.log(params);
-
-		//selector.token.val("");
 		switch (hostname) {
 			case "http://sandbox.api.e.qq.com":
 				selector.environments.eq(0).prop("checked", true);
@@ -11180,11 +11177,14 @@ var func = {
 
 			if (item[0] === "token") {
 				selector.token.val(item[1]);
+
 				continue;
 			}
 //console.log(selector.getList.find("input[name='" + item[0] + "']").val());
 			if ((selector.getList.find("input[name='" + item[0] + "']").val() || "") != "") {
 				console.log(321);
+
+				continue;
 			}
 
 
