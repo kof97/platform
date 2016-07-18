@@ -11007,7 +11007,7 @@ var func = {
 
 	/**
 	 * 获得字段的类型
-	 * @param extendType {string} 字段名
+	 * @param extendType {string} 字段名/继承的父字段名
 	 * 
 	 */
 	getType: function(extendType) {
@@ -11018,7 +11018,7 @@ var func = {
 	},
 
 	/**
-	 * 获得字段所继承的字段
+	 * 从 idl 获得字段所继承的父字段
 	 * @param name {string} 字段名
 	 * 
 	 */
