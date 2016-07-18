@@ -11125,7 +11125,7 @@ var func = {
 
 	/**
 	 * 解析 URL 到页面各个部分
-	 *
+	 * @param url {string}
 	 *
 	 */
 	analyzeUrl: function(url) {
@@ -11144,20 +11144,28 @@ var func = {
 
 		var flag = "/luna/v3/",
 			flagLength = flag.length,
-			flagStartIndex = url.indexOf(flag),
-			flagEndIndex = flagStartIndex + flagLength,
+			flagStartIndex, flagEndIndex, divideIndex, pathLength, hostname, path, mod, act, param;
 
-			divideIndex = url.indexOf("?"),
-			divideIndex = divideIndex === -1 ? url.length : divideIndex,
+		flagStartIndex = url.indexOf(flag);
 
-			pathLength = divideIndex - flagEndIndex,
+		divideIndex = url.indexOf("?");
+		divideIndex = divideIndex === -1 ? url.length : divideIndex;
 
-			hostname = url.substr(0, flagStartIndex),
-			path = url.substr(flagEndIndex, pathLength).split("/"),
-			mod = path[0],
-			act = path[1],
+		if (flagStartIndex === -1) {
 
-			param = url.substr(divideIndex + 1);
+			return 0;
+		}
+
+		flagEndIndex = flagStartIndex + flagLength;
+
+		pathLength = divideIndex - flagEndIndex;
+
+		hostname = url.substr(0, flagStartIndex);
+		path = url.substr(flagEndIndex, pathLength).split("/");
+		mod = path[0];
+		act = path[1];
+
+		param = url.substr(divideIndex + 1);
 
 		switch (hostname) {
 			case "http://sandbox.api.e.qq.com":
