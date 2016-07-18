@@ -11030,6 +11030,10 @@ var func = {
 
 	},
 
+	/**
+	 * 解析获取 get 参数
+	 * @return {string}
+	 */
 	analyzeGet: function() {
 		var items = [],
 
@@ -11059,8 +11063,15 @@ var func = {
 	
 		content = items.join("&");
 
-		console.log(content);
+		return content;
 
+	},
+
+	showUrl: function() {
+		var content = "";
+
+		content = func.getUrl() + "?" + func.analyzeGet();
+console.log(content);
 		return content;
 
 	},
@@ -11547,7 +11558,10 @@ var $ = require("./common/jquery"),
 	selector = require("./common/selector");
 
 selector.showUrl.on("click", function() {
-	func.analyzeGet();
+	var url = func.showUrl();
+
+	$("input[name='url']").val(url);
+
 });
 },{"./common/functions":4,"./common/jquery":7,"./common/selector":8}]},{},[12])
 
