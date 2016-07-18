@@ -10756,7 +10756,7 @@ var func = {
 								' + elementName + '\
 							  </option>');
 			}
-			
+
 		});
 
 		return {
@@ -10839,7 +10839,7 @@ var func = {
 	removeGetField: function(that, flag = 1) {
 		var that = $(that),
 			list = selector.requestList.find("li[data-get-name='" + that.attr("data-get-name") + "']");
-			
+
 		selector.getWarning.html("");
 		selector.getWarning.hide();
 
@@ -11186,6 +11186,12 @@ func.createUrl();
 module.exports = func;
 
 },{"./idl-data":5,"./jquery":7,"./selector":8}],5:[function(require,module,exports){
+/**
+ * idl selector 缓存
+ * 
+ * 
+ */
+ 
 var $ = require("./jquery"),
 	idl = require("./idl"),
 	source = $(idl);
@@ -11206,6 +11212,12 @@ module.exports = {
 
 
 },{"./idl":6,"./jquery":7}],6:[function(require,module,exports){
+/**
+ * idl 数据缓存
+ * 
+ * 
+ */
+
 var $ = require("./jquery");
 
 $.ajax({
@@ -11223,6 +11235,12 @@ var $ = require("jquery");
 
 module.exports = $;
 },{"jquery":1}],8:[function(require,module,exports){
+/**
+ * selector 缓存
+ * 
+ * 
+ */
+
 var $ = require("./jquery");
 
 var selector = {
@@ -11355,6 +11373,8 @@ var $ = require("./common/jquery");
 require("./token");
 require("./api-select");
 
+require("./url");
+
 require("./data-tabs");
 
 require("./header-options");
@@ -11374,7 +11394,7 @@ $.ajax({
 	}
 });
 
-},{"./api-select":2,"./array-struct-options":3,"./common/jquery":7,"./data-tabs":9,"./get-options":10,"./header-options":11,"./post-options":13,"./token":14}],13:[function(require,module,exports){
+},{"./api-select":2,"./array-struct-options":3,"./common/jquery":7,"./data-tabs":9,"./get-options":10,"./header-options":11,"./post-options":13,"./token":14,"./url":15}],13:[function(require,module,exports){
 var $ = require("./common/jquery"),
 	func = require("./common/functions"),
 	selector = require("./common/selector");
@@ -11476,7 +11496,9 @@ selector.tokenItem
 
 	});
 
-},{"./common/functions":4,"./common/jquery":7,"./common/selector":8}]},{},[12])
+},{"./common/functions":4,"./common/jquery":7,"./common/selector":8}],15:[function(require,module,exports){
+
+},{}]},{},[12])
 
 
 //# sourceMappingURL=script.js.map
