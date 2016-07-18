@@ -11046,6 +11046,8 @@ var func = {
 		
 		var len = getOptions.length;
 
+		items.push(func.getToken());
+
 		for (var i = 0; i < len; i++) {
 			option = $(getOptions[i]);
 
@@ -11068,12 +11070,12 @@ var func = {
 	},
 
 	showUrl: function() {
-		var content = "";
-
+		var content = "",
+			token = "token=" + selector.token.val();
+		
 		content = func.getUrl() + "?" + func.analyzeGet();
 console.log(content);
 		return content;
-
 	},
 
 	/**
@@ -11108,10 +11110,19 @@ console.log(content);
 	},
 
 	/**
-	 * 根据用户的 appid 和 appkey 获取token
-	 * 
+	 * 获取 token
+	 * @return {string}
 	 */
 	getToken: function() {
+		return "token=" + selector.token.val();
+
+	},
+
+	/**
+	 * 根据用户的 appid 和 appkey 计算 token
+	 * 
+	 */
+	creatToken: function() {
 		var appid = selector.tokenItem.find("input[name='appid']").val(),
 			appkey = selector.tokenItem.find("input[name='appkey']").val();
 
@@ -11300,7 +11311,8 @@ var selector = {
 
 	"dom": $(document),
 
-	"token": $("#token"),
+	"token": $("input[name='token']"),
+	"tokenPanel": $("#token"),
 	"tokenItem": $(".get-token"),
 
 	"environments": $("input[type='radio'][name='environment']"),
@@ -11524,7 +11536,7 @@ selector.dom.on("click", "div", function() {
 
 });
 
-selector.token
+selector.tokenPanel
 	.on("click", function() {
 		func.showTokenItem(this);
 
@@ -11537,7 +11549,7 @@ selector.token
 
 selector.tokenItem
 	.on("click", "button", function() {
-		var status = func.getToken();
+		var status = func.creatToken();
 
 		if (status === false) {
 			return 0;
