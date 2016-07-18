@@ -10348,22 +10348,7 @@ selector.postList
 
 			// array
 			case "2":
-				content = '<div class="array-options">\
-							<input type="text" name="" placeholder="Key">: \
-							<span class="array-lable">[</span>\
-							<div class="array-item">\
-								<div class="add-params">\
-									<select>\
-										<option value="0" selected>-- Please Select Params --</option>\
-										<option value="1">-- Add a Item --</option>\
-										<option value="2">-- Add a Array --</option>\
-										<option value="3">-- Add a Struct --</option>\
-									</select>\
-								</div>\
-							</div>\
-							<span class="array-lable">]</span>\
-							<a class="remove-params" href="javascript:(0)">×</a>\
-						   </div>';
+				content = func.getArrayItem(opt);
 				break;
 
 			// struct
@@ -10391,22 +10376,7 @@ selector.postList
 				switch (dataType) {
 
 					case "array":
-						content = '<div class="array-options">\
-									<input readonly type="text" name="' + value + '" value="' + value + '">: \
-									<span class="array-lable">[</span>\
-									<div class="array-item">\
-										<div class="add-params">\
-											<select>\
-												<option value="0" selected>-- Please Select Params --</option>\
-												<option value="1">-- Add a Item --</option>\
-												<option value="2">-- Add a Array --</option>\
-												<option value="3">-- Add a Struct --</option>\
-											</select>\
-										</div>\
-									</div>\
-									<span class="array-lable">]</span>\
-									<a class="remove-params" data-element-name="' + value + '" href="javascript:(0)">×</a>\
-								   </div>';
+						content = func.getArrayItem(opt);
 						break;
 
 					case "struct":
@@ -10614,7 +10584,7 @@ var func = {
 	 * 获取普通字段
 	 * @param opt {json}
 	 * @param name {string} 字段名
-	 * @param isRequired {string} 是否必填 yes/no/
+	 * @param isRequired {string} 是否必填 yes/no/""
 	 * @return {string}
 	 */
 	getItem: function(opt = {}) {
@@ -10656,7 +10626,7 @@ var func = {
 	 * 获取 array 类型字段
 	 * @param opt {json}
 	 * @param name {string} 字段名
-	 * @param isRequired {string} 是否必填 yes/no/
+	 * @param isRequired {string} 是否必填 yes/no/""
 	 * @return {string}
 	 */
 	getArrayItem: function(opt) {
@@ -10669,8 +10639,23 @@ var func = {
 			removeOption = "",
 			isReadonly = "readonly";
 
+		switch (conf.isRequired) {
+			case "yes":
+
+				break;
+
+			case "no":
+				removeOption = '<a class="remove-params" data-element-name="' + conf.name + '" href="javascript:(0)">×</a>';
+				break;
+
+			default:
+				conf.name = "";
+				isReadonly = "";
+				removeOption = '<a class="remove-params" href="javascript:(0)">×</a>';
+		}
+
 		content = '<div class="array-options">\
-					<input readonly type="text" name="' + elementName + '" value="' + elementName + '">: \
+					<input ' + isReadonly + ' type="text" name="' + conf.name + '" value="' + conf.name + '" placeholder="Key">: \
 					<span class="array-lable">[</span>\
 					<div class="array-item">\
 						<div class="add-params">\
@@ -10683,6 +10668,7 @@ var func = {
 						</div>\
 					</div>\
 					<span class="array-lable">]</span>\
+					' + removeOption + '\
 				   </div>';
 
 		return content;
