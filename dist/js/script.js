@@ -10095,7 +10095,14 @@ idl.mod.each(function(i, data) {
 selector.modules.append(list.join(""));
 list = [];
 
-// 一级联动
+/**
+ * 一级联动，生成接口列表
+ * 
+ * @param moduleName {string} 模块名
+ * @param interfaceData {selector} 模块下接口集合
+ * @param interfaceName {string} 接口名
+ * @param interfaceTitle {string} 接口描述
+ */
 selector.modules.on("change", function() {
 	var moduleName = $(this).val(),
 		interfaceData = idl.mod.filter("[name='" + moduleName + "']").find("interface");
@@ -10125,7 +10132,18 @@ selector.modules.on("change", function() {
 
 });
 
-// 二级联动
+/**
+ * 二级联动，生成接口字段列表和必填字段的 field
+ *
+ * @param interfaceName {string} 接口名
+ * @param moduleName {string} 模块名
+ * @param requestData {selector} 请求字段集合
+ * @param method {string} 接口提交方式 get/post
+ * @param requestName {string} 字段名
+ * @param extendType/ext {string} 所继承的父字段名
+ * @param isRequired {string} 是否必填字段 yes/no
+ * @param dataType {string} 字段类型
+ */
 selector.interfaces.on("change", function() {
 	var interfaceName = $(this).val(),
 		moduleName = selector.modules.val();
@@ -10238,18 +10256,16 @@ selector.dom.on("click", "div", function() {
 
 selector.postList
 	/**
-	 * 
-	 * 
-	 * 
-	 * 
+	 * array 类型的相关事件操作
+	 * 阻止默认事件
+	 * 显示 remove
+	 * 移除条目
 	 */
-	// stop propagation
 	.on("click", ".array-big-options", function(event) {
 		event.stopPropagation();
 
 	})
 
-	// show remove
 	.on("click", ".array-big-options", function() {	
 		var _this = $(this);
 		_this.css("border", "1px solid #A6C8FF")
@@ -10265,18 +10281,16 @@ selector.postList
 	})
 
 	/**
-	 * 
-	 * 
-	 * 
-	 * 
+	 * struct 类型的相关事件操作
+	 * 阻止默认事件
+	 * 显示 remove
+	 * 移除条目
 	 */
-	// stop propagation
 	.on("click", ".struct-big-options", function(event) {
 		event.stopPropagation();
 
 	})
 
-	// show remove
 	.on("click", ".struct-big-options", function() {	
 		var _this = $(this);
 		_this.css("border", "1px solid #A6C8FF")
@@ -10292,9 +10306,9 @@ selector.postList
 	})
 
 	/**
-	 * 
-	 * 
-	 * 
+	 * array 和 struct 公共事件
+	 * 移除 field
+	 * 添加子字段 item/array/struct
 	 * 
 	 */
 	.on("click", ".remove-params", function() {
