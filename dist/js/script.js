@@ -10733,7 +10733,7 @@ var func = {
 	/**
 	 * 移除 post 字段
 	 * @param that {dom object} 移除对象，this
-	 * @param flag {int} 移除层次，默认为1
+	 * @param flag {number} 移除层次，默认为1
 	 */
 	removePostField: function(that, flag = 1) {
 		var that = $(that),
@@ -10755,7 +10755,7 @@ var func = {
 	/**
 	 * 移除 get 字段
 	 * @param that {dom object} 移除对象，this
-	 * @param flag {int} 移除层次，默认为1
+	 * @param flag {number} 移除层次，默认为1
 	 */
 	removeGetField: function(that, flag = 1) {
 		var that = $(that),
@@ -10777,7 +10777,7 @@ var func = {
 	/**
 	 * 移除 header 信息
 	 * @param that {dom object} 移除对象，this
-	 * @param flag {int} 移除层次，默认为1
+	 * @param flag {number} 移除层次，默认为1
 	 */
 	removeHeaderField: function(that, flag = 1) {
 		var that = $(that);
@@ -10794,7 +10794,7 @@ var func = {
 	},
 
 	/**
-	 * 
+	 * 清除 post get 所有字段
 	 * 
 	 * 
 	 */
@@ -10807,6 +10807,11 @@ var func = {
 
 	},
 
+	/**
+	 * 切换 get post 操作需要的相应处理
+	 * @param method {string} post 或 get
+	 * 
+	 */
 	methodAction: function(method) {
 		selector.method.html(method);
 
@@ -10828,6 +10833,11 @@ var func = {
 
 	},
 
+	/**
+	 * 初始化数据切换菜单
+	 * 
+	 * 
+	 */
 	initTab: function() {
 		var num = 2;
 			that = selector.dataTabOption.find("li:eq(" + num + ")");
@@ -10839,6 +10849,11 @@ var func = {
 
 	},
 
+	/**
+	 * 切换菜单
+	 * @param num {number} ｛0|get, 1|post, 2|header｝
+	 * @param that {dom object}
+	 */
 	toggleTab: function(num, that) {
 		var selectors;
 
@@ -10870,6 +10885,11 @@ var func = {
 
 	},
 
+	/**
+	 * 显示 request-list 中各条目的注释
+	 * @param that {dom object}
+	 * 
+	 */
 	showNote: function(that) {
 		that = $(that);
 
@@ -10899,12 +10919,22 @@ var func = {
 
 	},
 
+	/**
+	 * 隐藏注释
+	 * 
+	 * 
+	 */
 	hideNote: function() {
 		selector.noteData.hide();
 		selector.noteData.html("");
 
 	},
 
+	/**
+	 * 根据填写数据生成对应请求 URL
+	 * 
+	 * 
+	 */
 	createUrl: function() {
 		var environment = $("input[type='radio'][name='environment']:checked");
 			mod = selector.modules.val() === "0" ? "{mod}" : selector.modules.val();
@@ -10919,6 +10949,11 @@ var func = {
 
 	}, 
 
+	/**
+	 * 显示 token 表单
+	 * @param that {dom object}
+	 * 
+	 */
 	showTokenItem: function(that) {
 		var that = $(that),
 			content = '<input type="text" class="form-control" name="appid" placeholder="Appid"> \
@@ -10934,6 +10969,11 @@ var func = {
 
 	},
 
+	/**
+	 * 根据用户的 appid 和 appkey 获取token
+	 * 
+	 * 
+	 */
 	getToken: function() {
 		var appid = selector.tokenItem.find("input[name='appid']").val(),
 			appkey = selector.tokenItem.find("input[name='appkey']").val();
@@ -10954,12 +10994,22 @@ var func = {
 
 	},
 
+	/**
+	 * 隐藏 token 填写框
+	 * 
+	 * 
+	 */
 	hideTokenItem: function() {
 		selector.tokenItem.hide();
 		selector.tokenItem.html("");
 
 	},
 
+	/**
+	 * 获得字段的类型
+	 * @param extendType {string} 字段名
+	 * 
+	 */
 	getType: function(extendType) {
 		var type = idl.types.find("[name='" + extendType + "']").attr("extends");
 
@@ -10967,6 +11017,11 @@ var func = {
 
 	},
 
+	/**
+	 * 获得字段所继承的字段
+	 * @param name {string} 字段名
+	 * 
+	 */
 	getExtendsType: function(name) {
 		var type = idl.service.find("element[name='" + name + "']").attr("type"),
 			extendType = type.split(".").pop();
@@ -10975,6 +11030,11 @@ var func = {
 
 	},
 
+	/**
+	 * 检查 header 填写字段
+	 * 
+	 * 
+	 */
 	checkHeaderItems: function() {
 		var maxSize = 10;
 
@@ -10993,6 +11053,11 @@ var func = {
 
 	},
 
+	/**
+	 * 检查 post 填写字段
+	 * 
+	 * 
+	 */
 	checkPostItems: function() {
 		var maxSize = 20;
 
@@ -11011,6 +11076,11 @@ var func = {
 
 	},
 
+	/**
+	 * 检查 get 填写字段
+	 * 
+	 * 
+	 */
 	checkGetItems: function() {
 		var maxSize = 20;
 
