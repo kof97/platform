@@ -10613,9 +10613,12 @@ var func = {
 
 	},
 
+	addItem: function() {
+
+	},
+
 	/**
 	 * 获取 struct 类型的子元素字段，可以递归操作
-	 *
 	 *
 	 */
 	getStructElements: function(name) {
