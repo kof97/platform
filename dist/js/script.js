@@ -10649,6 +10649,7 @@ var func = {
 	 * @param opt {json}
 	 * @param name {string} 字段名
 	 * @param isRequired {string} 是否必填 yes/no/""
+	 * @param extendType {string} 字段名/继承的父字段名
 	 * @return {string}
 	 */
 	getStructItem: function(opt) {
@@ -10815,6 +10816,7 @@ var func = {
 	removePostField: function(that, flag = 1) {
 		var that = $(that),
 			list = selector.requestList.find("li[data-post-name='" + that.attr("data-post-name") + "']");
+
 		selector.postWarning.html("");
 		selector.postWarning.hide();
 
@@ -10837,6 +10839,7 @@ var func = {
 	removeGetField: function(that, flag = 1) {
 		var that = $(that),
 			list = selector.requestList.find("li[data-get-name='" + that.attr("data-get-name") + "']");
+			
 		selector.getWarning.html("");
 		selector.getWarning.hide();
 
