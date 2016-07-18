@@ -11152,7 +11152,8 @@ var func = {
 			params = url.substr(divideIndex + 1).split("&"),
 			// token = params.shift(),
 
-			item = "",
+			item,
+			require,
 			getOptions = [];
 
 		switch (hostname) {
@@ -11180,12 +11181,14 @@ var func = {
 
 				continue;
 			}
-//console.log(selector.getList.find("input[name='" + item[0] + "']").val());
-			if ((selector.getList.find("input[name='" + item[0] + "']").val() || "") != "") {
-				console.log(321);
+
+			var require = selector.getList.find("input[name='" + item[0] + "']");
+			if ((require.val() || "") != "") {
+				require.next().val(item[1]);
 
 				continue;
 			}
+
 
 
 			console.log(item);
