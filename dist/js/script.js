@@ -10276,7 +10276,7 @@ selector.postList
 	})
 
 	.on("click", ".array-big-options > a", function() {
-		func.removeGetField(this, 2);
+		func.removePostField(this, 2);
 		
 	})
 
@@ -10284,7 +10284,7 @@ selector.postList
 	 * struct 类型的相关事件操作
 	 * 阻止默认事件
 	 * 显示 remove
-	 * 移除条目
+	 * 移除 field
 	 */
 	.on("click", ".struct-big-options", function(event) {
 		event.stopPropagation();
@@ -10307,7 +10307,7 @@ selector.postList
 
 	/**
 	 * array 和 struct 公共事件
-	 * 移除 field
+	 * 移除字段
 	 * 添加子字段 item/array/struct
 	 * 
 	 */
@@ -10613,8 +10613,30 @@ var func = {
 
 	},
 
-	addItem: function() {
+	/**
+	 *
+	 *
+	 *
+	 */
+	addItem: function(opt = {}) {
+		var conf = $.extend({}, {
+					"name": "",
+					"isRequired": ""
+				}, opt),
+			content = "",
+			removeOption = "",
+			isReadonly = "readonly";
 
+
+		if (conf.isRequired === "yes") {
+			removeOption = '<span class="warning-params">*</span>';
+		}
+
+		content = '<div>\
+					<input readonly type="text" name="' + elementName + '" value="' + elementName + '">: \
+					<input type="text" name="" placeholder="Value">\
+					<span class="warning-params">*</span>\
+				   </div>';
 	},
 
 	/**
