@@ -10676,6 +10676,44 @@ var func = {
 	},
 
 	/**
+	 * 获取 struct 类型字段
+	 * @param opt {json}
+	 * @param name {string} 字段名
+	 * @param isRequired {string} 是否必填 yes/no/""
+	 * @return {string}
+	 */
+	getStructItem: function(opt) {
+		var conf = $.extend({}, {
+					"name": "",
+					"isRequired": ""
+				}, opt),
+
+			content = "",
+			removeOption = "",
+			isReadonly = "readonly";
+
+		switch (conf.isRequired) {
+			case "yes":
+
+				break;
+
+			case "no":
+				removeOption = '<a class="remove-params" data-element-name="' + conf.name + '" href="javascript:(0)">×</a>';
+				break;
+
+			default:
+				conf.name = "";
+				isReadonly = "";
+				removeOption = '<a class="remove-params" href="javascript:(0)">×</a>';
+		}
+
+		content = '';
+
+		return content;
+
+	},
+
+	/**
 	 * 获取 struct 类型的子元素字段，可以递归操作
 	 *
 	 */
