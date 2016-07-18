@@ -11126,10 +11126,33 @@ var func = {
 	analyzeUrl: function(url) {
 		url = "http://sandbox.api.e.qq.com/luna/v3/account/get_transaction_detail?token=&advertiser_id=4234&account_type=2341&date_range=11111111&kof=kof97";
 
-		var checked = url.indexOf("<") === -1 || url.indexOf(">") === -1 || url.indexOf("'") === -1;
-		if (checked) {
-			console.log(321);
+		var checked = url.indexOf("<") == -1 || 
+					  url.indexOf(">") == -1 || 
+					  url.indexOf("'") == -1 ||
+					  url.indexOf("\"") == -1 ||
+					  url.indexOf("`") == -1;
+
+		if (!checked) {
+			return 0;
 		}
+
+		var flag = "/luna/v3/",
+			flagLength = flag.length,
+			flagStartIndex = url.indexOf(flag),
+			flagEndIndex = flagStartIndex + flagLength,
+
+			divideIndex = url.indexOf("?"),
+
+			pathLength = divideIndex - flagEndIndex,
+
+			hostname = url.substr(0, flagStartIndex),
+			path = url.substr(flagEndIndex, pathLength).split("/"),
+			mod = path[0],
+			act = path[1],
+			params = url.substr(divideIndex + 1).split("&");
+
+		console.log(params);
+
 
 	},
 
