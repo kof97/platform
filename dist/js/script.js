@@ -11016,7 +11016,7 @@ var func = {
 	 * 根据填写数据生成对应请求 URL
 	 * @return {string} url
 	 */
-	getUrl: function() {
+	getBaseUrl: function() {
 		var environment = $("input[type='radio'][name='environment']:checked");
 			mod = selector.modules.val() === "0" ? "{mod}" : selector.modules.val();
 			act = selector.interfaces.val() === "0" ? "{act}" : selector.interfaces.val();
@@ -11027,6 +11027,17 @@ var func = {
 				  act;
 
 		return url;
+
+	},
+
+	/**
+	 * 填充 URL
+	 * 
+	 */
+	createUrl: function() {
+		var url = func.getBaseUrl();
+
+		selector.url.val(url);
 
 	},
 
@@ -11069,23 +11080,56 @@ var func = {
 
 	},
 
-	showUrl: function() {
-		var content = "",
-			token = "token=" + selector.token.val();
-		
-		content = func.getUrl() + "?" + func.analyzeGet();
-console.log(content);
+	/**
+	 * 获得完整的请求 URL
+	 * @return {string} url
+	 */
+	getUrl: function() {
+		var content = "";
+		content = func.getBaseUrl() + "?" + func.analyzeGet();
+
 		return content;
+
 	},
 
-	/**
-	 * 填充 URL
-	 * 
-	 */
-	createUrl: function() {
-		var url = func.getUrl();
+	checkRequest: function() {
 
-		$("input[name='url']").val(url);
+	},
+
+	requestUrl: function() {
+		var url = func.getUrl(),
+			method = selector.method.text();
+
+
+//console.log(method);
+		/*$.ajax({
+			'url': url,
+			'method': method,
+			'dataType': 'json',
+			'Content-Type': 'text/plain',
+			'headers': {
+				'Access-Control-Allow-Origin': 'http://sandbox.api.e.qq.com',
+				'Access-Control-Allow-Methods': 'POST, GET, OPTIONS',
+				"Access-Control-Allow-Headers": "X-PINGOTHER"
+			},
+		
+			success: function(data) {
+				console.log(data);
+
+				$('#response-data').html(JSON.stringify(data, null, 4));
+			}
+		}).done(function(msg) {
+			console.log(msg);
+		});*/
+	},
+
+	analyzeUrl: function(url) {
+		url = "http://sandbox.api.e.qq.com/luna/v3/account/get_transaction_detail?token=&advertiser_id=4234&account_type=2341&date_range=11111111&kof=kof97";
+
+		var checked = url.indexOf("<") === -1 || url.indexOf(">") === -1 || url.indexOf("'") === -1;
+		if (checked) {
+			console.log(321);
+		}
 
 	},
 
@@ -11322,7 +11366,10 @@ var selector = {
 
 	"method": $("#method"),
 
+	"url": $("input[name='url']"),
+	
 	"showUrl": $("#show-url"),
+	"analyzeUrl": $("#analyze-url"),
 	"submitUrl": $("#submit-url"),
 
 	"dataTabOption": $(".data-tab-options"),
@@ -11570,10 +11617,20 @@ var $ = require("./common/jquery"),
 	selector = require("./common/selector");
 
 selector.showUrl.on("click", function() {
-	var url = func.showUrl();
+	var url = func.getUrl();
 
-	$("input[name='url']").val(url);
+	selector.url.val(url);
 
+});
+
+selector.submitUrl.on("click", function() {
+	func.requestUrl();
+
+});
+
+selector.analyzeUrl.on("click", function() {
+	func.analyzeUrl();
+	
 });
 },{"./common/functions":4,"./common/jquery":7,"./common/selector":8}]},{},[12])
 
