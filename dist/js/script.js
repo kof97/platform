@@ -11149,9 +11149,38 @@ var func = {
 			path = url.substr(flagEndIndex, pathLength).split("/"),
 			mod = path[0],
 			act = path[1],
-			params = url.substr(divideIndex + 1).split("&");
+			params = url.substr(divideIndex + 1).split("&"),
+			// token = params.shift(),
+
+			getOptions = [];
 
 		console.log(params);
+
+		//selector.token.val("");
+		switch (hostname) {
+			case "http://sandbox.api.e.qq.com":
+				selector.environments.eq(0).prop("checked", true);
+				break;
+
+			case "http://api.e.qq.com":
+				selector.environments.eq(1).prop("checked", true);
+				break;
+
+			default: 
+				return 0;
+		}
+
+		selector.modules.val(mod).change();
+		selector.interfaces.val(act).change();
+
+
+
+console.log(hostname);
+
+		var paramsLength = params.length;
+		for (var i = 0; i < paramsLength; i++) {
+			
+		}
 
 
 	},
