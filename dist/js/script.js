@@ -11031,8 +11031,37 @@ var func = {
 	},
 
 	analyzeGet: function() {
-		selector.getList.find(".getOption");
+		var items = [],
 
+			key = "",
+			value = "",
+			option = "",
+			content = "";
+
+		getOptions = selector.getList.find(".get-option");
+		
+		var len = getOptions.length;
+
+		for (var i = 0; i < len; i++) {
+			option = $(getOptions[i]);
+
+			key = option.find("input:eq(0)").val();
+			value = option.find("input:eq(1)").val();
+
+			if (key.trim() === "") {
+				continue;
+			}
+
+			content = key + "=" + value;
+
+			items.push(content);
+		}
+	
+		content = items.join("&");
+
+		console.log(content);
+
+		return content;
 
 	},
 
@@ -11269,6 +11298,9 @@ var selector = {
 	"versions": $("select[name='version']"),
 
 	"method": $("#method"),
+
+	"showUrl": $("#show-url"),
+	"submitUrl": $("#submit-url"),
 
 	"dataTabOption": $(".data-tab-options"),
 
@@ -11510,10 +11542,14 @@ selector.tokenItem
 	});
 
 },{"./common/functions":4,"./common/jquery":7,"./common/selector":8}],15:[function(require,module,exports){
-var $ = require("./common/jquery");
+var $ = require("./common/jquery"),
+	func = require("./common/functions"),
+	selector = require("./common/selector");
 
-
-},{"./common/jquery":7}]},{},[12])
+selector.showUrl.on("click", function() {
+	func.analyzeGet();
+});
+},{"./common/functions":4,"./common/jquery":7,"./common/selector":8}]},{},[12])
 
 
 //# sourceMappingURL=script.js.map
