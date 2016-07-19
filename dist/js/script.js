@@ -11132,17 +11132,20 @@ var func = {
 		url = "http://sandbox.api.e.qq.com/luna/v3/account/get_transaction_detail?token=MTIsMTIsMTQ2ODgzMzkxNSwwMmIzNjAxNDIwN2YyZjEwN2YxYTAwMGNlNDc5YjYyNTc4NDY4ZmE1&page=00000000000&advertiser_id=4234&account_type=2341&date_range=11111111&kof=kof97";
 		//url = "http://sandbox.api.e.qq.com/luna/v3/utility/get_estimation";
 
-		var checked = url.indexOf("<") == -1 || 
-					  url.indexOf(">") == -1 || 
-					  url.indexOf("'") == -1 ||
-					  url.indexOf("\"") == -1 ||
-					  url.indexOf("`") == -1;
+		var position = "",
+			msg = "",
+			checked = url.indexOf("<") != -1 || 
+					  url.indexOf(">") != -1 || 
+					  url.indexOf("'") != -1 ||
+					  url.indexOf("\"") != -1 ||
+					  url.indexOf("`") != -1;
 
-		if (!checked) {
+		if (checked) {
+			msg = "URL 中包含不合法字符（<, >, \", '）";
+
+			func.showWarning(position, msg);
 			return 0;
 		}
-
-		func.showWarning();
 
 		var flag = "/luna/v3/",
 			flagLength = flag.length,
@@ -11153,8 +11156,11 @@ var func = {
 		divideIndex = url.indexOf("?");
 		divideIndex = divideIndex === -1 ? url.length : divideIndex;
 
-		if (flagStartIndex === -1) {
+		if (flagStartIndex === -1 || flagStartIndex >= divideIndex) {
+			position = flag;
+			msg = "接口版本信息错误";
 
+			func.showWarning(position, msg);
 			return 0;
 		}
 
@@ -11178,14 +11184,37 @@ var func = {
 				selector.environments.eq(1).prop("checked", true);
 				break;
 
-			default: 
+			default:
+				position = hostname;
+				msg = "接口地址错误，请检查 hostname";
+
+				func.showWarning(position, msg);
 				return 0;
 		}
 
+		if ((selector.modules.find("[value='" + mod + "']").attr("value") || "") === "") {
+			position = mod;
+			msg = "API模块错误，请正确填写模块名或从列表选择合适项";
+
+			func.showWarning(position, msg);
+			return 0;
+		}
 		selector.modules.val(mod).change();
+
+		if ((selector.interfaces.find("[value='" + act + "']").attr("value") || "") === "") {
+			position = act;
+			msg = "API名称错误，请填写正确的API或从列表选择";
+
+			func.showWarning(position, msg);
+			return 0;
+		}
 		selector.interfaces.val(act).change();
 
-		if (selector.method.text() === "POST") {
+		if (selector.method.text() != "GET") {
+			position = method;
+			msg = "提交方式错误，目前只支持 GET";
+
+			func.showWarning(position, msg);
 			return 0;
 		}
 
@@ -11240,12 +11269,20 @@ var func = {
 
 	},
 
-	showWarning: function(msg) {
-		selector.analyzeWarning.fadeIn(300);
+	showWarning: function(position, msg) {
+		
 
 
-		selector.analyzeWarning.css("right", selector.analyzeUrl.width() + "px");
-		selector.analyzeWarning.css("top", "-" + selector.analyzeUrl.height() * 2.5 + "px");
+		
+
+		selector.analyzeWarning.find("strong").html(position);
+		selector.analyzeWarning.find("span").html(msg);
+
+		selector.analyzeWarning
+					.css("right", selector.analyzeUrl.width() + 60 + "px")
+					.css("top", "-" + selector.analyzeUrl.height() * 1.8 + "px")
+					.fadeIn(300);
+
 	},
 
 	/**
@@ -11259,12 +11296,11 @@ var func = {
 					   <input type="password" class="form-control" name="appkey" placeholder="Appkey"> \
 					   <button class="btn btn-primary" type="button">Get Token</button>';
 
-		selector.tokenItem.html(content);
-
-		selector.tokenItem.css("right", that.width() + "px");
-		selector.tokenItem.css("top", that.height() * 2.5 + "px");
-
-		selector.tokenItem.fadeIn(500);
+		selector.tokenItem
+					.html(content)
+					.css("right", that.width() + "px")
+					.css("top", that.height() * 2.5 + "px")
+					.fadeIn(500);
 
 	},
 
