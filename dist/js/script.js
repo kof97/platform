@@ -11142,6 +11142,8 @@ var func = {
 			return 0;
 		}
 
+		func.showWarning();
+
 		var flag = "/luna/v3/",
 			flagLength = flag.length,
 			flagStartIndex, flagEndIndex, divideIndex, pathLength, hostname, path, mod, act, param;
@@ -11236,6 +11238,14 @@ var func = {
 			}
 		}
 
+	},
+
+	showWarning: function(msg) {
+		selector.analyzeWarning.fadeIn(300);
+
+
+		selector.analyzeWarning.css("right", selector.analyzeUrl.width() + "px");
+		selector.analyzeWarning.css("top", "-" + selector.analyzeUrl.height() * 2.5 + "px");
 	},
 
 	/**
@@ -11473,6 +11483,8 @@ var selector = {
 
 	"url": $("input[name='url']"),
 	
+	"analyzeWarning": $(".analyze-warning"),
+
 	"showUrl": $("#show-url"),
 	"analyzeUrl": $("#analyze-url"),
 	"submitUrl": $("#submit-url"),
@@ -11733,9 +11745,25 @@ selector.submitUrl.on("click", function() {
 
 });
 
-selector.analyzeUrl.on("click", function() {
-	func.analyzeUrl();
-	
+selector.analyzeUrl
+	.on("click", function() {
+		func.analyzeUrl();
+		
+	})
+	.on("click", function(event) {
+		event.stopPropagation();
+
+	});
+
+// hide warning
+selector.dom.on("click", function() {
+	selector.analyzeWarning.hide();
+
+});
+
+selector.analyzeWarning.on("click", function(event) {
+	event.stopPropagation();
+
 });
 },{"./common/functions":4,"./common/jquery":7,"./common/selector":8}]},{},[12])
 
