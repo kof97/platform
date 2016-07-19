@@ -10388,6 +10388,138 @@ selector.postList
 
 	});
 
+selector.getList
+	/**
+	 * array 类型的相关事件操作
+	 * 阻止默认事件
+	 * 显示 remove
+	 * 移除条目
+	 */
+	.on("click", ".array-big-options", function(event) {
+		event.stopPropagation();
+
+	})
+
+	.on("click", ".array-big-options", function() {	
+		var _this = $(this);
+		_this.css("border", "1px solid #A6C8FF")
+			 .find("a").fadeIn(100);
+
+		_this.find(".add-params").slideDown(100);
+
+	})
+
+	.on("click", ".array-big-options > a", function() {
+		func.removeGetField(this, 2);
+		
+	})
+
+	/**
+	 * struct 类型的相关事件操作
+	 * 阻止默认事件
+	 * 显示 remove
+	 * 移除 field
+	 */
+	.on("click", ".struct-big-options", function(event) {
+		event.stopPropagation();
+
+	})
+
+	.on("click", ".struct-big-options", function() {	
+		var _this = $(this);
+		_this.css("border", "1px solid #A6C8FF")
+			 .find("a").fadeIn(100);
+
+		_this.find(".add-params").slideDown(100);
+
+	})
+
+	.on("click", ".struct-big-options > a", function() {
+		func.removeGetField(this, 2);
+		
+	})
+
+	/**
+	 * array 和 struct 公共事件
+	 * 移除字段
+	 * 添加子字段 item/array/struct
+	 * 
+	 */
+	.on("click", ".remove-params", function() {
+		var _this = $(this),
+			elementName = _this.attr("data-element-name") || "";
+
+		if (elementName != "") {
+
+			var option = _this.parent().siblings(".add-params").find("option[value='3']"),
+				content = '<option value="' + elementName + '">' + elementName + '</option>';
+
+			$(content).insertAfter(option);
+		}
+
+		_this.parent().remove();
+
+	})
+
+	.on("change", ".add-params select", function() {
+		var _this = $(this),
+			value = _this.val(),
+			option = _this.find("option[value='" + value + "']"),
+			extendType = option.attr("data-extends"),
+			dataType = option.attr("data-type"),
+			dataRepeated = option.attr("data-repeated") || "",
+
+			content = "",
+			opt = {
+				"name": value,
+				"isRequired": "",
+				"extendType": extendType
+			};
+
+		switch (value) {
+			// item
+			case "1":
+				content = func.getItem(opt);
+				break;
+
+			// array
+			case "2":
+				content = func.getArrayItem(opt);
+				break;
+
+			// struct
+			case "3":
+				content = func.getStructItem(opt);
+				break;
+
+			default:
+				opt.isRequired = "no";
+
+				switch (dataType) {
+
+					case "array":
+						content = func.getArrayItem(opt);
+						break;
+
+					case "struct":
+						content = func.getStructItem(opt);
+						break;
+
+					default: 
+						content = func.getItem(opt);
+
+				}
+
+				if (dataRepeated != "repeated") {
+					_this.find("option[value='" + value + "']").remove();
+				}
+
+		}
+
+		_this.val("0");
+		$(content).insertBefore(_this.parent());
+
+	});
 },{"./common/functions":4,"./common/jquery":7,"./common/selector":8}],4:[function(require,module,exports){
 /**
  * 公共函数定义
