@@ -11259,7 +11259,7 @@ var func = {
 	 * 
 	 */
 	createUrl: function() {
-		var url = func.getUrl();
+		var url = func.getBaseUrl();
 
 		selector.url.val(url);
 
@@ -11280,8 +11280,6 @@ var func = {
 		getOptions = selector.getList.find(".get-option");
 		
 		var len = getOptions.length;
-
-		items.push(func.getToken());
 
 		for (var i = 0; i < len; i++) {
 			option = $(getOptions[i]);
@@ -11309,8 +11307,11 @@ var func = {
 	 * @return {string} url
 	 */
 	getUrl: function() {
-		var content = "";
-		content = func.getBaseUrl() + "?" + func.getGetOptions();
+		var params = "",
+			content = "";
+
+		params = func.getGetOptions().trim();
+		content = params === "" ? func.getBaseUrl() : func.getBaseUrl() + "?" + params;
 
 		return content;
 
