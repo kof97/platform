@@ -10509,9 +10509,9 @@ var func = {
 		var conf = $.extend({}, {
 					"name": "",
 					"value": ""
-				}, opt);
-
-		var headerOption = '<div class="header-option"> \
+				}, opt),
+		
+			headerOption = '<div class="header-option"> \
 								<input type="text" name="" value="" placeholder="Key"> \
 								<input type="text" value="" placeholder="Value"> \
 								<a href="javascript:void(0)">Remove</a> \
@@ -11823,6 +11823,8 @@ selector.showUrl.on("click", function() {
 	var url = func.getUrl();
 
 	selector.url.val(url);
+	var token = selector.token.val();
+	func.addHeaderField({ 'name': '', 'value': token });
 
 });
 
