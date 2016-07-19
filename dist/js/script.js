@@ -10514,8 +10514,8 @@ var func = {
 			headerOption;
 
 		headerOption = '<div class="header-option"> \
-							<input type="text" name="' + opt.name + '" value="' + opt.name + '" placeholder="Key"> \
-							<input type="text" value="' + opt.value + '" placeholder="Value"> \
+							<input type="text" value="' + conf.name + '" placeholder="Key"> \
+							<input type="text" value="' + conf.value + '" placeholder="Value"> \
 							<a href="javascript:void(0)">Remove</a> \
 						</div>';
 
@@ -10881,6 +10881,15 @@ var func = {
 		} else {
 			that.parent().parent().remove();
 		}
+
+	},
+
+	/**
+	 * 清除 header 所有字段
+	 * 
+	 */
+	clearHeaderField: function() {
+		selector.headerList.html("");
 
 	},
 
@@ -11822,10 +11831,12 @@ var $ = require("./common/jquery"),
 	selector = require("./common/selector");
 
 selector.showUrl.on("click", function() {
-	var url = func.getUrl();
+	var url = func.getUrl(),
+		token = selector.token.val();
 
 	selector.url.val(url);
-	var token = selector.token.val();
+
+	func.clearHeaderField();
 	func.addHeaderField({ 'name': 'Authorization', 'value': 'Bearer ' + token });
 
 });
@@ -11855,6 +11866,7 @@ selector.analyzeWarning.on("click", function(event) {
 	event.stopPropagation();
 
 });
+
 },{"./common/functions":4,"./common/jquery":7,"./common/selector":8}]},{},[12])
 
 
