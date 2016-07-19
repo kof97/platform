@@ -10334,6 +10334,7 @@ selector.postList
 			option = _this.find("option[value='" + value + "']"),
 			extendType = option.attr("data-extends"),
 			dataType = option.attr("data-type"),
+			dataRepeated = option.attr("data-repeated") || "",
 
 			content = "",
 			opt = {
@@ -10376,7 +10377,9 @@ selector.postList
 
 				}
 
-				_this.find("option[value='" + value + "']").remove();
+				if (dataRepeated != "repeated") {
+					_this.find("option[value='" + value + "']").remove();
+				}
 
 		}
 
@@ -10538,6 +10541,8 @@ var func = {
 			removeOption = '<a href="javascript:void(0)" data-post-name="' + conf.name + '">Remove The Param</a>';
 		}
 
+		var option = func.getArrayRepeated(conf.name);
+
 		var postOption = '<div class="post-option"> \
 							<input readonly type="text" name="' + conf.name + '" value="' + conf.name + '" placeholder="Name"> \
 							<div class="array-options shadow array-big-options">\
@@ -10548,8 +10553,9 @@ var func = {
 											<option value="0" selected>-- Please Select Params --</option>\
 											<option value="1">-- Add a Item --</option>\
 											<option value="2">-- Add a Array --</option>\
-											<option value="3">-- Add a Struct --</option>\
-										</select>\
+											' + option + '\
+' + //'											<option value="3">-- Add a Struct --</option>\
+'										</select>\
 									</div>\
 								</div>\
 								<span class="array-lable">]</span>\
@@ -10558,6 +10564,29 @@ var func = {
 						  </div>';
 
 		selector.postList.append(postOption);
+
+	},
+
+	/**
+	 * 获得 array 类型的 repeated 类型
+	 * @param name {string}
+	 * 
+	 *
+	 */
+	getArrayRepeated: function(name) {
+		var repeatedType = idl.complexTypeArray.filter("[name='" + name + "']").find("repeated").attr("type"),
+			content = "";
+		
+
+		content = '<option value="' + repeatedType + '" \
+						  data-extends="' + repeatedType + '" \
+						  data-type="struct"\
+						  data-repeated="repeated">\
+					' + repeatedType + '\
+				   </option>';
+
+
+		return content;
 
 	},
 
@@ -11519,14 +11548,18 @@ var $ = require("./jquery"),
 var types = source.find("types"),
 
 	service = source.find("service"),
-	mod = service.find("module");
+	mod = service.find("module"),
+
+	complexTypeArray = types.find("[extends='array']");
 
 module.exports = {
 
 	"types": types,
 
 	"service": service,
-	"mod": mod
+	"mod": mod,
+
+	"complexTypeArray": complexTypeArray
 
 }
 
