@@ -10422,13 +10422,13 @@ var func = {
 
 		switch (conf.dataType) {
 			case "struct":
-				func.addStructField(opt);
+				func.addStructField(conf);
 				func.toggleTab(1);
 				return 0;
 				break;
 
 			case "array":
-				func.addArrayField(opt);
+				func.addArrayField(conf);
 				func.toggleTab(1);
 				return 0;
 				break;
@@ -10483,13 +10483,13 @@ var func = {
 
 		switch (conf.dataType) {
 			case "struct":
-				func.addStructField(opt);
+				func.addStructField(conf);
 				func.toggleTab(0);
 				return 0;
 				break;
 
 			case "array":
-				func.addArrayField(opt);
+				func.addArrayField(conf);
 				func.toggleTab(0);
 				return 0;
 				break;
@@ -10603,7 +10603,7 @@ var func = {
 	getArrayRepeated: function(name) {
 		var repeatedType = idl.complexTypeArray.filter("[name='" + name + "']").find("repeated").attr("type"),
 			content = "";
-		
+
 		switch (repeatedType) {
 			case "creative_struct":
 
@@ -11847,8 +11847,7 @@ selector.requestList
 				"name": name,
 				"value": "",
 				"dataType": dataType,
-				"isRequired": isRequired,
-				"method": "post"
+				"isRequired": isRequired
 			};
 
 		if (isRequired === "no") {
