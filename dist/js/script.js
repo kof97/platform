@@ -11229,19 +11229,26 @@ var func = {
 		selector.url.val(url);
 
 		// check mothod
-		if (selector.method.text() != "GET") {
-			position = method;
-			msg = "提交方式错误，目前只支持 GET";
+		switch (selector.method.text()) {
+			case "GET":
+				if (param === "") {
+					return 0
+				}
 
-			func.showWarning(position, msg);
-			return 0;
+				func.analyzeGet(param);
+				break;
+
+			case "POST":
+
+				break;
+
+			default:
+				position = method;
+				msg = "提交方式错误，目前只支持 GET/POST";
+
+				func.showWarning(position, msg);
+				return 0;
 		}
-
-		if (param === "") {
-			return 0
-		}
-
-		func.analyzeGet(param);
 
 	},
 
