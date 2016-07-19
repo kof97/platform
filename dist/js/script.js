@@ -10415,7 +10415,8 @@ var func = {
 				"name": "",
 				"value": "",
 				"dataType": "",
-				"isRequired": ""
+				"isRequired": "",
+				"method": "post"
 			}, opt),
 			postOption = "";		
 
@@ -10471,32 +10472,49 @@ var func = {
 		var conf = $.extend({}, {
 					"name": "",
 					"value": "",
-					"isRequired": ""
+					"dataType": "",
+					"isRequired": "",
+					"method": "get"
 				}, opt),
 
 			isReadonly = "readonly",
 			removeOption = "",
 			getOption = "";
 
-		switch (conf.isRequired) {
-			case "yes":
-				removeOption = '<span>*</span>';
+		switch (conf.dataType) {
+			case "struct":
+				func.addStructField(opt);
+				func.toggleTab(0);
+				return 0;
 				break;
 
-			case "no":
-				removeOption = '<a data-get-name="' + conf.name + '" href="javascript:void(0)">Remove</a>';
+			case "array":
+				func.addArrayField(opt);
+				func.toggleTab(0);
+				return 0;
 				break;
 
 			default:
-				isReadonly = "";
-				removeOption = '<a href="javascript:void(0)">Remove</a>';
-		}
+				switch (conf.isRequired) {
+					case "yes":
+						removeOption = '<span>*</span>';
+						break;
 
-		getOption = '<div class="get-option">\
-						<input ' + isReadonly + ' type="text" name="' + conf.name + '" value="' + conf.name + '" placeholder="Name"> \
-						<input type="text" value="' + conf.value + '" placeholder="Value"> \
-						' + removeOption + '\
-					 </div>';
+					case "no":
+						removeOption = '<a data-get-name="' + conf.name + '" href="javascript:void(0)">Remove</a>';
+						break;
+
+					default:
+						isReadonly = "";
+						removeOption = '<a href="javascript:void(0)">Remove</a>';
+				}
+
+				getOption = '<div class="get-option">\
+								<input ' + isReadonly + ' type="text" name="' + conf.name + '" value="' + conf.name + '" placeholder="Name"> \
+								<input type="text" value="' + conf.value + '" placeholder="Value"> \
+								' + removeOption + '\
+							 </div>';
+		}
 
 		selector.getList.append(getOption);
 
@@ -10511,7 +10529,8 @@ var func = {
 	addHeaderField: function(opt = {}) {
 		var conf = $.extend({}, {
 					"name": "",
-					"value": ""
+					"value": "",
+					"method": ""
 				}, opt),
 
 			headerOption;
@@ -10527,23 +10546,23 @@ var func = {
 	},
 
 	/**
-	 * 添加 post 里面的 array 类型字段
+	 * 添加 array 类型字段
 	 *
 	 */
 	addArrayField: function(opt = {}) {
 		var conf = $.extend({}, {
 					"name": "",
-					"isRequired": "no"
+					"isRequired": "no",
+					"method": ""
 				}, opt),
 			removeOption = "";
 
 		if (conf.isRequired === "no") {
-			removeOption = '<a href="javascript:void(0)" data-post-name="' + conf.name + '">Remove The Param</a>';
+			removeOption = '<a href="javascript:void(0)" data-' + conf.method + '-name="' + conf.name + '">Remove The Param</a>';
 		}
 
-		var option = func.getArrayRepeated(conf.name);
-
-		var postOption = '<div class="post-option"> \
+		var option = func.getArrayRepeated(conf.name),
+			dataOption = '<div class="' + conf.method + '-option"> \
 							<input readonly type="text" name="' + conf.name + '" value="' + conf.name + '" placeholder="Name"> \
 							<div class="array-options shadow array-big-options">\
 								<span class="array-lable">[</span>\
@@ -10551,11 +10570,8 @@ var func = {
 									<div class="add-params">\
 										<select>\
 											<option value="0" selected>-- Please Select Params --</option>\
-											<option value="1">-- Add a Item --</option>\
-											<option value="2">-- Add a Array --</option>\
 											' + option + '\
-' + //'											<option value="3">-- Add a Struct --</option>\
-'										</select>\
+										</select>\
 									</div>\
 								</div>\
 								<span class="array-lable">]</span>\
@@ -10563,7 +10579,18 @@ var func = {
 							</div>\
 						  </div>';
 
-		selector.postList.append(postOption);
+		switch (conf.method) {
+
+			case "get":
+				selector.getList.append(dataOption);
+				break;
+
+			case "post":
+				selector.postList.append(dataOption);
+				break;
+
+			default: ;
+		}
 
 	},
 
@@ -10577,14 +10604,22 @@ var func = {
 		var repeatedType = idl.complexTypeArray.filter("[name='" + name + "']").find("repeated").attr("type"),
 			content = "";
 		
+		switch (repeatedType) {
+			case "creative_struct":
 
-		content = '<option value="' + repeatedType + '" \
-						  data-extends="' + repeatedType + '" \
-						  data-type="struct"\
-						  data-repeated="repeated">\
-					' + repeatedType + '\
-				   </option>';
+			case "filter_struct":
+				content = '<option value="' + repeatedType + '" \
+								   data-extends="' + repeatedType + '" \
+								   data-type="struct"\
+								   data-repeated="repeated">\
+								' + repeatedType + '\
+						   </option>';
 
+				break;
+
+			default:
+				content = '<option value="1">-- Add a Item --</option>';
+		}
 
 		return content;
 
@@ -10645,6 +10680,7 @@ var func = {
 					"isRequired": ""
 				}, opt),
 
+			option = "",
 			content = "",
 			removeOption = "",
 			isReadonly = "readonly";
@@ -10664,6 +10700,7 @@ var func = {
 				removeOption = '<a class="remove-params" href="javascript:(0)">×</a>';
 		}
 
+		option = func.getArrayRepeated(conf.name);
 		content = '<div class="array-options">\
 					<input ' + isReadonly + ' type="text" name="' + conf.name + '" value="' + conf.name + '" placeholder="Key">: \
 					<span class="array-lable">[</span>\
@@ -10671,9 +10708,7 @@ var func = {
 						<div class="add-params">\
 							<select>\
 								<option value="0" selected>-- Please Select Params --</option>\
-								<option value="1">-- Add a Item --</option>\
-								<option value="2">-- Add a Array --</option>\
-								<option value="3">-- Add a Struct --</option>\
+								' + option + '\
 							</select>\
 						</div>\
 					</div>\
@@ -10808,22 +10843,23 @@ var func = {
 	},
 
 	/**
-	 * 添加 post 里面的 struct 类型字段
+	 * 添加 struct 类型字段
 	 *
 	 */
 	addStructField: function(opt = {}) {
 		var conf = $.extend({}, {
 					"name": "",
-					"isRequired": ""
+					"isRequired": "",
+					"method": ""
 				}, opt),
 			removeOption = "";
 
 		if (conf.isRequired === "no") {
-			removeOption = '<a href="javascript:void(0)" data-post-name="' + conf.name + '">Remove The Param</a>';
+			removeOption = '<a href="javascript:void(0)" data-' + conf.method + '-name="' + conf.name + '">Remove The Param</a>';
 		}
 
 		var elements = func.getStructElements(conf.name),
-			postOption = '<div class="post-option">\
+			dataOption = '<div class="' + conf.method + '-option">\
 							<input readonly type="text" name="' + conf.name + '" value="' + conf.name + '" placeholder="Name">\
 							<div class="struct-options shadow struct-big-options">\
 								<span class="struct-lable">{</span>\
@@ -10844,7 +10880,18 @@ var func = {
 							</div>\
 						  </div>';
 
-		selector.postList.append(postOption);
+		switch (conf.method) {
+
+			case "get":
+				selector.getList.append(dataOption);
+				break;
+
+			case "post":
+				selector.postList.append(dataOption);
+				break;
+
+			default: ;
+		}
 
 	},
 
@@ -11691,11 +11738,14 @@ selector.requestList.on("click", "li[method='GET']", function() {
 		return 0;
 	}
 
-	var name = _this.find("a").text(),
+	var dataType = _this.attr("data-type"),
+		name = _this.find("a").text(),
 		isRequired = _this.find("span:eq(1)").text(),
 
 		opt = {
 			"name": name,
+			"value": "",
+			"dataType": dataType,
 			"isRequired": isRequired
 		};
 
@@ -11797,7 +11847,8 @@ selector.requestList
 				"name": name,
 				"value": "",
 				"dataType": dataType,
-				"isRequired": isRequired
+				"isRequired": isRequired,
+				"method": "post"
 			};
 
 		if (isRequired === "no") {
