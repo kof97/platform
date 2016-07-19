@@ -11235,6 +11235,10 @@ var func = {
 			return 0;
 		}
 
+		if (param === "") {
+			return 0
+		}
+
 		func.analyzeGet(param);
 
 	},
@@ -11258,9 +11262,29 @@ var func = {
 			item = params[i].split("=");
 
 			if (item[0] === "") {
-				break;
+				position = item[0];
+				msg = "参数名不能为空";
+
+				func.showWarning(position, msg);
+				return 0;
 			}
 
+			if (!item[0].match(/^[a-zA-Z0-9_]{1,}$/)) {
+				position = item[0];
+				msg = "参数名只能包含大小写字母和下划线（a-z, A-Z, 0-9, _）";
+
+				func.showWarning(position, msg);
+				return 0;
+			}
+/*
+			if (item[1] === "") {
+				position = item[0];
+				msg = item[0] + "未填写参数值";
+
+				func.showWarning(position, msg);
+				return 0;
+			}
+*/
 			if (item[0] === "token") {
 				selector.token.val(item[1]);
 
