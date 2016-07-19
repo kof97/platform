@@ -10510,12 +10510,14 @@ var func = {
 					"name": "",
 					"value": ""
 				}, opt),
-		
-			headerOption = '<div class="header-option"> \
-								<input type="text" name="" value="" placeholder="Key"> \
-								<input type="text" value="" placeholder="Value"> \
-								<a href="javascript:void(0)">Remove</a> \
-							</div>';
+
+			headerOption;
+
+		headerOption = '<div class="header-option"> \
+							<input type="text" name="' + opt.name + '" value="' + opt.name + '" placeholder="Key"> \
+							<input type="text" value="' + opt.value + '" placeholder="Value"> \
+							<a href="javascript:void(0)">Remove</a> \
+						</div>';
 
 		selector.headerList.append(headerOption);
 
@@ -11824,7 +11826,7 @@ selector.showUrl.on("click", function() {
 
 	selector.url.val(url);
 	var token = selector.token.val();
-	func.addHeaderField({ 'name': '', 'value': token });
+	func.addHeaderField({ 'name': 'Authorization', 'value': 'Bearer ' + token });
 
 });
 
