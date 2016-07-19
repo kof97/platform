@@ -10880,8 +10880,10 @@ var func = {
 
 			case "no":
 				var elements = func.getStructElements(conf.extendType);
+
 				items = elements.items;
 				options = elements.options;
+
 				removeOption = '<a class="remove-params" data-element-name="' + conf.name + '" href="javascript:(0)">×</a>';
 				break;
 
@@ -10921,7 +10923,10 @@ var func = {
 	getStructElements: function(name) {
 		name = (selector.requestList.find("span[data-post-name='" + name + "']").attr("data-extends") || name).split(".").pop();
 		
-		var paramInfo = idl.types.find("[name='" + name + "']"),
+		var paramInfo = idl.mod
+							.filter("[name='" + selector.modules.val() + "']")
+							.find("types [name='" + name + "']").eq(0),
+//		var paramInfo = idl.types.find("[name='" + name + "']"),
 			elements = paramInfo.find("element"),
 			items = [],
 			options = [];
