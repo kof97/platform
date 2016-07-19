@@ -11278,7 +11278,7 @@ var func = {
 			content = "";
 
 		getOptions = selector.getList.find(".get-option");
-		
+
 		var len = getOptions.length;
 
 		for (var i = 0; i < len; i++) {
@@ -11295,7 +11295,7 @@ var func = {
 
 			items.push(content);
 		}
-	
+
 		content = items.join("&");
 
 		return content;
@@ -11354,8 +11354,6 @@ var func = {
 	 *
 	 */
 	analyzeUrl: function(url) {
-		//url = "http://sandbox.api.e.qq.com/luna/v3/account/get_transaction_detail?token=MTIsMTIsMTQ2ODgzMzkxNSwwMmIzNjAxNDIwN2YyZjEwN2YxYTAwMGNlNDc5YjYyNTc4NDY4ZmE1&page=00000000000&advertiser_id=4234&account_type=2341&date_range=11111111&kof=kof97";
-		//url = "http://sandbox.api.e.qq.com/luna/v3/utility/get_estimation";
 		var position = "",
 			msg = "",
 			checked;
