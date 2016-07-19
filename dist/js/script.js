@@ -10923,11 +10923,11 @@ var func = {
 	getStructElements: function(name) {
 		name = (selector.requestList.find("span[data-post-name='" + name + "']").attr("data-extends") || name).split(".").pop();
 		
-		var paramInfo = idl.mod
+		// var paramInfo = idl.types.find("[name='" + name + "']"),
+		var elements = idl.mod
 							.filter("[name='" + selector.modules.val() + "']")
-							.find("types [name='" + name + "']").eq(0),
-//		var paramInfo = idl.types.find("[name='" + name + "']"),
-			elements = paramInfo.find("element"),
+							.find("types [name='" + name + "']").eq(0)
+							.find("element"),
 			items = [],
 			options = [];
 
@@ -10947,7 +10947,6 @@ var func = {
 			if (isRequired === "yes") {
 
 				switch (dataType) {
-
 					case "array":
 						content = func.getArrayItem(opt);
 						break;
@@ -11018,7 +11017,6 @@ var func = {
 						  </div>';
 
 		switch (conf.method) {
-
 			case "get":
 				selector.getList.append(dataOption);
 				break;
@@ -12051,13 +12049,9 @@ var $ = require("./common/jquery"),
 	selector = require("./common/selector");
 
 selector.showUrl.on("click", function() {
-	var url = func.getUrl(),
-		token = selector.token.val();
+	var url = func.getUrl();
 
 	selector.url.val(url);
-
-	func.clearHeaderField();
-	func.addHeaderField({ 'name': 'Authorization', 'value': 'Bearer ' + token });
 
 });
 
@@ -12069,7 +12063,13 @@ selector.submitUrl.on("click", function() {
 selector.analyzeUrl
 	.on("click", function() {
 		func.analyzeUrl((selector.url.val() || ""));
-		
+
+		var token = selector.token.val();
+
+		func.clearHeaderField();
+		func.addHeaderField({ 'name': 'Authorization', 'value': 'Bearer ' + token });
+		//func.toggleTab(2);
+
 	})
 	.on("click", function(event) {
 		event.stopPropagation();
