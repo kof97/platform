@@ -10184,7 +10184,7 @@ selector.interfaces.on("change", function() {
 
 			visibility = "",
 			selected = "";
-			
+		
 		if (isRequired === "yes") {
 			visibility = 'style="visibility: visible"';
 			selected = 'class="selected"';
@@ -10471,6 +10471,7 @@ var func = {
 					"isRequired": ""
 				}, opt),
 
+			isReadonly = "readonly",
 			removeOption = "",
 			getOption = "";
 
@@ -10484,11 +10485,12 @@ var func = {
 				break;
 
 			default:
+				isReadonly = "";
 				removeOption = '<a href="javascript:void(0)">Remove</a>';
 		}
 
 		getOption = '<div class="get-option">\
-						<input type="text" name="' + conf.name + '" value="' + conf.name + '" placeholder="Name"> \
+						<input ' + isReadonly + ' type="text" name="' + conf.name + '" value="' + conf.name + '" placeholder="Name"> \
 						<input type="text" value="' + conf.value + '" placeholder="Value"> \
 						' + removeOption + '\
 					 </div>';
@@ -11129,18 +11131,28 @@ var func = {
 	 *
 	 */
 	analyzeUrl: function(url) {
-		url = "http://sandbox.api.e.qq.com/luna/v3/account/get_transaction_detail?token=MTIsMTIsMTQ2ODgzMzkxNSwwMmIzNjAxNDIwN2YyZjEwN2YxYTAwMGNlNDc5YjYyNTc4NDY4ZmE1&page=00000000000&advertiser_id=4234&account_type=2341&date_range=11111111&kof=kof97";
+		//url = "http://sandbox.api.e.qq.com/luna/v3/account/get_transaction_detail?token=MTIsMTIsMTQ2ODgzMzkxNSwwMmIzNjAxNDIwN2YyZjEwN2YxYTAwMGNlNDc5YjYyNTc4NDY4ZmE1&page=00000000000&advertiser_id=4234&account_type=2341&date_range=11111111&kof=kof97";
 		//url = "http://sandbox.api.e.qq.com/luna/v3/utility/get_estimation";
-
 		var position = "",
 			msg = "",
-			checked = url.indexOf("<") != -1 || 
-					  url.indexOf(">") != -1 || 
-					  url.indexOf("'") != -1 ||
-					  url.indexOf("\"") != -1 ||
-					  url.indexOf("`") != -1;
+			checked;
+
+		if (url.trim() === "") {
+			position = "URL";
+			msg = "请填写正确的 URL";
+
+			func.showWarning(position, msg);
+			return 0;
+		}
+
+		checked = url.indexOf("<") != -1 || 
+				  url.indexOf(">") != -1 || 
+				  url.indexOf("'") != -1 ||
+				  url.indexOf("\"") != -1 ||
+				  url.indexOf("`") != -1;
 
 		if (checked) {
+			position = "非法字符";
 			msg = "URL 中包含不合法字符（<, >, \", '）";
 
 			func.showWarning(position, msg);
@@ -11156,6 +11168,7 @@ var func = {
 		divideIndex = url.indexOf("?");
 		divideIndex = divideIndex === -1 ? url.length : divideIndex;
 
+		// check version
 		if (flagStartIndex === -1 || flagStartIndex >= divideIndex) {
 			position = flag;
 			msg = "接口版本信息错误";
@@ -11175,6 +11188,7 @@ var func = {
 
 		param = url.substr(divideIndex + 1);
 
+		// check hostname
 		switch (hostname) {
 			case "http://sandbox.api.e.qq.com":
 				selector.environments.eq(0).prop("checked", true);
@@ -11192,6 +11206,7 @@ var func = {
 				return 0;
 		}
 
+		// check mod
 		if ((selector.modules.find("[value='" + mod + "']").attr("value") || "") === "") {
 			position = mod;
 			msg = "API模块错误，请正确填写模块名或从列表选择合适项";
@@ -11201,6 +11216,7 @@ var func = {
 		}
 		selector.modules.val(mod).change();
 
+		// check act
 		if ((selector.interfaces.find("[value='" + act + "']").attr("value") || "") === "") {
 			position = act;
 			msg = "API名称错误，请填写正确的API或从列表选择";
@@ -11210,6 +11226,7 @@ var func = {
 		}
 		selector.interfaces.val(act).change();
 
+		// check mothod
 		if (selector.method.text() != "GET") {
 			position = method;
 			msg = "提交方式错误，目前只支持 GET";
@@ -11239,6 +11256,10 @@ var func = {
 
 		for (var i = 0; i < paramsLength; i++) {
 			item = params[i].split("=");
+
+			if (item[0] === "") {
+				break;
+			}
 
 			if (item[0] === "token") {
 				selector.token.val(item[1]);
@@ -11270,11 +11291,6 @@ var func = {
 	},
 
 	showWarning: function(position, msg) {
-		
-
-
-		
-
 		selector.analyzeWarning.find("strong").html(position);
 		selector.analyzeWarning.find("span").html(msg);
 
@@ -11783,7 +11799,7 @@ selector.submitUrl.on("click", function() {
 
 selector.analyzeUrl
 	.on("click", function() {
-		func.analyzeUrl();
+		func.analyzeUrl((selector.url.val() || ""));
 		
 	})
 	.on("click", function(event) {
