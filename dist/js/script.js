@@ -11215,6 +11215,7 @@ var func = {
 			return 0;
 		}
 		selector.modules.val(mod).change();
+		selector.url.val(url);
 
 		// check act
 		if ((selector.interfaces.find("[value='" + act + "']").attr("value") || "") === "") {
@@ -11225,6 +11226,7 @@ var func = {
 			return 0;
 		}
 		selector.interfaces.val(act).change();
+		selector.url.val(url);
 
 		// check mothod
 		if (selector.method.text() != "GET") {
@@ -11250,7 +11252,8 @@ var func = {
 	 */
 	analyzeGet: function(param) {
 		var params = param.split("&"),
-
+			position,
+			msg,
 			item,
 			required,
 			notRequired,
