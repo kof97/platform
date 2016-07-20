@@ -11730,6 +11730,27 @@ var func = {
 
 	},
 
+	addSDK: function(num) {
+		var content = "";
+
+		switch (num) {
+			case "0":
+
+				break;
+
+			case "1":
+
+				break;
+
+			default: ;
+		}
+
+	
+
+		return content;
+
+	},
+
 }
 
 func.createUrl();
