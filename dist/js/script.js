@@ -11711,6 +11711,10 @@ var func = {
 
 	showSDK: function() {
 
+		selector.sdk.css("marginLeft", selector.showSDK.width() * 3 + "px")
+					.css("marginTop", "1px")
+					.fadeIn(300);
+
 	},
 
 }
@@ -12014,8 +12018,31 @@ selector.requestList
 	});
 
 },{"./common/functions":4,"./common/jquery":7,"./common/selector":8}],14:[function(require,module,exports){
-var $ = require("./common/jquery");
-},{"./common/jquery":7}],15:[function(require,module,exports){
+var $ = require("./common/jquery"),
+	func = require("./common/functions"),
+	selector = require("./common/selector");
+
+selector.dom.on("click", function() {
+	selector.sdk.hide();
+
+});
+
+selector.showSDK
+	.on("click", function() {
+		func.showSDK();
+	
+	})
+
+	.on("click", function(event) {
+		event.stopPropagation();
+
+	});
+
+selector.sdk.on("click", function(event) {
+	event.stopPropagation();
+
+})
+},{"./common/functions":4,"./common/jquery":7,"./common/selector":8}],15:[function(require,module,exports){
 var $ = require("./common/jquery"),
 	func = require("./common/functions"),
 	selector = require("./common/selector");
