@@ -11645,7 +11645,7 @@ var func = {
 
 	/**
 	 * 检查 header 填写字段
-	 * 
+	 * @return {number} 0/1
 	 */
 	checkHeaderItems: function() {
 		var maxSize = 10;
@@ -11667,7 +11667,7 @@ var func = {
 
 	/**
 	 * 检查 post 填写字段
-	 * 
+	 * @return {number} 0/1
 	 */
 	checkPostItems: function() {
 		var maxSize = 20;
@@ -11689,7 +11689,7 @@ var func = {
 
 	/**
 	 * 检查 get 填写字段
-	 * 
+	 * @return {number} 0/1
 	 */
 	checkGetItems: function() {
 		var maxSize = 20;
@@ -11708,6 +11708,8 @@ var func = {
 		}
 
 	},
+
+
 
 }
 
