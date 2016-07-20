@@ -12007,8 +12007,8 @@ selector.requestList
 	});
 
 },{"./common/functions":4,"./common/jquery":7,"./common/selector":8}],14:[function(require,module,exports){
-
-},{}],15:[function(require,module,exports){
+var $ = require("./common/jquery");
+},{"./common/jquery":7}],15:[function(require,module,exports){
 var $ = require("./common/jquery"),
 	func = require("./common/functions"),
 	selector = require("./common/selector");
