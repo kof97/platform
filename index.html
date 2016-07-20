@@ -128,24 +128,6 @@
 					</pre>
 				</div>
 			</div>
-			<!--script type="text/javascript" src="//cdn.bootcss.com/jquery/3.1.0/jquery.min.js"></script>
-			<script type="text/javascript" src="./dist/js/jquery.zclip.js"></script>
-			<script>
-
-				$(".copy-sdk").zclip({
-					path: "./dist/swf/ZeroClipboard.swf",
-					copy: function() {
-						console.log(21);
-						return "kof";
-					},
-					beforeCopy: function() {
-
-					},
-					afterCopy: function() {
-
-					}
-				});
-			</script-->
 		</div>
 
 		<div>
@@ -251,3 +233,26 @@
 </html>
 
 <script src="dist/js/script.js"></script>
+
+<script src="//cdn.bootcss.com/jquery/3.1.0/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/zclip/1.1.2/jquery.zclip.min.js"></script>
+<script>
+	
+	// copy code
+	$(".copy-sdk").zclip({
+		path: "//cdn.bootcss.com/zclip/1.1.2/ZeroClipboard.swf",
+		copy: function() {
+			var num = $(".sdk-tab").find("a[class='selected']").index();
+
+			return $(".sdk-info").find("pre").eq(num).text();
+
+		},
+		beforeCopy: function() {
+
+		},
+		afterCopy: function() {
+			var content = "";
+	    }
+	});
+
+</script>
