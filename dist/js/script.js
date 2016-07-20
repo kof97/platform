@@ -11806,6 +11806,9 @@ var selector = {
 
 	"dataTabOption": $(".data-tab-options"),
 
+	"showSDK": $(".show-sdk"),
+	"sdk": $(".sdk"),
+
 	"postData": $("#post-data"),
 	"postList": $(".post-list"),
 	"postWarning": $(".post-warning"),
