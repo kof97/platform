@@ -122,11 +122,19 @@
 
 			<div class="sdk-info">
 				<pre>
-
+curl 'http://sandbox.api.e.qq.com/ads/v3/agency/transfer' \
+	-H 'Authorization: Bearer >' \
+	-d 'advertiser_id=50342' \
+	-d 'account_type=DEVIDE' \
+	-d 'amount=100'
 				</pre>
 
 				<pre>
-
+curl 'http://sandbox.api.e.qq.com/ads/v3/agency/transfer' \
+	-H 'Authorization: Bearer ' \
+	-d 'advertiser_id=50342' \
+	-d 'account_type=DEVIDE' \
+	-d 'amount=100'
 				</pre>
 			</div>
 
@@ -242,7 +250,7 @@
 <script src="//cdn.bootcss.com/jquery/3.1.0/jquery.min.js"></script>
 <script src="//cdn.bootcss.com/zclip/1.1.2/jquery.zclip.min.js"></script>
 <script>
-	console.log($(".copy-sdk").attr("class"));
+	
 	// copy code
 	$(".copy-sdk").zclip({
 		path: "//cdn.bootcss.com/zclip/1.1.2/ZeroClipboard.swf",
