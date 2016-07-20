@@ -12547,7 +12547,7 @@ selector.showSDK
 	.on("click", function() {
 		func.showSDK();
 
-		$(".show-sdk").zclip({
+		$(".copy-sdk").zclip({
 			path: "./dist/swf/ZeroClipboard.swf",
 			copy: function() {
 				console.log(321);
