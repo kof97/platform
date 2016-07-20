@@ -110,23 +110,28 @@
 
 			<a href="javascript:void(0)" class="pull-right shadow show-sdk">获取 SDK</a>
 
-			<div class="sdk shadow">
-				<div class="sdk-tab shadow">
-					<a href="javascript:void(0)">CURL</a>
-					<a href="javascript:void(0)">PHP</a>
+		</div>
 
-					<a href="javascript:void(0)" class="copy-sdk shadow pull-right">复制代码</a>
-				</div>
+		<div class="sdk shadow">
+			<div class="sdk-tab shadow">
+				<a href="javascript:void(0)">CURL</a>
+				<a href="javascript:void(0)">PHP</a>
 
-				<div class="sdk-info">
-					<pre>
+				<a href="javascript:void(0)" class="copy-sdk shadow pull-right">复制代码</a>
+			</div>
+
+			<div class="sdk-info">
+				<pre>
 23423
-					</pre>
+				</pre>
 
-					<pre>
-						phphphphphphphphhphph
-					</pre>
-				</div>
+				<pre>
+					phphphphphphphphhphph
+				</pre>
+			</div>
+
+			<div class='copy-tips'>
+				<div class='copy-tips-wrap'>☺ 复制成功</div>
 			</div>
 		</div>
 
@@ -252,7 +257,7 @@
 		},
 		afterCopy: function() {
 			var content = "";
-			
+			$("body").append(content)
 	    }
 
 	});
