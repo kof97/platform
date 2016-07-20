@@ -11711,9 +11711,17 @@ var func = {
 
 	showSDK: function() {
 
-		selector.sdk.css("marginLeft", selector.showSDK.width() * 3 + "px")
-					.css("marginTop", "1px")
+		selector.sdk.css("marginLeft", "15%")
+					.css("top", "20%")
 					.fadeIn(300);
+
+	},
+
+	toggleSDK: function(num) {
+		var sdkTab = selector.sdkTab.find("a").eq(num);
+
+		sdkTab.addClass("selected");
+		sdkTab.siblings().removeClass("selected");
 
 	},
 
@@ -11812,6 +11820,7 @@ var selector = {
 
 	"showSDK": $(".show-sdk"),
 	"sdk": $(".sdk"),
+	"sdkTab": $(".sdk-tab"),
 
 	"postData": $("#post-data"),
 	"postList": $(".post-list"),
@@ -12041,6 +12050,19 @@ selector.showSDK
 selector.sdk.on("click", function(event) {
 	event.stopPropagation();
 
+});
+
+selector.sdkTab.on("click", "a", function() {
+	var _this = $(this);
+
+	func.toggleSDK(_this.index());
+
+
+});
+
+$(".copy-sdk").on("click", function(event) {
+	event.stopPropagation();
+	
 })
 },{"./common/functions":4,"./common/jquery":7,"./common/selector":8}],15:[function(require,module,exports){
 var $ = require("./common/jquery"),
