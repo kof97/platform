@@ -10340,8 +10340,13 @@ selector.postList
 			opt = {
 				"name": value,
 				"isRequired": "",
-				"extendType": extendType
+				"extendType": extendType,
+				"fromArray": ""
 			};
+
+		if (dataRepeated === "repeated") {
+			opt.fromArray = "true";
+		}
 
 		switch (value) {
 			// item
@@ -10525,6 +10530,7 @@ selector.getList
 		$(content).insertBefore(_this.parent());
 
 	});
+
 },{"./common/functions":4,"./common/jquery":7,"./common/selector":8}],4:[function(require,module,exports){
 /**
  * 公共函数定义
