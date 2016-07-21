@@ -10755,7 +10755,7 @@ var func = {
 				break;
 
 			default:
-				content = '<option data-repeated="repeated">-- Add a Item --</option>';
+				content = '<option value="" data-repeated="repeated">-- Add a Item --</option>';
 		}
 
 		return content;
