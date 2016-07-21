@@ -11296,7 +11296,7 @@ var func = {
 	 * @return {string}
 	 */
 	getGetOptions: function() {
-		var items = [],
+/*		var items = [],
 
 			key = "",
 			value = "",
@@ -11324,12 +11324,57 @@ var func = {
 
 		content = items.join("&");
 
-		return content;
+		return content;*/
 
+		var options,
+			params = [],
+
+			key = "",
+			value = "",
+			isItem = "",
+			option = "",
+			content = "";
+
+		options = selector.getList.find(".get-option");
+
+		var len = options.length;
+
+		if (len === 0) {
+			return "";
+		}
+
+		for (var i = 0; i < len; i++) {
+			option = $(options[i]);
+
+			isItem = option.find(".add-params").eq(0).attr("class") || "";
+
+			// item
+			key = option.find("input:eq(0)").val() || "";
+			if (isItem === "") {
+				value = option.find("input:eq(1)").val() || "";
+
+			} else {
+				value = func.collectComplexParams(option);
+			}
+
+			if (key.trim() === "") {
+				continue;
+			}
+
+			params.push(key + "=" + value);
+
+		}
+
+		content = params.join("&");
+
+		console.log(content);
+
+	
 	},
 
 	/**
 	 * 参数收集
+	 * @param {string} get/post/header
 	 * @return {json}
 	 * @return {string}
 	 */
@@ -11476,7 +11521,7 @@ var func = {
 		var params = "",
 			content = "";
 
-		params = func.getGetOptions().trim();
+		params = func.getGetOptions();
 		content = params === "" ? func.getBaseUrl() : func.getBaseUrl() + "?" + params;
 
 		return content;
