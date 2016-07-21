@@ -11065,8 +11065,7 @@ var func = {
 		var that = $(that),
 			list = selector.requestList.find("li[data-post-name='" + that.attr("data-post-name") + "']");
 
-		selector.postWarning.html("");
-		selector.postWarning.hide();
+		selector.postWarning.html("").hide();
 
 		if (flag === 1) {
 			that.parent().remove();
@@ -11088,8 +11087,7 @@ var func = {
 		var that = $(that),
 			list = selector.requestList.find("li[data-get-name='" + that.attr("data-get-name") + "']");
 
-		selector.getWarning.html("");
-		selector.getWarning.hide();
+		selector.getWarning.html("").hide();
 
 		if (flag === 1) {
 			that.parent().remove();
@@ -11110,8 +11108,7 @@ var func = {
 	removeHeaderField: function(that, flag = 1) {
 		var that = $(that);
 
-		selector.headerWarning.html("");
-		selector.headerWarning.hide();
+		selector.headerWarning.html("").hide();
 
 		if (flag === 1) {
 			that.parent().remove();
@@ -11174,8 +11171,7 @@ var func = {
 		var num = 2,
 			that = selector.dataTabOption.find("li:eq(" + num + ")");
 
-		that.siblings().addClass("disabled");
-		that.siblings().removeClass("selected");
+		that.siblings().addClass("disabled").removeClass("selected");
 
 		func.toggleTab(num);
 
@@ -11209,12 +11205,12 @@ var func = {
 				return 0;
 		}
 
-		that.addClass("selected");
-		that.removeClass("disabled");
-		that.siblings().removeClass("selected");
+		that.addClass("selected")
+			.removeClass("disabled")
+			.siblings().removeClass("selected");
 
-		selectors.siblings().hide();
-		selectors.slideDown(300);
+		selectors.slideDown(300)
+				 .siblings().hide();
 
 	},
 
@@ -11246,9 +11242,9 @@ var func = {
 
 		selector.noteData.append(content);
 
-		selector.noteData.css("left", that.offset().left + 20 + "px");
-		selector.noteData.css("top", that.offset().top + "px");
-		selector.noteData.show();
+		selector.noteData.css("left", that.offset().left + 20 + "px")
+						 .css("top", that.offset().top + "px")
+						 .show();
 
 	},
 
@@ -11383,7 +11379,6 @@ var func = {
 				if ((item.attr("class") || "") === "") {
 					value = "\"" + (item.find("input:eq(0)").val() || "") + "\"";
 
-					
 				} else {
 					value = func.collectComplexParams(item);
 
