@@ -11347,7 +11347,7 @@ var func = {
 				options = selector.getList.find(".get-option");
 				break;
 
-			case "get":
+			case "post":
 				options = selector.postList.find(".post-option");
 				break;
 
@@ -11365,7 +11365,7 @@ var func = {
 			// item
 			key = option.find("input:eq(0)").val() || "";
 			if (isItem === "") {
-				value = option.find("input:eq(1)").val() || '""';
+				value = "\"" + (option.find("input:eq(1)").val() || "") + "\"";
 
 			} else {
 				value = func.collectComplexParams(option);
@@ -11416,7 +11416,7 @@ var func = {
 
 				key = item.find("input:eq(0)").val() || "";
 				if ((item.attr("class") || "") === "") {
-					value = item.find("input:eq(1)").val() || '""';
+					value = "\"" + (item.find("input:eq(1)").val() || "") + "\"";
 
 					
 				} else {
@@ -11442,7 +11442,7 @@ var func = {
 				item = $(items[i]);
 
 				if ((item.attr("class") || "") === "") {
-					value = item.find("input:eq(0)").val();
+					value = "\"" + (item.find("input:eq(0)").val() || "") + "\"";
 
 					
 				} else {
@@ -11454,7 +11454,7 @@ var func = {
 					continue;
 				}
 
-				params.push("\"" + value + "\"");
+				params.push(value);
 
 			}
 
