@@ -11385,10 +11385,33 @@ console.log(params);
 			return "{" + params.join(",") + "}";
 
 		} else if (flag === "[") {
-			return;
-		}
+			items = that.find("[class='array-item']:eq(0) > div");
+			len = items.length;
 
-		return;
+			for (var i = 0; i < len; i++) {
+				item = $(items[i]);
+
+				key = item.find("input:eq(0)").val() || "";
+				if ((item.attr("class") || "") === "") {
+					value = item.find("input:eq(1)").val();
+
+					
+				} else {
+					value = func.collectComplexParams(item);
+
+				}
+
+				if (key.trim() === "") {
+					continue;
+				}
+
+				params.push(key + ":" + value);
+
+			}
+
+			return "[" + params.join(",") + "]";
+
+		}
 
 	},
 
