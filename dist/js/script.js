@@ -11308,9 +11308,67 @@ var func = {
 	 *
 	 */
 	collectParams: function() {
-		var _this = selector.postList;
+		var _this = selector.getList,
+
+			params = [],
+
+			key = "",
+			value = "",
+			isItem = "",
+			option = "";
+
+		getOptions = _this.find(".get-option");
+
+		var len = getOptions.length;
+
+		for (var i = 0; i < len; i++) {
+			option = $(getOptions[i]);
+
+			isItem = option.find(".add-params").eq(0).attr("class") || "";
+
+			// item
+			if (isItem === "") {
+				key = option.find("input:eq(0)").val();
+				value = option.find("input:eq(1)").val();
+
+				if (key.trim() === "") {
+					continue;
+				}
+
+				content = key + "=" + value;
+
+				params.push(content);
+
+				continue;
+			}
+
+			func.collectComplexParams(option);
 
 
+
+		}
+
+		// console.log(params);
+
+	},
+
+	collectComplexParams: function(that) {
+		var flag = that.find("span").eq(0).text().trim(),
+			items = [],
+			item = "",
+			len = 0;
+
+		if (flag === "{") {
+			items = that.find("[class='struct-item']:eq(0) > div");
+			len = items.length;
+
+			for (var i = 0; i < len; i++) {
+				
+			}
+
+		} else if (flag === "[") {
+
+		}
 
 	},
 
@@ -12159,6 +12217,8 @@ selector.showUrl.on("click", function() {
 
 selector.submitUrl.on("click", function() {
 	func.requestUrl();
+
+	func.collectParams();
 
 });
 
