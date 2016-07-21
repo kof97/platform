@@ -11327,27 +11327,22 @@ var func = {
 			isItem = option.find(".add-params").eq(0).attr("class") || "";
 
 			// item
+			key = option.find("input:eq(0)").val() || "";
 			if (isItem === "") {
-				key = option.find("input:eq(0)").val();
 				value = option.find("input:eq(1)").val();
 
-				if (key.trim() === "") {
-					continue;
-				}
+			} else {
+				value = func.collectComplexParams(option);
+			}
 
-				content = key + "=" + value;
-
-				params.push(content);
-
+			if (key.trim() === "") {
 				continue;
 			}
 
-			func.collectComplexParams(option);
-
-
+			params.push(key + ":" + value);
 
 		}
-
+console.log(params);
 		// console.log(params);
 
 	},
@@ -11356,19 +11351,44 @@ var func = {
 		var flag = that.find("span").eq(0).text().trim(),
 			items = [],
 			item = "",
-			len = 0;
+			len = 0,
+
+			key = "",
+			value = "",
+			params = [];
 
 		if (flag === "{") {
 			items = that.find("[class='struct-item']:eq(0) > div");
 			len = items.length;
 
 			for (var i = 0; i < len; i++) {
-				
+				item = $(items[i]);
+
+				key = item.find("input:eq(0)").val() || "";
+				if ((item.attr("class") || "") === "") {
+					value = item.find("input:eq(1)").val();
+
+					
+				} else {
+					value = func.collectComplexParams(item);
+
+				}
+
+				if (key.trim() === "") {
+					continue;
+				}
+
+				params.push(key + ":" + value);
+
 			}
 
-		} else if (flag === "[") {
+			return "{" + params.join(",") + "}";
 
+		} else if (flag === "[") {
+			return;
 		}
+
+		return;
 
 	},
 
