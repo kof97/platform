@@ -10342,7 +10342,7 @@ selector.postList
 				"isRequired": "",
 				"extendType": extendType
 			};
-console.log(value);
+
 		switch (value) {
 			// item
 			case "1":
@@ -10363,14 +10363,6 @@ console.log(value);
 				opt.isRequired = "no";
 
 				switch (dataType) {
-
-					// array item
-					case "4":
-						content = '<div>\
-									<input type="text" name="" placeholder="Value">\
-									<a class="remove-params" href="javascript:(0)">×</a>\
-								   </div>';
-						break;
 
 					case "array":
 						content = func.getArrayItem(opt);
@@ -10481,8 +10473,13 @@ selector.getList
 			opt = {
 				"name": value,
 				"isRequired": "",
-				"extendType": extendType
+				"extendType": extendType,
+				"fromArray": ""
 			};
+
+		if (dataRepeated === "repeated") {
+			opt.fromArray = "true";
+		}
 
 		switch (value) {
 			// item
@@ -10758,7 +10755,7 @@ var func = {
 				break;
 
 			default:
-				content = '<option value="4">-- Add a Item --</option>';
+				content = '<option data-repeated="repeated">-- Add a Item --</option>';
 		}
 
 		return content;
@@ -10775,12 +10772,15 @@ var func = {
 	getItem: function(opt = {}) {
 		var conf = $.extend({}, {
 					"name": "",
-					"isRequired": ""
+					"isRequired": "",
+					"fromArray": ""
 				}, opt),
 
 			content = "",
 			removeOption = "",
-			isReadonly = "readonly";
+			isReadonly = "readonly",
+
+			key = "";
 
 		switch (conf.isRequired) {
 			case "yes":
@@ -10797,8 +10797,12 @@ var func = {
 				removeOption = '<a class="remove-params" href="javascript:(0)">×</a>';
 		}
 
+		if (conf.fromArray != "true") {
+			key = '<input ' + isReadonly + ' type="text" name="' + conf.name + '" value="' + conf.name + '" placeholder="Key">:';
+		}
+
 		content = '<div>\
-					<input ' + isReadonly + ' type="text" name="' + conf.name + '" value="' + conf.name + '" placeholder="Key">: \
+					' + key + ' \
 					<input type="text" name="" placeholder="Value">\
 					' + removeOption + '\
 				   </div>';
@@ -10872,14 +10876,17 @@ var func = {
 		var conf = $.extend({}, {
 					"name": "",
 					"isRequired": "",
-					"extendType": ""
+					"extendType": "",
+					"fromArray": ""
 				}, opt),
 
 			content = "",
 			removeOption = "",
 			isReadonly = "readonly",
 			items = "",
-			options = "";
+			options = "",
+
+			key = "";
 
 		switch (conf.isRequired) {
 			case "yes":
@@ -10901,8 +10908,12 @@ var func = {
 				removeOption = '<a class="remove-params" href="javascript:(0)">×</a>';
 		}
 
+		if (conf.fromArray != "true") {
+			key = '<input ' + isReadonly + ' type="text" name="' + conf.name + '" value="' + conf.name + '" placeholder="Key">:';
+		}
+
 		content = '<div class="struct-options">\
-					<input ' + isReadonly + ' type="text" name="' + conf.name + '" value="' + conf.name + '" placeholder="Key">: \
+					' + key + ' \
 					<span class="struct-lable">{</span>\
 					<div class="struct-item">\
 						' + items + '\
