@@ -11303,6 +11303,18 @@ var func = {
 	},
 
 	/**
+	 * 参数收集
+	 *
+	 *
+	 */
+	collectParams: function() {
+		var _this = selector.postList;
+
+
+
+	},
+
+	/**
 	 * 获得完整的请求 URL
 	 * @return {string} url
 	 */
