@@ -11369,12 +11369,12 @@ var func = {
 				continue;
 			}
 
-			params.push("\"" + key + "\"" + ":" + value);
+			params.push("\"" + key + "\"" + ":" + "\"" + value + "\"");
 
 		}
 
 		content = "{" + params.join(",") + "}";
-		console.log(content);
+		console.log(JSON.stringify(content, null, 4));
 		return content;
 
 	},
@@ -11415,7 +11415,7 @@ var func = {
 					continue;
 				}
 
-				params.push(key + ":" + value);
+				params.push("\"" + key + "\"" + ":" + "\"" + value + "\"");
 
 			}
 
@@ -11441,7 +11441,7 @@ var func = {
 					continue;
 				}
 
-				params.push(value);
+				params.push("\"" + value + "\"");
 
 			}
 
