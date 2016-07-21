@@ -11529,29 +11529,37 @@ var func = {
 
 	requestUrl: function() {
 		var url = func.getUrl(),
-			method = selector.method.text();
+			method = selector.method.text(),
+			headerData, params;
 
+		switch (method) {
+			case "GET":
+				params = {};
+				break;
 
-//console.log(method);
-		/*$.ajax({
-			'url': url,
-			'method': method,
-			'dataType': 'json',
-			'Content-Type': 'text/plain',
-			'headers': {
-				'Access-Control-Allow-Origin': 'http://sandbox.api.e.qq.com',
-				'Access-Control-Allow-Methods': 'POST, GET, OPTIONS',
-				"Access-Control-Allow-Headers": "X-PINGOTHER"
-			},
+			case "POST":
+				params = func.collectParams("post");
+				break;
+
+			default:
+				return 0;
+		}
+
+		headerData = func.collectParams("header");
+
+		$.ajax({
+			url: url,
+			method: method,
+			data: params,
+			dataType: 'json',
+			headers: headerData,
 		
 			success: function(data) {
 				console.log(data);
 
 				$('#response-data').html(JSON.stringify(data, null, 4));
 			}
-		}).done(function(msg) {
-			console.log(msg);
-		});*/
+		});
 	},
 
 	/**
@@ -11580,7 +11588,7 @@ var func = {
 
 		if (checked) {
 			position = "非法字符";
-			msg = "URL 中包含不合法字符（<, >, \", '）";
+			msg = "URL 中包含不合法字符（<, >）";
 
 			func.showWarning(position, msg);
 			return 0;
