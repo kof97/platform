@@ -11499,29 +11499,27 @@ var func = {
 
 	showResult: function() {
 		var url = func.getUrl(),
-			method = "",
+			method = selector.method.text(),
 			content = "";
 
 		selector.url.val(url);
 
 		switch (method) {
 			case "GET":
-
+				content = "GET 参数预览：<br>" + JSON.stringify(func.collectParams("get").json, null, 4);
 				break;
 
 			case "POST":
-
+				content = "POST 参数预览：<br>" + JSON.stringify(func.collectParams("post").json, null, 4);
 				break;
 
 			default:
 				return 0;
 		}
 
-		content = "GET 参数预览：<br>" + JSON.stringify(func.collectParams("post").json, null, 4) + 
-				  "POST 参数预览：<br>" + JSON.stringify(func.collectParams("post").json, null, 4) + 
-				  "header 信息预览：<br>" + JSON.stringify(func.collectParams("post").json, null, 4);
+		content += "<br><br>header 信息预览：<br>" + JSON.stringify(func.collectParams("header").json, null, 4);
 
-		selector.reponseData.html();
+		selector.reponseData.html(content);
 
 	},
 
@@ -11576,8 +11574,8 @@ var func = {
 
 		checked = url.indexOf("<") != -1 || 
 				  url.indexOf(">") != -1 || 
-				  url.indexOf("'") != -1 ||
-				  url.indexOf("\"") != -1 ||
+				  //url.indexOf("'") != -1 ||
+				  //url.indexOf("\"") != -1 ||
 				  url.indexOf("`") != -1;
 
 		if (checked) {
