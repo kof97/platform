@@ -11263,116 +11263,6 @@ var func = {
 	},
 
 	/**
-	 * 根据填写数据生成对应请求 URL
-	 * @return {string} url
-	 */
-	getBaseUrl: function() {
-		var environment = $("input[type='radio'][name='environment']:checked");
-			mod = selector.modules.val() === "0" ? "{mod}" : selector.modules.val();
-			act = selector.interfaces.val() === "0" ? "{act}" : selector.interfaces.val();
-
-		var url = environment.val() + "/luna/" + 
-				  selector.versions.val() + "/" + 
-				  mod + "/" + 
-				  act;
-
-		return url;
-
-	},
-
-	/**
-	 * 填充 URL
-	 * 
-	 */
-	createUrl: function() {
-		var url = func.getBaseUrl();
-
-		selector.url.val(url);
-
-	},
-
-	/**
-	 * 获取 get 参数
-	 * @return {string}
-	 */
-	getGetOptions: function() {
-/*		var items = [],
-
-			key = "",
-			value = "",
-			option = "",
-			content = "";
-
-		getOptions = selector.getList.find(".get-option");
-
-		var len = getOptions.length;
-
-		for (var i = 0; i < len; i++) {
-			option = $(getOptions[i]);
-
-			key = option.find("input:eq(0)").val();
-			value = option.find("input:eq(1)").val();
-
-			if (key.trim() === "") {
-				continue;
-			}
-
-			content = key + "=" + value;
-
-			items.push(content);
-		}
-
-		content = items.join("&");
-
-		return content;*/
-
-		var options,
-			params = [],
-
-			key = "",
-			value = "",
-			isItem = "",
-			option = "",
-			content = "";
-
-		options = selector.getList.find(".get-option");
-
-		var len = options.length;
-
-		if (len === 0) {
-			return "";
-		}
-
-		for (var i = 0; i < len; i++) {
-			option = $(options[i]);
-
-			isItem = option.find(".add-params").eq(0).attr("class") || "";
-
-			// item
-			key = option.find("input:eq(0)").val() || "";
-			if (isItem === "") {
-				value = option.find("input:eq(1)").val() || "";
-
-			} else {
-				value = func.collectComplexParams(option);
-			}
-
-			if (key.trim() === "") {
-				continue;
-			}
-
-			params.push(key + "=" + value);
-
-		}
-
-		content = params.join("&");
-
-		console.log(content);
-
-	
-	},
-
-	/**
 	 * 参数收集
 	 * @param {string} get/post/header
 	 * @return {json}
@@ -11514,6 +11404,85 @@ var func = {
 	},
 
 	/**
+	 * 根据填写数据生成对应请求 URL
+	 * @return {string} url
+	 */
+	getBaseUrl: function() {
+		var environment = $("input[type='radio'][name='environment']:checked");
+			mod = selector.modules.val() === "0" ? "{mod}" : selector.modules.val();
+			act = selector.interfaces.val() === "0" ? "{act}" : selector.interfaces.val();
+
+		var url = environment.val() + "/luna/" + 
+				  selector.versions.val() + "/" + 
+				  mod + "/" + 
+				  act;
+
+		return url;
+
+	},
+
+	/**
+	 * 填充 URL
+	 * 
+	 */
+	createUrl: function() {
+		var url = func.getBaseUrl();
+
+		selector.url.val(url);
+
+	},
+
+	/**
+	 * 获取 get 参数
+	 * @return {string}
+	 */
+	getGetOptions: function() {
+		var options,
+			params = [],
+
+			key = "",
+			value = "",
+			isItem = "",
+			option = "",
+			content = "";
+
+		options = selector.getList.find(".get-option");
+
+		var len = options.length;
+
+		if (len === 0) {
+			return "";
+		}
+
+		for (var i = 0; i < len; i++) {
+			option = $(options[i]);
+
+			isItem = option.find(".add-params").eq(0).attr("class") || "";
+
+			// item
+			key = option.find("input:eq(0)").val() || "";
+			if (isItem === "") {
+				value = option.find("input:eq(1)").val() || "";
+
+			} else {
+				value = func.collectComplexParams(option);
+			}
+
+			if (key.trim() === "") {
+				continue;
+			}
+
+			params.push(key + "=" + value);
+
+		}
+
+		content = params.join("&");
+
+		return content;
+	
+	},
+
+	/**
 	 * 获得完整的请求 URL
 	 * @return {string} url
 	 */
@@ -11525,6 +11494,34 @@ var func = {
 		content = params === "" ? func.getBaseUrl() : func.getBaseUrl() + "?" + params;
 
 		return content;
+
+	},
+
+	showResult: function() {
+		var url = func.getUrl(),
+			method = "",
+			content = "";
+
+		selector.url.val(url);
+
+		switch (method) {
+			case "GET":
+
+				break;
+
+			case "POST":
+
+				break;
+
+			default:
+				return 0;
+		}
+
+		content = "GET 参数预览：<br>" + JSON.stringify(func.collectParams("post").json, null, 4) + 
+				  "POST 参数预览：<br>" + JSON.stringify(func.collectParams("post").json, null, 4) + 
+				  "header 信息预览：<br>" + JSON.stringify(func.collectParams("post").json, null, 4);
+
+		selector.reponseData.html();
 
 	},
 
@@ -12370,9 +12367,7 @@ var $ = require("./common/jquery"),
 	selector = require("./common/selector");
 
 selector.showUrl.on("click", function() {
-	var url = func.getUrl();
-
-	selector.url.val(url);
+	func.showResult();
 
 });
 
