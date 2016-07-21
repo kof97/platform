@@ -10111,6 +10111,8 @@ selector.modules.on("change", function() {
 
 	func.createUrl();
 
+	func.clearReponse();
+
 	func.clearField();
 	selector.requestList.html("");
 
@@ -10149,6 +10151,8 @@ selector.interfaces.on("change", function() {
 		moduleName = selector.modules.val();
 
 	func.createUrl();
+
+	func.clearReponse();
 
 	func.clearField();
 	selector.requestList.html("");
@@ -11950,6 +11954,10 @@ var func = {
 
 		return content;
 
+	},
+
+	clearReponse: function() {
+		selector.reponseData.html("");
 	},
 
 }
