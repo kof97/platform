@@ -12027,7 +12027,9 @@ var selector = {
 
 	"requestList": $("#request-list"),
 
-	"noteData": $(".info .note")
+	"noteData": $(".info .note"),
+
+	"reponseData": $("#response-data")
 
 }
 
@@ -12124,6 +12126,12 @@ selector.headerData.find("span:eq(0) > a").on("click", function() {
 
 });
 
+// view data
+selector.headerData.find("span:eq(1) > a").on("click", function() {
+	selector.reponseData.html(JSON.stringify(func.collectParams("header"), null, 4));
+
+});
+
 },{"./common/functions":4,"./common/jquery":7,"./common/selector":8}],12:[function(require,module,exports){
 var $ = require("./common/jquery");
 
@@ -12172,6 +12180,12 @@ selector.postData.find("span:eq(0) > a").on("click", function() {
 	}
 
 	func.addPostField();
+
+});
+
+// view data
+selector.postData.find("span:eq(1) > a").on("click", function() {
+	selector.reponseData.html(JSON.stringify(func.collectParams("post"), null, 4));
 
 });
 
