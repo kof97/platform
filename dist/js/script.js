@@ -12062,7 +12062,7 @@ selector.getList.on("click", ".get-option > a", function() {
 });
 
 // Add a Field
-selector.getData.find("span > a").on("click", function() {
+selector.getData.find("span:eq(0) > a").on("click", function() {
 	if (func.checkGetItems() === 0) {
 		return 0;
 	}
@@ -12115,7 +12115,7 @@ selector.headerList.on("click", ".header-option > a", function() {
 });
 
 // Add a Field
-selector.headerData.find("span > a").on("click", function() {
+selector.headerData.find("span:eq(0) > a").on("click", function() {
 	if (func.checkHeaderItems() === 0) {
 		return 0;
 	}
@@ -12166,7 +12166,7 @@ selector.postList.on("click", ".post-option > a", function() {
 });
 
 // Add a Field
-selector.postData.find("span > a").on("click", function() {
+selector.postData.find("span:eq(0) > a").on("click", function() {
 	if (func.checkPostItems() === 0) {
 		return 0;
 	}
