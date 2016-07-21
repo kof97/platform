@@ -11347,7 +11347,6 @@ var func = {
 		} else {
 			options = selector.postList.find(".post-option");
 		}
-		
 
 		var len = options.length;
 
@@ -11359,7 +11358,7 @@ var func = {
 			// item
 			key = option.find("input:eq(0)").val() || "";
 			if (isItem === "") {
-				value = option.find("input:eq(1)").val();
+				value = option.find("input:eq(1)").val() || '""';
 
 			} else {
 				value = func.collectComplexParams(option);
@@ -11369,12 +11368,21 @@ var func = {
 				continue;
 			}
 
-			params.push("\"" + key + "\"" + ":" + "\"" + value + "\"");
+			params.push("\"" + key + "\"" + ":" + value);
 
 		}
 
 		content = "{" + params.join(",") + "}";
-		console.log(JSON.stringify(content, null, 4));
+		//console.log(content);
+
+		var a = content;
+
+		console.log(a);
+
+		var c = JSON.parse(a);
+		
+		$('#response-data').html(JSON.stringify(c, null, 4));
+
 		return content;
 
 	},
@@ -11403,7 +11411,7 @@ var func = {
 
 				key = item.find("input:eq(0)").val() || "";
 				if ((item.attr("class") || "") === "") {
-					value = item.find("input:eq(1)").val();
+					value = item.find("input:eq(1)").val() || '""';
 
 					
 				} else {
@@ -11415,7 +11423,7 @@ var func = {
 					continue;
 				}
 
-				params.push("\"" + key + "\"" + ":" + "\"" + value + "\"");
+				params.push("\"" + key + "\"" + ":" + value);
 
 			}
 
@@ -11444,7 +11452,6 @@ var func = {
 				params.push("\"" + value + "\"");
 
 			}
-
 
 			return "[" + params.join(",") + "]";
 
