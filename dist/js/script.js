@@ -11743,8 +11743,7 @@ var func = {
 			if ((notRequired.attr("data-get-name") || "") != "") {
 				func.addGetField({'name': item[0], 'value': item[1], "isRequired": "no"});
 
-				notRequired.addClass("selected");
-				notRequired.find(".checked").css("visibility", "visible");
+				notRequired.addClass("selected").find(".checked").css("visibility", "visible");
 
 			} else {
 				func.addGetField({'name': item[0], 'value': item[1]});
@@ -11822,8 +11821,7 @@ var func = {
 	 * 
 	 */
 	hideTokenItem: function() {
-		selector.tokenItem.hide();
-		selector.tokenItem.html("");
+		selector.tokenItem.hide().html("");
 
 	},
 
@@ -11860,14 +11858,12 @@ var func = {
 		var maxSize = 10;
 
 		if ($(".header-option").length >= maxSize) {
-			selector.headerWarning.html("最多添加 " + maxSize + " 个选项");
-			selector.headerWarning.show();
+			selector.headerWarning.html("最多添加 " + maxSize + " 个选项").show();
 
 			return 0;
 
 		} else {
-			selector.headerWarning.hide();
-			selector.headerWarning.html("");
+			selector.headerWarning.hide().html("");
 
 			return 1;
 		}
@@ -11882,14 +11878,12 @@ var func = {
 		var maxSize = 20;
 
 		if ($(".post-option").length >= maxSize) {
-			selector.postWarning.html("最多添加 " + maxSize + " 个选项");
-			selector.postWarning.show();
+			selector.postWarning.html("最多添加 " + maxSize + " 个选项").show();
 
 			return 0;
 
 		} else {
-			selector.postWarning.hide();
-			selector.postWarning.html("");
+			selector.postWarning.hide().html("");
 		
 			return 1;
 		}
@@ -11904,14 +11898,12 @@ var func = {
 		var maxSize = 20;
 
 		if ($(".get-option").length >= maxSize) {
-			selector.getWarning.html("最多添加 " + maxSize + " 个选项");
-			selector.getWarning.show();
+			selector.getWarning.html("最多添加 " + maxSize + " 个选项").show();
 
 			return 0;
 
 		} else {
-			selector.getWarning.hide();
-			selector.getWarning.html("");
+			selector.getWarning.hide().html("");
 
 			return 1;
 		}
@@ -11933,11 +11925,9 @@ var func = {
 		var _this = selector.sdkTab.find("a").eq(num),
 			info = selector.sdkInfo.find("pre").eq(num);
 
-		_this.addClass("selected");
-		_this.siblings().removeClass("selected");
+		_this.addClass("selected").siblings().removeClass("selected");
 
-		info.show();
-		info.siblings().hide();
+		info.show().siblings().hide();
 
 	},
 
