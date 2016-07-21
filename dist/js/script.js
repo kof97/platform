@@ -11345,7 +11345,7 @@ var func = {
 		if (selector.method.text() === "GET") {
 			options = selector.getList.find(".get-option");
 		} else {
-			options = selector.postList.find(".get-option");
+			options = selector.postList.find(".post-option");
 		}
 		
 
@@ -11428,15 +11428,15 @@ console.log(params);
 				item = $(items[i]);
 
 				if ((item.attr("class") || "") === "") {
-					value = item.find("input:eq(0)").val() || "";
+					value = item.find("input:eq(0)").val();
 
 					
 				} else {
 					value = func.collectComplexParams(item);
 
 				}
-console.log(value);
-				if (value === "") {
+
+				if ((value || "").trim() === "") {
 					continue;
 				}
 
