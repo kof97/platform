@@ -10342,7 +10342,7 @@ selector.postList
 				"isRequired": "",
 				"extendType": extendType
 			};
-
+console.log(value);
 		switch (value) {
 			// item
 			case "1":
@@ -10363,6 +10363,14 @@ selector.postList
 				opt.isRequired = "no";
 
 				switch (dataType) {
+
+					// array item
+					case "4":
+						content = '<div>\
+									<input type="text" name="" placeholder="Value">\
+									<a class="remove-params" href="javascript:(0)">×</a>\
+								   </div>';
+						break;
 
 					case "array":
 						content = func.getArrayItem(opt);
@@ -10750,7 +10758,7 @@ var func = {
 				break;
 
 			default:
-				content = '<option value="1">-- Add a Item --</option>';
+				content = '<option value="4">-- Add a Item --</option>';
 		}
 
 		return content;
