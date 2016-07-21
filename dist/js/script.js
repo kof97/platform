@@ -11330,8 +11330,7 @@ var func = {
 
 	/**
 	 * 参数收集
-	 *
-	 *
+	 * @return {json}
 	 */
 	collectParams: function() {
 		var options,
@@ -11340,7 +11339,8 @@ var func = {
 			key = "",
 			value = "",
 			isItem = "",
-			option = "";
+			option = "",
+			content = "";
 
 		if (selector.method.text() === "GET") {
 			options = selector.getList.find(".get-option");
@@ -11369,19 +11369,20 @@ var func = {
 				continue;
 			}
 
-			params.push(key + ":" + value);
+			params.push("\"" + key + "\"" + ":" + value);
 
 		}
-console.log(params);
-		// console.log(params);
+
+		content = "{" + params.join(",") + "}";
+		console.log(content);
+		return content;
 
 	},
 
 	/**
 	 * 收集复杂类型数据
-	 * 
-	 * 
-	 * 
+	 * @param that {dom object} get/post option
+	 * @return {json}
 	 */
 	collectComplexParams: function(that) {
 		var flag = that.find("span").eq(0).text().trim(),
