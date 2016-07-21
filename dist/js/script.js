@@ -11712,10 +11712,12 @@ var func = {
 	showSDK: function() {
 		func.toggleSDK(0);
 
-		selector.sdk.css("marginLeft", "15%")
-					.css("top", "20%")
-					.fadeIn(300);
+		selector.sdk.css("top", "20%");
 
+	},
+
+	hideSDK: function() {
+		selector.sdk.css("top", "-40em");
 	},
 
 	toggleSDK: function(num) {
@@ -12061,7 +12063,7 @@ var $ = require("./common/jquery"),
 
 // hide sdk
 selector.dom.on("click", function() {
-	selector.sdk.hide();
+	func.hideSDK();
 
 });
 
