@@ -11334,8 +11334,7 @@ var func = {
 	 *
 	 */
 	collectParams: function() {
-		var _this = selector.getList,
-
+		var options,
 			params = [],
 
 			key = "",
@@ -11343,12 +11342,17 @@ var func = {
 			isItem = "",
 			option = "";
 
-		getOptions = _this.find(".get-option");
+		if (selector.method.text() === "GET") {
+			options = selector.getList.find(".get-option");
+		} else {
+			options = selector.postList.find(".get-option");
+		}
+		
 
-		var len = getOptions.length;
+		var len = options.length;
 
 		for (var i = 0; i < len; i++) {
-			option = $(getOptions[i]);
+			option = $(options[i]);
 
 			isItem = option.find(".add-params").eq(0).attr("class") || "";
 
@@ -11373,6 +11377,12 @@ console.log(params);
 
 	},
 
+	/**
+	 * 收集复杂类型数据
+	 * 
+	 * 
+	 * 
+	 */
 	collectComplexParams: function(that) {
 		var flag = that.find("span").eq(0).text().trim(),
 			items = [],
@@ -11417,23 +11427,23 @@ console.log(params);
 			for (var i = 0; i < len; i++) {
 				item = $(items[i]);
 
-				key = item.find("input:eq(0)").val() || "";
 				if ((item.attr("class") || "") === "") {
-					value = item.find("input:eq(1)").val();
+					value = item.find("input:eq(0)").val() || "";
 
 					
 				} else {
 					value = func.collectComplexParams(item);
 
 				}
-
-				if (key.trim() === "") {
+console.log(value);
+				if (value === "") {
 					continue;
 				}
 
-				params.push(key + ":" + value);
+				params.push(value);
 
 			}
+
 
 			return "[" + params.join(",") + "]";
 
