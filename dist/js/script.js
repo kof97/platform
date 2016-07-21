@@ -11332,7 +11332,7 @@ var func = {
 	 * 参数收集
 	 * @return {json}
 	 */
-	collectParams: function() {
+	collectParams: function(method) {
 		var options,
 			params = [],
 
@@ -11342,10 +11342,17 @@ var func = {
 			option = "",
 			content = "";
 
-		if (selector.method.text() === "GET") {
-			options = selector.getList.find(".get-option");
-		} else {
-			options = selector.postList.find(".post-option");
+		switch (method) {
+			case "get":
+				options = selector.getList.find(".get-option");
+				break;
+
+			case "get":
+				options = selector.postList.find(".post-option");
+				break;
+
+			default:
+				options = selector.headerList.find(".header-option");
 		}
 
 		var len = options.length;
@@ -11375,22 +11382,20 @@ var func = {
 		content = "{" + params.join(",") + "}";
 		//console.log(content);
 
-		var a = content;
+		//var a = content;
+		//console.log(a);
+		//var c = JSON.parse(a);
+		//
+		//$('#response-data').html(JSON.stringify(c, null, 4));
 
-		console.log(a);
-
-		var c = JSON.parse(a);
-		
-		$('#response-data').html(JSON.stringify(c, null, 4));
-
-		return content;
+		return JSON.parse(content);
 
 	},
 
 	/**
 	 * 收集复杂类型数据
 	 * @param that {dom object} get/post option
-	 * @return {json}
+	 * @return {string}
 	 */
 	collectComplexParams: function(that) {
 		var flag = that.find("span").eq(0).text().trim(),
