@@ -11426,7 +11426,7 @@ var func = {
 	 * 
 	 */
 	createUrl: function() {
-		var url = func.getBaseUrl();
+		var url = func.getUrl();
 
 		selector.url.val(url);
 
