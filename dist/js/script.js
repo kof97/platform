@@ -11331,6 +11331,7 @@ var func = {
 	/**
 	 * 参数收集
 	 * @return {json}
+	 * @return {string}
 	 */
 	collectParams: function(method) {
 		var options,
@@ -11388,7 +11389,10 @@ var func = {
 		//
 		//$('#response-data').html(JSON.stringify(c, null, 4));
 
-		return JSON.parse(content);
+		return {
+			json: JSON.parse(content),
+			string: content
+		}
 
 	},
 
@@ -12075,7 +12079,7 @@ selector.getData.find("span:eq(0) > a").on("click", function() {
 
 // view data
 selector.getData.find("span:eq(1) > a").on("click", function() {
-	selector.reponseData.html("GET 参数预览：<br>" + JSON.stringify(func.collectParams("get"), null, 4));
+	selector.reponseData.html("GET 参数预览：<br>" + JSON.stringify(func.collectParams("get").json, null, 4));
 
 });
 
@@ -12134,7 +12138,7 @@ selector.headerData.find("span:eq(0) > a").on("click", function() {
 
 // view data
 selector.headerData.find("span:eq(1) > a").on("click", function() {
-	selector.reponseData.html("header 头信息预览：<br>" + JSON.stringify(func.collectParams("header"), null, 4));
+	selector.reponseData.html("header 头信息预览：<br>" + JSON.stringify(func.collectParams("header").json, null, 4));
 
 });
 
@@ -12191,7 +12195,7 @@ selector.postData.find("span:eq(0) > a").on("click", function() {
 
 // view data
 selector.postData.find("span:eq(1) > a").on("click", function() {
-	selector.reponseData.html("POST 参数预览：<br>" + JSON.stringify(func.collectParams("post"), null, 4));
+	selector.reponseData.html("POST 参数预览：<br>" + JSON.stringify(func.collectParams("post").json, null, 4));
 
 });
 
