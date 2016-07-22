@@ -11239,7 +11239,7 @@ var func = {
 			if (paramInfo.attr("name") === undefined) {
 				paramInfo = idl.types.find("complexType[name='" + data + "']:eq(0)");
 			}
-			
+
 		var type = paramInfo.attr("extends"),
 			description = paramInfo.find("attribute[name='description']").attr("value"),
 			restraint = paramInfo.find("attribute[name='restraint']").attr("value"),
@@ -11537,7 +11537,7 @@ var func = {
 
 		switch (method) {
 			case "GET":
-				params = {};
+				params = null;
 				break;
 
 			case "POST":
@@ -11549,12 +11549,15 @@ var func = {
 		}
 
 		headerData = func.collectParams("header");
+		//$(JSON.stringify(headerData).json).attr("Access-Control-Allow-Origin", "developers.e.qq.com");
+
 
 		$.ajax({
 			url: url,
 			method: method,
 			data: params,
-			dataType: 'json',
+			'Content-Type': 'application/json',
+			dataType: 'jsonp',
 			headers: headerData,
 		
 			success: function(data) {
