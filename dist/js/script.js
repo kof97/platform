@@ -11610,7 +11610,7 @@ console.log(headerData);
 			'data': params,
 			'Content-Type': 'text/plain',
 			'dataType': 'json',
-			headers: headerData,
+			'headers': headerData,
 		
 			success: function(data) {
 				console.log(data);
