@@ -11782,14 +11782,15 @@ var func = {
 	 */
 	showTokenItem: function(that) {
 		var that = $(that),
-			content = '<input type="text" class="form-control" name="appid" placeholder="Appid"> \
+			content = '<input type="text" class="form-control" name="uid" placeholder="Uid"> \
+					   <input type="text" class="form-control" name="appid" placeholder="Appid"> \
 					   <input type="password" class="form-control" name="appkey" placeholder="Appkey"> \
 					   <button class="btn btn-primary" type="button">Get Token</button>';
 
 		selector.tokenItem
 					.html(content)
 					.css("right", that.width() + "px")
-					.css("top", that.height() * 2.5 + "px")
+					.css("top", that.height() * 1.9 + "px")
 					.fadeIn(500);
 
 	},
@@ -11808,10 +11809,11 @@ var func = {
 	 * 
 	 */
 	creatToken: function() {
-		var appid = selector.tokenItem.find("input[name='appid']").val(),
+		var uid = selector.tokenItem.find("input[name='uid']").val(),
+			appid = selector.tokenItem.find("input[name='appid']").val(),
 			appkey = selector.tokenItem.find("input[name='appkey']").val();
 
-		if (appid.trim() === "" || appkey.trim() === "") {
+		if (uid.trim() === "" || appid.trim() === "" || appkey.trim() === "") {
 			return false;
 		}
 
@@ -11819,9 +11821,10 @@ var func = {
 			url: './dist/api/token.php',
 			method: 'post',
 			dataType: 'text',
-			data: { 'key': appkey, 'id': appid },
+			data: { 'key': appkey, 'id': appid, 'uid': uid },
 			success: function(data) {
 				$("input[name='token']").val(data);
+				func.addHeaderField({"name": "Authorization", "value": "Bearer " + data});
 			}
 		});
 
