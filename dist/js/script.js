@@ -10555,6 +10555,7 @@ var func = {
 	 * @param value {string} 值
 	 * @param dataType {string} 字段类型
 	 * @param isRequired {string} 是否必填字段
+	 * @param method {string} 提交方式
 	 * @return void
 	 */
 	addPostField: function(opt = {}) {
@@ -10613,7 +10614,13 @@ var func = {
 
 	/**
 	 * 添加 get 字段
-	 *
+	 * @param opt {json}
+	 * @param name {string} 字段名
+	 * @param value {string} 值
+	 * @param dataType {string} 字段类型
+	 * @param isRequired {string} 是否必填字段
+	 * @param method {string} 提交方式
+	 * @return void
 	 */
 	addGetField: function(opt = {}) {
 		var conf = $.extend({}, {
@@ -10671,7 +10678,11 @@ var func = {
 
 	/**
 	 * 添加 header 信息
-	 *
+	 * @param opt {json}
+	 * @param name {string} 字段名
+	 * @param value {string} 值
+	 * @param method {string} 提交方式
+	 * @return void
 	 */
 	addHeaderField: function(opt = {}) {
 		var conf = $.extend({}, {
@@ -10694,7 +10705,11 @@ var func = {
 
 	/**
 	 * 添加 array 类型字段
-	 *
+	 * @param opt {json}
+	 * @param name {string} 字段名
+	 * @param isRequired {string} 是否必填字段
+	 * @param method {string} 提交方式
+	 * @return void
 	 */
 	addArrayField: function(opt = {}) {
 		var conf = $.extend({}, {
@@ -10744,7 +10759,6 @@ var func = {
 	/**
 	 * 获得 array 类型的 repeated 类型
 	 * @param name {string}
-	 * 
 	 *
 	 */
 	getArrayRepeated: function(name) {
@@ -10777,6 +10791,7 @@ var func = {
 	 * @param opt {json}
 	 * @param name {string} 字段名
 	 * @param isRequired {string} 是否必填 yes/no/""
+	 * @param fromArray {string} 是否属于数组添加项 "true"/""
 	 * @return {string}
 	 */
 	getItem: function(opt = {}) {
@@ -10880,6 +10895,7 @@ var func = {
 	 * @param name {string} 字段名
 	 * @param isRequired {string} 是否必填 yes/no/""
 	 * @param extendType {string} 字段名/继承的父字段名
+	 * @param fromArray {string} 是否属于数组添加项 "true"/""
 	 * @return {string}
 	 */
 	getStructItem: function(opt) {
@@ -10946,8 +10962,10 @@ var func = {
 	},
 
 	/**
-	 * 获取 struct 类型的子元素字段，可以递归操作
-	 *
+	 * 获取 struct 类型的子元素字段（拼接好的html），可以递归操作
+	 * @param name {string} 字段名
+	 * @return items {string} item 项的 html
+	 * @return options {string} option 项的 html
 	 */
 	getStructElements: function(name) {
 		name = (selector.requestList.find("span[data-post-name='" + name + "']").attr("data-extends") || name).split(".").pop();
@@ -11010,7 +11028,10 @@ var func = {
 
 	/**
 	 * 添加 struct 类型字段
-	 *
+	 * @param opt {json}
+	 * @param name {string} 字段名
+	 * @param isRequired {string} 是否必填字段
+	 * @param method {string} 提交方式
 	 */
 	addStructField: function(opt = {}) {
 		var conf = $.extend({}, {
@@ -11268,7 +11289,7 @@ var func = {
 
 	/**
 	 * 参数收集
-	 * @param {string} get/post/header
+	 * @param method {string} get/post/header
 	 * @return {json}
 	 * @return {string}
 	 */
@@ -11500,6 +11521,10 @@ var func = {
 
 	},
 
+	/**
+	 * 预览所有参数结果
+	 * @return void
+	 */
 	showResult: function() {
 		var url = func.getUrl(),
 			method = selector.method.text(),
@@ -11530,12 +11555,16 @@ var func = {
 
 	},
 
+	/**
+	 * 发送请求 URL
+	 * @return void
+	 */
 	requestUrl: function() {
 		var url = func.getUrl(),
 			method = selector.method.text(),
 			headerData, params;
 
-		headerData = func.collectParams("header");
+		headerData = func.collectParams("header").json;
 
 		switch (method) {
 			case "GET":
@@ -11543,7 +11572,7 @@ var func = {
 				break;
 
 			case "POST":
-				params = func.collectParams("post");
+				params = func.collectParams("post").json;
 				break;
 
 			default:
@@ -11764,6 +11793,10 @@ var func = {
 
 	},
 
+	/**
+	 * 显示解析错误信息
+	 * @return void
+	 */
 	showWarning: function(position, msg) {
 		selector.analyzeWarning.find("strong").html(position);
 		selector.analyzeWarning.find("span").html(msg);
@@ -11798,11 +11831,11 @@ var func = {
 	/**
 	 * 获取 token
 	 * @return {string}
-	 */
+	 
 	getToken: function() {
 		return "token=" + selector.token.val();
 
-	},
+	},*/
 
 	/**
 	 * 根据用户的 appid 和 appkey 计算 token
@@ -11924,6 +11957,10 @@ var func = {
 
 	},
 
+	/**
+	 * 显示 SDK
+	 * @return void
+	 */
 	showSDK: function() {
 		func.toggleSDK(0);
 
@@ -11931,10 +11968,18 @@ var func = {
 
 	},
 
+	/**
+	 * 隐藏 SDK
+	 * @return void
+	 */
 	hideSDK: function() {
 		selector.sdk.css("top", "-40em");
 	},
 
+	/**
+	 * 切换 SDK
+	 * @return void
+	 */
 	toggleSDK: function(num) {
 		var _this = selector.sdkTab.find("a").eq(num),
 			info = selector.sdkInfo.find("pre").eq(num);
@@ -11966,8 +12011,13 @@ var func = {
 
 	},
 
+	/**
+	 * 清除响应信息
+	 * @return void
+	 */
 	clearReponse: function() {
 		selector.reponseData.html("");
+
 	},
 
 }
