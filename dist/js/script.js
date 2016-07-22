@@ -11535,6 +11535,8 @@ var func = {
 			method = selector.method.text(),
 			headerData, params;
 
+		headerData = func.collectParams("header");
+
 		switch (method) {
 			case "GET":
 				params = null;
@@ -11548,17 +11550,15 @@ var func = {
 				return 0;
 		}
 
-		headerData = func.collectParams("header");
 		//$(JSON.stringify(headerData).json).attr("Access-Control-Allow-Origin", "developers.e.qq.com");
 
-
 		$.ajax({
-			url: url,
-			method: method,
-			data: params,
+			'url': url,
+			'method': method,
+			'data': params,
 			'Content-Type': 'application/json',
-			dataType: 'jsonp',
-			headers: headerData,
+			'dataType': 'jsonp',
+			'headers': headerData,
 		
 			success: function(data) {
 				console.log(data);
