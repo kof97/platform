@@ -11235,8 +11235,12 @@ var func = {
 
 		var data = that.attr("data-extends").split(".").pop();
 
-		var paramInfo = idl.types.find("[name='" + data + "']"),
-			type = paramInfo.attr("extends"),
+		var paramInfo = idl.types.find("simpleType[name='" + data + "']:eq(0)");
+			if (paramInfo.attr("name") === undefined) {
+				paramInfo = idl.types.find("complexType[name='" + data + "']:eq(0)");
+			}
+			
+		var type = paramInfo.attr("extends"),
 			description = paramInfo.find("attribute[name='description']").attr("value"),
 			restraint = paramInfo.find("attribute[name='restraint']").attr("value"),
 
@@ -11411,7 +11415,7 @@ var func = {
 			mod = selector.modules.val() === "0" ? "{mod}" : selector.modules.val();
 			act = selector.interfaces.val() === "0" ? "{act}" : selector.interfaces.val();
 
-		var url = environment.val() + "/luna/" + 
+		var url = environment.val() + "/ads/" + 
 				  selector.versions.val() + "/" + 
 				  mod + "/" + 
 				  act;
@@ -11593,7 +11597,7 @@ var func = {
 			return 0;
 		}
 
-		var flag = "/luna/v3/",
+		var flag = "/ads/v3/",
 			flagLength = flag.length,
 			flagStartIndex, flagEndIndex, divideIndex, pathLength, hostname, path, mod, act, param;
 
