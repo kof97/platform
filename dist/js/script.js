@@ -11290,8 +11290,8 @@ var func = {
 	/**
 	 * 参数收集
 	 * @param method {string} get/post/header
-	 * @return {json}
-	 * @return {string}
+	 * @return {json} json 格式数据
+	 * @return {string} 字符串格式数据
 	 */
 	collectParams: function(method) {
 		var options,
@@ -11579,6 +11579,29 @@ var func = {
 				return 0;
 		}
 
+
+		var xhr = new XMLHttpRequest();
+
+
+		if(xhr) {    
+			xhr.open('GET', url, true);
+			xhr.withCredentials = true;
+			xhr.setRequestHeader('X-PINGOTHER', 'kof97');
+			xhr.setRequestHeader('Content-Type', 'application/json');
+			xhr.setRequestHeader('Origin', 'http://localhost');
+			xhr.setRequestHeader('Access-Control-Request-Method', 'GET');
+			xhr.setRequestHeader('Access-Control-Request-Headers', 'X-PINGOTHER, Content-Type, Origin, X-PINGOTHER, Access-Control-Request-Method, Access-Control-Allow-Origin');
+			xhr.setRequestHeader('Access-Control-Allow-Origin', 'http://localhost');
+			
+			xhr.onreadystatechange = function() {
+
+			};
+			xhr.send(params);
+		}
+
+		$(headerData).attr("Accept", "text/plain; charset=utf-8");
+		$(headerData).attr("Content-Type", "text/plain; charset=utf-8");
+console.log(headerData);
 		//$(JSON.stringify(headerData).json).attr("Access-Control-Allow-Origin", "developers.e.qq.com");
 
 		$.ajax({
@@ -11586,15 +11609,29 @@ var func = {
 			'method': method,
 			'data': params,
 			'Content-Type': 'application/json',
-			'dataType': 'jsonp',
+			'dataType': 'json',
 			'headers': headerData,
 		
 			success: function(data) {
 				console.log(data);
 
 				$('#response-data').html(JSON.stringify(data, null, 4));
+			},
+
+			beforeSend: function(xhrObj) {
+				xhrObj.withCredentials = true;
+				xhrObj.setRequestHeader("Content-Type","application/json");
+				xhrObj.setRequestHeader("Accept","application/json");
+				xhrObj.setRequestHeader('X-PINGOTHER', 'kof97');
+				xhrObj.setRequestHeader('Content-Type', 'application/json');
+				xhrObj.setRequestHeader('Origin', 'http://localhost');
+				xhrObj.setRequestHeader('Access-Control-Request-Method', 'GET');
+				xhrObj.setRequestHeader('Access-Control-Request-Headers', 'X-PINGOTHER, Content-Type, Origin, X-PINGOTHER, Access-Control-Request-Method, Access-Control-Allow-Origin');
+				xhrObj.setRequestHeader('Access-Control-Allow-Origin', 'http://localhost');
 			}
+
 		});
+
 	},
 
 	/**
