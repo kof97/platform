@@ -11562,7 +11562,8 @@ var func = {
 	requestUrl: function() {
 		var url = func.getUrl(),
 			method = selector.method.text(),
-			headerData, params;
+			headerData,
+			params;
 
 		headerData = func.collectParams("header").json;
 
@@ -11578,7 +11579,6 @@ var func = {
 			default:
 				return 0;
 		}
-
 
 		var xhr = new XMLHttpRequest();
 
@@ -11608,9 +11608,9 @@ console.log(headerData);
 			'url': url,
 			'method': method,
 			'data': params,
-			'Content-Type': 'application/json',
+			'Content-Type': 'text/plain',
 			'dataType': 'json',
-			'headers': headerData,
+			headers: headerData,
 		
 			success: function(data) {
 				console.log(data);
@@ -11620,13 +11620,12 @@ console.log(headerData);
 
 			beforeSend: function(xhrObj) {
 				xhrObj.withCredentials = true;
-				xhrObj.setRequestHeader("Content-Type","application/json");
-				xhrObj.setRequestHeader("Accept","application/json");
+
 				xhrObj.setRequestHeader('X-PINGOTHER', 'kof97');
 				xhrObj.setRequestHeader('Content-Type', 'application/json');
 				xhrObj.setRequestHeader('Origin', 'http://localhost');
 				xhrObj.setRequestHeader('Access-Control-Request-Method', 'GET');
-				xhrObj.setRequestHeader('Access-Control-Request-Headers', 'X-PINGOTHER, Content-Type, Origin, X-PINGOTHER, Access-Control-Request-Method, Access-Control-Allow-Origin');
+				xhrObj.setRequestHeader('Access-Control-Request-Headers', 'X-PINGOTHER, Origin, Access-Control-Request-Method, Access-Control-Allow-Origin');
 				xhrObj.setRequestHeader('Access-Control-Allow-Origin', 'http://localhost');
 			}
 
