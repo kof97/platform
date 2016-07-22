@@ -12202,7 +12202,7 @@ require("./get-options");
 require("./array-struct-options");
 
 $.ajax({
-	url: 'http://localhost/api/testapi.php',
+	url: './dist/api/testapi.php',
 	method: 'get',
 	dataType: 'json',
 	success: function(data) {
