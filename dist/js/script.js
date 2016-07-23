@@ -10798,7 +10798,8 @@ var func = {
 		var conf = $.extend({}, {
 					"name": "",
 					"isRequired": "",
-					"fromArray": ""
+					"fromArray": "",
+					"fromAnalyze": ""
 				}, opt),
 
 			content = "",
@@ -10820,6 +10821,10 @@ var func = {
 				conf.name = "";
 				isReadonly = "";
 				removeOption = '<a class="remove-params" href="javascript:(0)">×</a>';
+		}
+
+		if (conf.fromAnalyze === "true") {
+			conf.name = opt.name;
 		}
 
 		if (conf.fromArray != "true") {
@@ -10903,7 +10908,8 @@ var func = {
 					"name": "",
 					"isRequired": "",
 					"extendType": "",
-					"fromArray": ""
+					"fromArray": "",
+					"fromAnalyze": ""
 				}, opt),
 
 			content = "",
@@ -10932,6 +10938,10 @@ var func = {
 				conf.name = "";
 				isReadonly = "";
 				removeOption = '<a class="remove-params" href="javascript:(0)">×</a>';
+		}
+
+		if (conf.fromAnalyze === "true") {
+			conf.name = opt.name;
 		}
 
 		if (conf.fromArray != "true") {
@@ -11897,12 +11907,13 @@ console.log(headerData);
 				value = JSON.parse(value);
 
 				var i = 0,
-					k, v, tag, item;
+					v = {},
+					k, tag, item;
 
 				for (k in value) {
 
-					v = JSON.stringify(value[k]);
-					v = v.replace(/"([^"]*)"/g, "$1");
+					v.json = JSON.stringify(value[k]);
+					v.string = v.json.replace(/"([^"]*)"/g, "$1");
 
 					item = items.find("input[name='" + k + "']");
 					fieldName = item.attr("name");
@@ -11910,40 +11921,56 @@ console.log(headerData);
 //console.log(k);
 //console.log(fieldName);
 //console.log(v);
-					tag = v.substr(0, 1);
+					tag = v.string.substr(0, 1);
 
 					// 必选项
 					if ((fieldName || "") === k) {
 
 						// 必选项复杂类型处理
 						if (tag === "{" || tag === "[") {
-							func.analyzeComplex(field, v);
+							func.analyzeComplex(field, v.json);
 							continue;
 						}
 						
-						field.val(v);
+						field.val(v.string);
+
+						continue;
 					}
 
+					// 非必选项
 					var content = "",
+						addParams = items.filter(".add-params"),
+
 						opt = {
-							"name": k
+							"name": k,
+							"fromAnalyze": "true"
 						};
-console.log(opt);
-console.log(tag);
+
 					switch (tag) {
 						case "{":
 							content = func.getStructItem(opt);
+
+							$(content).insertBefore(addParams);
+
+							func.analyzeComplex(addParams.prev(), v.json);
+
+							continue;
+
 							break;
 
 						case "[":
 
 							break;
 
-						default: ;
-					}
-					console.log(content);
+						default:
+							content = func.getItem(opt);
+							$(content).insertBefore(items.filter(".add-params"));
 
-					$(content).insertBefore(items.filter(".add-params"));
+							continue;
+
+					}
+
+					
 
 					++i;
 				}
