@@ -12277,7 +12277,8 @@ console.log(headerData);
 	 * @return {string}
 	 */
 	creatCurlSDK: function() {
-		var code, method, params, url, headers,
+		var code, method, url, headers,
+			params = [],
 			headerParams = [];
 
 		
