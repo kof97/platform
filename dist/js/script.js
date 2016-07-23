@@ -12270,7 +12270,6 @@ console.log(headerData);
 			default: ;
 		}
 
-	
 
 		return content;
 
