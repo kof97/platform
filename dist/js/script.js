@@ -12277,11 +12277,9 @@ console.log(headerData);
 	 * @return {string}
 	 */
 	creatCurlSDK: function() {
-		var code, method, url, headers,
-			params = [],
+		var code, method, params, url, headers,
+			postParams = [],
 			headerParams = [];
-
-		
 
 		headers = func.collectParams("header").json;
 
@@ -12293,8 +12291,6 @@ console.log(headerData);
 
 		}
 
-
-
 		switch (selector.method.text()) {
 
 			case "GET":
@@ -12305,15 +12301,28 @@ console.log(headerData);
 
 			case "POST":
 				url = func.getBaseUrl();
+				params = func.collectParams("post").json;
+
+				for (k in params) {
+					v = JSON.stringify(params[k]);
+					//v = v.replace(/"([^"]*)"/g, "$1");
+
+					postParams.push("-d '" + k + "=" + v + "'");
+
+				}
 
 				break;
 
-			default: ;
+			default:
+				return 0;
 		}
 
 		code = "curl " + method + url + " \\\n" + 
-				headerParams.join(" \\\n") + "\\\n" + 
-				params.join(" \\\n");
+				headerParams.join(" \\\n");
+
+		if (postParams.length != 0) {
+			code = code + "\\\n" + postParams.join(" \\\n");
+		}
 
 		selector.sdkInfo.find("pre:eq(0)").text(code);
 
