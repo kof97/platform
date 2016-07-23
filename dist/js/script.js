@@ -11902,11 +11902,12 @@ console.log(headerData);
 	 */
 	analyzeComplex: function(that, value) {
 		var flag = that.find("span").eq(0).text().trim(),
-			items;
+			items, addParams;
 
 		switch (flag) {
 			case "{":
 				items = that.find("[class='struct-item']:eq(0) > div");
+				addParams = items.filter(".add-params");
 
 				value = JSON.parse(value);
 
@@ -11941,8 +11942,6 @@ console.log(headerData);
 
 					// 非必选项
 					var content = "",
-						addParams = items.filter(".add-params"),
-
 						opt = {
 							"name": k,
 							"value": v.string,
@@ -11960,8 +11959,9 @@ console.log(headerData);
 							continue;
 
 						case "[":
+							func.analyzeComplex(addParams.prev(), v.json);
 
-							break;
+							continue;
 
 						default:
 							content = func.getItem(opt);
@@ -11977,7 +11977,59 @@ console.log(headerData);
 				break;
 
 			case "[":
+				items = that.find("[class='array-item']:eq(0) > div");
+				addParams = items.filter(".add-params");
 
+				value = JSON.parse(value);
+
+
+				var len = value.length,
+					v = {},
+					tag;
+
+				for (var i = 0; i < len; i++) {
+					v.json = JSON.stringify(value[i]);
+					v.string = v.json.replace(/"([^"]*)"/g, "$1");
+
+					tag = v.string.substr(0, 1);
+
+					var content = "",
+						opt = {
+							"name": "",
+							"value": "",
+							"fromAnalyze": "true",
+							"fromArray": "true"
+						};
+
+					if (v.string.indexOf("filter") === -1) {
+						opt.name = "filter_struct";
+					} else {
+						opt.name = "creative_struct";
+					}
+
+					switch (tag) {
+						case "{":
+							content = func.getStructItem(opt);
+							$(content).insertBefore(addParams);
+
+							func.analyzeComplex(addParams.prev(), v.json);
+
+							continue;
+
+						case "[":
+
+							break;
+
+						default:
+							opt.value = v.string;
+							content = func.getItem(opt);
+
+							$(content).insertBefore(addParams);
+
+							continue;
+					}
+
+				}
 
 
 
