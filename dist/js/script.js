@@ -11945,6 +11945,7 @@ console.log(headerData);
 						opt = {
 							"name": k,
 							"value": v.string,
+							"isRequired": "",
 							"fromAnalyze": "true"
 						};
 
@@ -11959,6 +11960,11 @@ console.log(headerData);
 							continue;
 
 						case "[":
+							opt.isRequired = "no";
+
+							content = func.getArrayItem(opt);
+							$(content).insertBefore(addParams);
+
 							func.analyzeComplex(addParams.prev(), v.json);
 
 							continue;
@@ -11990,6 +11996,10 @@ console.log(headerData);
 				for (var i = 0; i < len; i++) {
 					v.json = JSON.stringify(value[i]);
 					v.string = v.json.replace(/"([^"]*)"/g, "$1");
+
+					if (v.string === "") {
+						continue;
+					}
 
 					tag = v.string.substr(0, 1);
 
