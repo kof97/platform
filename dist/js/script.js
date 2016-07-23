@@ -11809,14 +11809,26 @@ console.log(headerData);
 
 			required = selector.getList.find("input[name='" + item[0] + "']");
 			if ((required.val() || "") != "") {
-				var field = required.next();
-				var tag = field.prop("tagName").toLowerCase();
+				var field = required.next(),
+					tag = field.prop("tagName").toLowerCase(),
+					flag = field.find("span").eq(0).text().trim();
 
 				if (tag === "input") {
 					field.val(item[1]);
 				} else {
-					
+					switch (flag) {
+						case "{":
+
+							break;
+
+						case "[":
+
+							break;
+
+						default: ;
+					}
 				}
+
 				console.log();
 
 				continue;
@@ -11836,6 +11848,15 @@ console.log(headerData);
 
 			}
 		}
+
+	},
+
+	/**
+	 * 复杂类型解析
+	 *
+	 *
+	 */
+	analyzeComplex: function() {
 
 	},
 
