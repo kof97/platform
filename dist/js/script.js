@@ -12273,8 +12273,8 @@ console.log(headerData);
 	},
 
 	/**
-	 * 生成 SDK
-	 * @return {string}
+	 * 生成 curl SDK
+	 * @return void
 	 */
 	creatCurlSDK: function() {
 		var code, method, params, url, headers,
