@@ -11648,6 +11648,7 @@ console.log(headerData);
 			msg = "请填写正确的 URL";
 
 			func.showWarning(position, msg);
+
 			return 0;
 		}
 
@@ -11662,6 +11663,7 @@ console.log(headerData);
 			msg = "URL 中包含不合法字符（<, >）";
 
 			func.showWarning(position, msg);
+
 			return 0;
 		}
 
@@ -11680,6 +11682,7 @@ console.log(headerData);
 			msg = "接口版本信息错误";
 
 			func.showWarning(position, msg);
+
 			return 0;
 		}
 
@@ -11709,6 +11712,7 @@ console.log(headerData);
 				msg = "接口地址错误，请检查 hostname";
 
 				func.showWarning(position, msg);
+
 				return 0;
 		}
 
@@ -11718,6 +11722,7 @@ console.log(headerData);
 			msg = "API模块错误，请正确填写模块名或从列表选择合适项";
 
 			func.showWarning(position, msg);
+
 			return 0;
 		}
 		selector.modules.val(mod).change();
@@ -11729,6 +11734,7 @@ console.log(headerData);
 			msg = "API名称错误，请填写正确的API或从列表选择";
 
 			func.showWarning(position, msg);
+
 			return 0;
 		}
 		selector.interfaces.val(act).change();
@@ -11753,6 +11759,7 @@ console.log(headerData);
 				msg = "提交方式错误，目前只支持 GET/POST";
 
 				func.showWarning(position, msg);
+
 				return 0;
 		}
 
@@ -11785,6 +11792,7 @@ console.log(headerData);
 				msg = "参数名不能为空";
 
 				func.showWarning(position, msg);
+
 				return 0;
 			}
 
@@ -11793,6 +11801,7 @@ console.log(headerData);
 				msg = "参数名只能包含大小写字母和下划线（a-z, A-Z, 0-9, _）";
 
 				func.showWarning(position, msg);
+
 				return 0;
 			}
 /*
@@ -11813,6 +11822,7 @@ console.log(headerData);
 
 			// 必选字段填充
 			required = selector.getList.find("input[name='" + item[0] + "']");
+
 			if ((required.val() || "") != "") {
 				field = required.next();
 				tag = field.prop("tagName").toLowerCase();
@@ -11830,22 +11840,28 @@ console.log(headerData);
 			notRequired = selector.requestList.find("li[data-get-name='" + item[0] + "']");
 			dataType = notRequired.attr("data-type");
 
+			var opt = {
+				'name': item[0],
+				'value': item[1],
+				'dataType': dataType,
+				"isRequired": "no"
+			};
+
 			if ((notRequired.attr("data-get-name") || "") != "") {
 
 				if (dataType === "array" || dataType === "struct") {
-					
-					func.addGetField({'name': item[0], 'dataType': dataType, "isRequired": "no"});
-
-				} else {
-					func.addGetField({'name': item[0], 'value': item[1], "isRequired": "no"});
+					opt.value = "";
 				}
 				
 				notRequired.addClass("selected").find(".checked").css("visibility", "visible");
 
 			} else {
 				// 自定义字段
-				func.addGetField({'name': item[0], 'value': item[1]});
+				opt.dataType = "";
+				opt.isRequired = "";
 			}
+
+			func.addGetField(opt);
 
 			// 非必选字段复杂类型解析
 			required = selector.getList.find("input[name='" + item[0] + "']");
