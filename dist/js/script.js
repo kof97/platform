@@ -10797,6 +10797,7 @@ var func = {
 	getItem: function(opt = {}) {
 		var conf = $.extend({}, {
 					"name": "",
+					"value": "",
 					"isRequired": "",
 					"fromArray": "",
 					"fromAnalyze": ""
@@ -10807,6 +10808,8 @@ var func = {
 			isReadonly = "readonly",
 
 			key = "";
+
+			conf.value = "";
 
 		switch (conf.isRequired) {
 			case "yes":
@@ -10825,6 +10828,7 @@ var func = {
 
 		if (conf.fromAnalyze === "true") {
 			conf.name = opt.name;
+			conf.value = opt.value;
 		}
 
 		if (conf.fromArray != "true") {
@@ -10833,7 +10837,7 @@ var func = {
 
 		content = '<div>\
 					' + key + ' \
-					<input type="text" name="" placeholder="Value">\
+					<input type="text" value="' + conf.value + '" placeholder="Value">\
 					' + removeOption + '\
 				   </div>';
 
@@ -11943,6 +11947,7 @@ console.log(headerData);
 
 						opt = {
 							"name": k,
+							"value": v.string,
 							"fromAnalyze": "true"
 						};
 
@@ -11964,7 +11969,8 @@ console.log(headerData);
 
 						default:
 							content = func.getItem(opt);
-							$(content).insertBefore(items.filter(".add-params"));
+
+							$(content).insertBefore(addParams);
 
 							continue;
 
