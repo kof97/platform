@@ -11922,9 +11922,7 @@ console.log(headerData);
 					item = items.find("input[name='" + k + "']");
 					fieldName = item.attr("name");
 					field = item.next();
-//console.log(k);
-//console.log(fieldName);
-//console.log(v);
+
 					tag = v.string.substr(0, 1);
 
 					// 必选项
@@ -11952,16 +11950,14 @@ console.log(headerData);
 						};
 
 					switch (tag) {
+
 						case "{":
 							content = func.getStructItem(opt);
-
 							$(content).insertBefore(addParams);
 
 							func.analyzeComplex(addParams.prev(), v.json);
 
 							continue;
-
-							break;
 
 						case "[":
 
@@ -11973,18 +11969,18 @@ console.log(headerData);
 							$(content).insertBefore(addParams);
 
 							continue;
-
 					}
-
-					
 
 					++i;
 				}
 
-
 				break;
 
 			case "[":
+
+
+
+
 
 				break;
 
