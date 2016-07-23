@@ -11901,14 +11901,19 @@ console.log(headerData);
 
 				for (k in value) {
 
-					v = value[k];
-					fieldName = items.eq(i).find("input:eq(0)");
-					field = fieldName.next();
+					v = JSON.stringify(value[k]);
+					v = v.replace(/"([^"]*)"/g, "$1");
+
+					item = items.find("input[name='" + k + "']");
+					fieldName = item.attr("name");
+					field = item.next();
+//console.log(k);
+//console.log(fieldName);
+//console.log(v);
+					tag = v.substr(0, 1);
 
 					// 必选项
-					if ((fieldName.attr("name") || "") === k) {
-
-						tag = v.substr(0, 1);
+					if ((fieldName || "") === k) {
 
 						// 必选项复杂类型处理
 						if (tag === "{" || tag === "[") {
@@ -11919,8 +11924,26 @@ console.log(headerData);
 						field.val(v);
 					}
 
-					
-			
+					var content = "",
+						opt = {
+							"name": k
+						};
+console.log(opt);
+console.log(tag);
+					switch (tag) {
+						case "{":
+							content = func.getStructItem(opt);
+							break;
+
+						case "[":
+
+							break;
+
+						default: ;
+					}
+					console.log(content);
+
+					$(content).insertBefore(items.filter(".add-params"));
 
 					++i;
 				}
