@@ -11896,7 +11896,7 @@ console.log(headerData);
 	},
 
 	/**
-	 * 复杂类型解析
+	 * 复杂类型解析，递归解析
 	 * @param that {dom object}
 	 * @param value {string|json}
 	 */
@@ -11905,6 +11905,7 @@ console.log(headerData);
 			items, addParams;
 
 		switch (flag) {
+			// struct 处理
 			case "{":
 				items = that.find("[class='struct-item']:eq(0) > div");
 				addParams = items.filter(".add-params");
@@ -11950,7 +11951,7 @@ console.log(headerData);
 						};
 
 					switch (tag) {
-
+						// 非必选项 struct 处理
 						case "{":
 							content = func.getStructItem(opt);
 							$(content).insertBefore(addParams);
@@ -11959,6 +11960,7 @@ console.log(headerData);
 
 							continue;
 
+						// 非必选项 array 处理
 						case "[":
 							opt.isRequired = "no";
 
@@ -11969,6 +11971,7 @@ console.log(headerData);
 
 							continue;
 
+						// 非必选项一般处理
 						default:
 							content = func.getItem(opt);
 
@@ -11982,12 +11985,12 @@ console.log(headerData);
 
 				break;
 
+			// array 处理
 			case "[":
 				items = that.find("[class='array-item']:eq(0) > div");
 				addParams = items.filter(".add-params");
 
 				value = JSON.parse(value);
-
 
 				var len = value.length,
 					v = {},
@@ -12041,13 +12044,11 @@ console.log(headerData);
 
 				}
 
-
-
-
 				break;
 
 			default: ;
 		}
+
 	},
 
 	/**
