@@ -11948,7 +11948,8 @@ console.log(headerData);
 							"value": v.string,
 							"isRequired": "",
 							"fromAnalyze": "true"
-						};
+						},
+						removeOption;
 
 					switch (tag) {
 						// 非必选项 struct 处理
@@ -11976,6 +11977,12 @@ console.log(headerData);
 							content = func.getItem(opt);
 
 							$(content).insertBefore(addParams);
+
+							// 移除已有参数选项
+							removeOption = addParams.find("option[value='" + k + "']");
+							if (k === (removeOption.attr("value") || "")) {
+								removeOption.remove();
+							}
 
 							continue;
 					}
