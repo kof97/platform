@@ -11277,9 +11277,13 @@ var func = {
 
 		var type = paramInfo.attr("extends"),
 			description = paramInfo.find("attribute[name='description']").attr("value"),
-			restraint = paramInfo.find("attribute[name='restraint']").attr("value"),
+			restraint = paramInfo.find("attribute[name='restraint']").attr("value");
 
-			content = "<li><strong>描 述: </strong>" + description + "</li>" + 
+		if (restraint === "详见附录") {
+			restraint = paramInfo.find("attribute[name='description']").eq(1).attr("value");
+		}
+
+		var content = "<li><strong>描 述: </strong>" + description + "</li>" + 
 					  "<li><strong>类 型: </strong>" + type + "</li>" + 
 					  "<li><strong>限 制: </strong>" + restraint + "</li>";
 
