@@ -12308,7 +12308,6 @@ console.log(headerData);
 					//v = v.replace(/"([^"]*)"/g, "$1");
 
 					postParams.push("-d '" + k + "=" + v + "'");
-
 				}
 
 				break;
@@ -12317,11 +12316,14 @@ console.log(headerData);
 				return 0;
 		}
 
-		code = "curl " + method + url + " \\\n" + 
-				headerParams.join(" \\\n");
+		code = "curl " + method + url;
+
+		if (headerParams.length != 0) {
+			code = code + " \\\n" + headerParams.join(" \\\n");
+		}
 
 		if (postParams.length != 0) {
-			code = code + "\\\n" + postParams.join(" \\\n");
+			code = code + " \\\n" + postParams.join(" \\\n");
 		}
 
 		selector.sdkInfo.find("pre:eq(0)").text(code);
