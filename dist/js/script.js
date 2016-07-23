@@ -11809,9 +11809,19 @@ console.log(headerData);
 
 			required = selector.getList.find("input[name='" + item[0] + "']");
 			if ((required.val() || "") != "") {
-				required.next().val(item[1]);
+				var field = required.next();
+				var tag = field.prop("tagName").toLowerCase();
+
+				if (tag === "input") {
+					field.val(item[1]);
+				} else {
+					
+				}
+				console.log();
 
 				continue;
+
+				
 			}
 
 			notRequired = selector.requestList.find("li[data-get-name='" + item[0] + "']");
