@@ -11608,6 +11608,8 @@ var func = {
 		$.post('./dist/api/proxy.php', data, function(res) {
 			console.log(res);
 
+			res = JSON.parse(res);
+
 			$('#response-data').html(JSON.stringify(res, null, 4));
 		});
 
