@@ -11830,7 +11830,7 @@ console.log(headerData);
 				if (tag === "input") {
 					field.val(item[1]);
 				} else {
-					func.analyzeComplex(field);
+					func.analyzeComplex(field, item[1]);
 				}
 
 				continue;
@@ -11872,7 +11872,7 @@ console.log(headerData);
 				tag = field.prop("tagName").toLowerCase();
 
 				if (tag != "input") {
-					func.analyzeComplex(field);
+					func.analyzeComplex(field, item[1]);
 				}
 
 			}
@@ -11883,14 +11883,39 @@ console.log(headerData);
 
 	/**
 	 * 复杂类型解析
-	 *
-	 *
+	 * @param that {dom object}
+	 * @param value {string|json}
 	 */
-	analyzeComplex: function(that) {
-		var flag = that.find("span").eq(0).text().trim();
+	analyzeComplex: function(that, value) {
+		var flag = that.find("span").eq(0).text().trim(),
+			items;
 
 		switch (flag) {
 			case "{":
+				items = that.find("[class='struct-item']:eq(0) > div");
+
+				value = JSON.parse(value);
+
+				var i = 0,
+					k, v, item;
+				for (k in value) {
+					v = value[k];
+					nameField = items.eq(i).find("input:eq(0)"),
+					field = nameField.next;
+
+					if ((nameField.attr("name") || "") === k) {
+						// 必选项复杂类型处理
+						if (v.substr(0, 1) === "{" || v.substr(0, 1) === "[") {
+							func.analyzeComplex(field, v);
+						}
+						
+
+					}
+			
+
+					++i;
+				}
+
 
 				break;
 
