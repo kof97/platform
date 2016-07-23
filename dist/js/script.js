@@ -11583,7 +11583,7 @@ var func = {
 
 		switch (method) {
 			case "GET":
-				params = null;
+				params = func.collectParams("get").json;
 				break;
 
 			case "POST":
@@ -11594,7 +11594,22 @@ var func = {
 				return 0;
 		}
 
-		var xhr = new XMLHttpRequest();
+		var data = {
+			'header': headerData,
+			'method': method,
+			'params': params
+		}
+
+		$.post('./dist/api/proxy.php', data, function(res) {
+			console.log(res);
+
+			$('#response-data').html(JSON.stringify(res, null, 4));
+		});
+
+
+
+
+/*		var xhr = new XMLHttpRequest();
 
 
 		if(xhr) {    
@@ -11643,7 +11658,7 @@ console.log(headerData);
 				xhrObj.setRequestHeader('Access-Control-Allow-Origin', 'http://localhost');
 			}
 
-		});
+		});*/
 
 	},
 
@@ -12229,6 +12244,8 @@ console.log(headerData);
 	showSDK: function() {
 		func.toggleSDK(0);
 
+		func.creatCurlSDK();
+
 		selector.sdk.css("top", "20%");
 
 	},
@@ -12255,23 +12272,49 @@ console.log(headerData);
 
 	},
 
-	addSDK: function(num) {
-		var content = "";
+	/**
+	 * 生成 SDK
+	 * @return {string}
+	 */
+	creatCurlSDK: function() {
+		var code, method, params, url, headers,
+			headerParams = [];
 
-		switch (num) {
-			case "0":
+		
+
+		headers = func.collectParams("header").json;
+
+		var k, v;
+		for (k in headers) {
+			v = headers[k];
+
+			headerParams.push("-H '" + k + ": " + v + "'");
+
+		}
+
+
+
+		switch (selector.method.text()) {
+
+			case "GET":
+				method = "-G ";
+				url = func.getUrl();
 
 				break;
 
-			case "1":
+			case "POST":
+				url = func.getBaseUrl();
 
 				break;
 
 			default: ;
 		}
 
+		code = "curl " + method + url + " \\\n" + 
+				headerParams.join(" \\\n") + "\\\n" + 
+				params.join(" \\\n");
 
-		return content;
+		selector.sdkInfo.find("pre:eq(0)").text(code);
 
 	},
 
