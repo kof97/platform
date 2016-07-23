@@ -11897,19 +11897,26 @@ console.log(headerData);
 				value = JSON.parse(value);
 
 				var i = 0,
-					k, v, item;
-				for (k in value) {
-					v = value[k];
-					nameField = items.eq(i).find("input:eq(0)"),
-					field = nameField.next;
+					k, v, tag, item;
 
-					if ((nameField.attr("name") || "") === k) {
+				for (k in value) {
+
+					v = value[k];
+					fieldName = items.eq(i).find("input:eq(0)");
+					field = fieldName.next();
+
+					// 必选项
+					if ((fieldName.attr("name") || "") === k) {
+
+						tag = v.substr(0, 1);
+
 						// 必选项复杂类型处理
-						if (v.substr(0, 1) === "{" || v.substr(0, 1) === "[") {
+						if (tag === "{" || tag === "[") {
 							func.analyzeComplex(field, v);
+							continue;
 						}
 						
-
+						field.val(v);
 					}
 			
 
