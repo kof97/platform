@@ -11770,7 +11770,10 @@ console.log(headerData);
 			item,
 			required,
 			notRequired,
-			getOptions = [],
+
+			field,
+			tag,
+			dataType,
 
 			paramsLength = params.length;
 
@@ -11800,53 +11803,64 @@ console.log(headerData);
 				func.showWarning(position, msg);
 				return 0;
 			}
-*/
+
 			if (item[0] === "token") {
 				selector.token.val(item[1]);
 
 				continue;
 			}
+*/
 
+			// 必选字段填充
 			required = selector.getList.find("input[name='" + item[0] + "']");
 			if ((required.val() || "") != "") {
-				var field = required.next(),
-					tag = field.prop("tagName").toLowerCase(),
-					flag = field.find("span").eq(0).text().trim();
+				field = required.next();
+				tag = field.prop("tagName").toLowerCase();
 
 				if (tag === "input") {
 					field.val(item[1]);
 				} else {
-					switch (flag) {
-						case "{":
-
-							break;
-
-						case "[":
-
-							break;
-
-						default: ;
-					}
+					func.analyzeComplex(field);
 				}
 
-				console.log();
-
 				continue;
-
-				
 			}
 
+			// 非必选字段填充
 			notRequired = selector.requestList.find("li[data-get-name='" + item[0] + "']");
+			dataType = notRequired.attr("data-type");
 
 			if ((notRequired.attr("data-get-name") || "") != "") {
-				func.addGetField({'name': item[0], 'value': item[1], "isRequired": "no"});
 
+				if (dataType === "array" || dataType === "struct") {
+					
+					func.addGetField({'name': item[0], 'dataType': dataType, "isRequired": "no"});
+
+				} else {
+					func.addGetField({'name': item[0], 'value': item[1], "isRequired": "no"});
+				}
+				
 				notRequired.addClass("selected").find(".checked").css("visibility", "visible");
 
 			} else {
+				// 自定义字段
 				func.addGetField({'name': item[0], 'value': item[1]});
+			}
+
+			// 非必选字段复杂类型解析
+			required = selector.getList.find("input[name='" + item[0] + "']");
+
+			if ((required.val() || "") != "") {
+
+				field = required.next();
+				tag = field.prop("tagName").toLowerCase();
+
+				if (tag != "input") {
+					func.analyzeComplex(field);
+				}
 
 			}
+
 		}
 
 	},
@@ -11856,8 +11870,20 @@ console.log(headerData);
 	 *
 	 *
 	 */
-	analyzeComplex: function() {
+	analyzeComplex: function(that) {
+		var flag = that.find("span").eq(0).text().trim();
 
+		switch (flag) {
+			case "{":
+
+				break;
+
+			case "[":
+
+				break;
+
+			default: ;
+		}
 	},
 
 	/**
