@@ -10704,14 +10704,14 @@ var func = {
 			case "struct":
 				func.addStructField(conf);
 				func.toggleTab(0);
+
 				return 0;
-				break;
 
 			case "array":
 				func.addArrayField(conf);
 				func.toggleTab(0);
+
 				return 0;
-				break;
 
 			default:
 				switch (conf.isRequired) {
@@ -11096,9 +11096,6 @@ var func = {
 	 */
 	getStructElements: function(name) {
 		name = (selector.requestList.find("span[data-post-name='" + name + "']").attr("data-extends") || name).split(".").pop();
-		
-		/*var elements = idl.types.find("[name='" + name + "']").eq(0)
-								.find("element"),*/
 
 		var modules = idl.mod.filter("[name='" + selector.modules.val() + "']"),
 			elements = modules.find("interface[service='" + selector.interfaces.val() + "']")
@@ -11111,6 +11108,11 @@ var func = {
 		if (elements.length === 0) {
 			elements = modules.find("types [name='" + name + "']").eq(0)
 							  .find("element");
+		}
+
+		if (elements.length === 0) {
+			elements = idl.types.find("[name='" + name + "']").eq(0)
+								.find("element");
 		}
 
 		elements.each(function(i, data) {
