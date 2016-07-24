@@ -10851,6 +10851,11 @@ var func = {
 
 	},
 
+	/**
+	 * 获取枚举值
+	 * @param name {string}
+	 * @return {string}
+	 */
 	getEnumList: function(name) {
 		var modules = idl.mod.filter("[name='" + selector.modules.val() + "']"),
 			element = modules.find("interface[service='" + selector.interfaces.val() + "']")
@@ -12071,22 +12076,9 @@ var func = {
 						},
 						removeOption;
 
-					console.log(key + "," + k);
-
-			/*		var modules = idl.mod.filter("[name='" + selector.modules.val() + "']"),
-						element = modules.find("interface[service='" + selector.interfaces.val() + "']")
-										 .find("types element[name='" + name + "']"),
-
-						list = "",
-						source = "";
-
-					if (element.length === 0) {
-						element = modules.find("types element[name='" + name + "']").eq(0);
-					}*/
-
 					var hasElement = idl.types.find("complexType[name='" + key + "']")
-										   .find("element[name='" + k + "']")
-										   .attr("name") || "";
+											  .find("element[name='" + k + "']")
+											  .attr("name") || "";
 
 					if (hasElement != "") {
 						opt.isRequired = "no";
