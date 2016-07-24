@@ -10811,6 +10811,14 @@ var func = {
 
 			conf.value = "";
 
+
+
+		var elements = idl.mod
+							.filter("[name='" + selector.modules.val() + "']")
+							.find("types simpleType[name='" + name + "']")
+							.find("attribute[name='list']").attr("list");
+		console.log(elements);
+
 		switch (conf.isRequired) {
 			case "yes":
 				removeOption = '<span class="warning-params">*</span>';
@@ -11005,6 +11013,8 @@ var func = {
 					"name": elementName,
 					"isRequired": isRequired
 				};
+
+			var list = _data
 
 			if (isRequired === "yes") {
 
