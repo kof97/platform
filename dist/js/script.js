@@ -10602,7 +10602,7 @@ var func = {
 			}
 
 			value = '<select class="btn btn-default">\
-						<option selected="selected" value="0">-- Select --</option>\
+						<option selected="selected" value="0">-- Select a Value --</option>\
 						' + options.join("") + '\
 					 </select>';
 		}
@@ -10676,7 +10676,7 @@ var func = {
 			getOption = "",
 
 			value = "",
-			list = [];	
+			list = [];
 
 		if (conf.name != "") {
 			conf.list = func.getEnumList(conf.name);
@@ -10695,7 +10695,7 @@ var func = {
 			}
 
 			value = '<select class="btn btn-default">\
-						<option selected="selected" value="0">-- Select --</option>\
+						<option selected="selected" value="0">-- Select a Value --</option>\
 						' + options.join("") + '\
 					 </select>';
 		}
@@ -10937,7 +10937,7 @@ var func = {
 			}
 
 			value = '<select class="btn btn-default">\
-						<option selected="selected" value="0">-- Select --</option>\
+						<option selected="selected" value="0">-- Select a Value --</option>\
 						' + options.join("") + '\
 					 </select>';
 
