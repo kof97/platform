@@ -10237,6 +10237,7 @@ selector.versions.on("change", function() {
 
 },{"./common/functions":4,"./common/idl-data":5,"./common/jquery":7,"./common/selector":8}],3:[function(require,module,exports){
 var $ = require("./common/jquery"),
+	idl = require("./common/idl-data"),
 	func = require("./common/functions"),
 	selector = require("./common/selector");
 
@@ -10479,12 +10480,30 @@ selector.getList
 			dataRepeated = option.attr("data-repeated") || "",
 
 			content = "",
-			opt = {
-				"name": value,
-				"isRequired": "",
-				"extendType": extendType,
-				"fromArray": ""
-			};
+
+			list = "",
+			source = "";
+
+		var modules = idl.mod.filter("[name='" + selector.modules.val() + "']"),
+			element = modules.find("interface[service='" + selector.interfaces.val() + "']")
+							 .find("types element[name='" + value + "']");
+
+		if (element.length === 0) {
+			element = modules.find("types element[name='" + value + "']").eq(0);
+		}
+
+		list = element.attr("list") || "";
+		if (list === "") {
+			source = element.attr("source") || "";
+		}
+
+		var opt = {
+			"name": value,
+			"isRequired": "",
+			"extendType": extendType,
+			"list": list,
+			"fromArray": ""
+		};
 
 		if (dataRepeated === "repeated") {
 			opt.fromArray = "true";
@@ -10535,7 +10554,7 @@ selector.getList
 
 	});
 
-},{"./common/functions":4,"./common/jquery":7,"./common/selector":8}],4:[function(require,module,exports){
+},{"./common/functions":4,"./common/idl-data":5,"./common/jquery":7,"./common/selector":8}],4:[function(require,module,exports){
 /**
  * 公共函数定义
  *
@@ -10808,7 +10827,9 @@ var func = {
 			removeOption = "",
 			isReadonly = "readonly",
 
-			key = "";
+			key = "",
+			value = "",
+			list = [];
 
 			conf.value = "";
 
@@ -10836,13 +10857,28 @@ var func = {
 			key = '<input ' + isReadonly + ' type="text" name="' + conf.name + '" value="' + conf.name + '" placeholder="Key">:';
 		}
 
-		if (list != "") {
-			
+		if (conf.list === "") {
+			value = '<input type="text" value="' + conf.value + '" placeholder="Value">';
+		} else {
+			list = conf.list.split(",");
+
+			var len = list.length,
+				options = [];
+
+			for (var i = 0; i < len; i++) {
+				options.push('<option value="' + list[i] + '">' + list[i] + '</option>');
+			}
+
+			value = '<select class="btn btn-default">\
+						<option selected="selected" value="0">-- Select --</option>\
+						' + options.join("") + '\
+					 </select>';
+
 		}
 
 		content = '<div>\
 					' + key + ' \
-					<input type="text" value="' + conf.value + '" placeholder="Value">\
+					' + value + '\
 					' + removeOption + '\
 				   </div>';
 
