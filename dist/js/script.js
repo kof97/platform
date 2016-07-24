@@ -11105,7 +11105,7 @@ var func = {
 
 		if (elements.length === 0) {
 			elements = modules.find("types [name='" + name + "']").eq(0)
-						  	  .find("element");
+							  .find("element");
 		}
 
 		elements.each(function(i, data) {
@@ -11955,7 +11955,7 @@ var func = {
 				if (tag === "input" || tag === "select") {
 					field.val(item[1]);
 				} else {
-					func.analyzeComplex(field, item[1]);
+					func.analyzeComplex(field, item[0], item[1]);
 				}
 
 				continue;
@@ -11997,7 +11997,7 @@ var func = {
 				tag = field.prop("tagName").toLowerCase();
 
 				if (tag != "input" && tag != "select") {
-					func.analyzeComplex(field, item[1]);
+					func.analyzeComplex(field, item[0], item[1]);
 				}
 
 			}
@@ -12008,10 +12008,11 @@ var func = {
 
 	/**
 	 * 复杂类型解析，递归解析
-	 * @param that {dom object}
+	 * @param that 	{dom object}
+	 * @param key  	{string}
 	 * @param value {string|json}
 	 */
-	analyzeComplex: function(that, value) {
+	analyzeComplex: function(that, key, value) {
 		var flag = that.find("span").eq(0).text().trim(),
 			items, addParams;
 
@@ -12043,7 +12044,7 @@ var func = {
 
 						// 必选项复杂类型处理
 						if (tag === "{" || tag === "[") {
-							func.analyzeComplex(field, v.json);
+							func.analyzeComplex(field, k, v.json);
 							continue;
 						}
 						
@@ -12063,24 +12064,24 @@ var func = {
 						},
 						removeOption;
 
+
+
 					switch (tag) {
 						// 非必选项 struct 处理
 						case "{":
 							content = func.getStructItem(opt);
 							$(content).insertBefore(addParams);
 
-							func.analyzeComplex(addParams.prev(), v.json);
+							func.analyzeComplex(addParams.prev(), k, v.json);
 
 							continue;
 
 						// 非必选项 array 处理
 						case "[":
-							opt.isRequired = "no";
-
 							content = func.getArrayItem(opt);
 							$(content).insertBefore(addParams);
 
-							func.analyzeComplex(addParams.prev(), v.json);
+							func.analyzeComplex(addParams.prev(), k, v.json);
 
 							continue;
 
@@ -12141,23 +12142,30 @@ var func = {
 						opt = {
 							"name": "",
 							"value": "",
+							"isRequired": "",
+							"extendType": "",
 							"list": "",
 							"fromAnalyze": "true",
 							"fromArray": "true"
 						};
 
-					if (v.string.indexOf("filter") === -1) {
+					if (v.string.indexOf("creative_template_id") === -1) {
+
+						opt.isRequired = "no";
 						opt.name = "filter_struct";
+						opt.extendType = opt.name;
+
 					} else {
 						opt.name = "creative_struct";
 					}
 
 					switch (tag) {
+
 						case "{":
 							content = func.getStructItem(opt);
 							$(content).insertBefore(addParams);
 
-							func.analyzeComplex(addParams.prev(), v.json);
+							func.analyzeComplex(addParams.prev(), k, v.json);
 
 							continue;
 
