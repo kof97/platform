@@ -11752,6 +11752,12 @@ var func = {
 				break;
 
 			default:
+				var res = '{"error":"提交方式只支持 GET / POST"}';
+				
+				res = JSON.parse(res);
+
+				$('#response-data').html(JSON.stringify(res, null, 4));
+
 				return 0;
 		}
 
@@ -12656,7 +12662,7 @@ selector.getData.find("span:eq(0) > a").on("click", function() {
 
 // view data
 selector.getData.find("span:eq(1) > a").on("click", function() {
-	selector.reponseData.html("GET 参数预览：<br>" + JSON.stringify(func.collectParams("get").json, null, 4));
+	selector.reponseData.html("<strong>GET 参数预览：</strong><br>" + JSON.stringify(func.collectParams("get").json, null, 4));
 
 });
 
