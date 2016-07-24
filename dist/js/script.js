@@ -12251,6 +12251,7 @@ var func = {
 				break;
 
 			case "POST":
+				method = "";
 				url = func.getBaseUrl();
 				params = func.collectParams("post").json;
 
