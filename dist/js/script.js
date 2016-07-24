@@ -10963,7 +10963,8 @@ var func = {
 	getArrayItem: function(opt) {
 		var conf = $.extend({}, {
 					"name": "",
-					"isRequired": ""
+					"isRequired": "",
+					"fromAnalyze": ""
 				}, opt),
 
 			option = "",
@@ -10984,6 +10985,10 @@ var func = {
 				conf.name = "";
 				isReadonly = "";
 				removeOption = '<a class="remove-params" href="javascript:(0)">×</a>';
+		}
+
+		if (conf.fromAnalyze === "true") {
+			conf.name = opt.name;
 		}
 
 		option = func.getArrayRepeated(conf.name);
@@ -12064,7 +12069,26 @@ var func = {
 						},
 						removeOption;
 
+					console.log(key + "," + k);
 
+			/*		var modules = idl.mod.filter("[name='" + selector.modules.val() + "']"),
+						element = modules.find("interface[service='" + selector.interfaces.val() + "']")
+										 .find("types element[name='" + name + "']"),
+
+						list = "",
+						source = "";
+
+					if (element.length === 0) {
+						element = modules.find("types element[name='" + name + "']").eq(0);
+					}*/
+
+					var hasElement = idl.types.find("complexType[name='" + key + "']")
+										   .find("element[name='" + k + "']")
+										   .attr("name") || "";
+
+					if (hasElement != "") {
+						opt.isRequired = "no";
+					}
 
 					switch (tag) {
 						// 非必选项 struct 处理
@@ -12072,12 +12096,20 @@ var func = {
 							content = func.getStructItem(opt);
 							$(content).insertBefore(addParams);
 
+							// 移除已有参数选项
+							removeOption = addParams.find("option[value='" + k + "']");
+							if (k === (removeOption.attr("value") || "")) {
+								removeOption.remove();
+							}
+
 							func.analyzeComplex(addParams.prev(), k, v.json);
 
 							continue;
 
 						// 非必选项 array 处理
 						case "[":
+							opt.isRequired = "";
+
 							content = func.getArrayItem(opt);
 							$(content).insertBefore(addParams);
 
@@ -12102,7 +12134,7 @@ var func = {
 									selected.val(opt.value);
 								}
 							}
-							
+
 							// 移除已有参数选项
 							removeOption = addParams.find("option[value='" + k + "']");
 							if (k === (removeOption.attr("value") || "")) {
