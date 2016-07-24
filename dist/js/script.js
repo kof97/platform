@@ -11952,7 +11952,7 @@ var func = {
 				field = required.next();
 				tag = field.prop("tagName").toLowerCase();
 
-				if (tag === "input") {
+				if (tag === "input" || tag === "select") {
 					field.val(item[1]);
 				} else {
 					func.analyzeComplex(field, item[1]);
@@ -11996,7 +11996,7 @@ var func = {
 				field = required.next();
 				tag = field.prop("tagName").toLowerCase();
 
-				if (tag != "input") {
+				if (tag != "input" && tag != "select") {
 					func.analyzeComplex(field, item[1]);
 				}
 
