@@ -10343,21 +10343,9 @@ selector.postList
 
 			content = "",
 
-			list = "",
-			source = "";
+			list = "";
 
-		var modules = idl.mod.filter("[name='" + selector.modules.val() + "']"),
-			element = modules.find("interface[service='" + selector.interfaces.val() + "']")
-							 .find("types element[name='" + value + "']");
-
-		if (element.length === 0) {
-			element = modules.find("types element[name='" + value + "']").eq(0);
-		}
-
-		list = element.attr("list") || "";
-		if (list === "") {
-			source = element.attr("source") || "";
-		}
+		list = func.getEnumList(value);
 
 		var opt = {
 			"name": value,
@@ -10366,7 +10354,7 @@ selector.postList
 			"list": list,
 			"fromArray": ""
 		};
-		
+
 		if (dataRepeated === "repeated") {
 			opt.fromArray = "true";
 		}
@@ -10499,21 +10487,9 @@ selector.getList
 
 			content = "",
 
-			list = "",
-			source = "";
+			list = "";
 
-		var modules = idl.mod.filter("[name='" + selector.modules.val() + "']"),
-			element = modules.find("interface[service='" + selector.interfaces.val() + "']")
-							 .find("types element[name='" + value + "']");
-
-		if (element.length === 0) {
-			element = modules.find("types element[name='" + value + "']").eq(0);
-		}
-
-		list = element.attr("list") || "";
-		if (list === "") {
-			source = element.attr("source") || "";
-		}
+		list = func.getEnumList(value);
 
 		var opt = {
 			"name": value,
@@ -10601,9 +10577,35 @@ var func = {
 				"value": "",
 				"dataType": "",
 				"isRequired": "",
+				"list": "",
 				"method": "post"
 			}, opt),
-			postOption = "";		
+			postOption = "",
+
+			value = "",
+			list = [];		
+
+		if (conf.name != "") {
+			conf.list = func.getEnumList(conf.name);
+		}
+		
+		if (conf.list === "") {
+			value = '<input type="text" value="' + conf.value + '" placeholder="Value">';
+		} else {
+			list = conf.list.split(",");
+
+			var len = list.length,
+				options = [];
+
+			for (var i = 0; i < len; i++) {
+				options.push('<option value="' + list[i] + '">' + list[i] + '</option>');
+			}
+
+			value = '<select class="btn btn-default">\
+						<option selected="selected" value="0">-- Select --</option>\
+						' + options.join("") + '\
+					 </select>';
+		}
 
 		switch (conf.dataType) {
 			case "struct":
@@ -10638,7 +10640,7 @@ var func = {
 
 				postOption = '<div class="post-option">\
 								<input ' + isReadonly + ' type="text" name="' + conf.name + '" value="' + conf.name + '" placeholder="Name">\
-								<input type="text" value="' + conf.value + '" placeholder="Value">\
+								' + value + '\
 								' + removeOption + '\
 							  </div>';
 		}
@@ -10665,12 +10667,38 @@ var func = {
 					"value": "",
 					"dataType": "",
 					"isRequired": "",
+					"list": "",
 					"method": "get"
 				}, opt),
 
 			isReadonly = "readonly",
 			removeOption = "",
-			getOption = "";
+			getOption = "",
+
+			value = "",
+			list = [];	
+
+		if (conf.name != "") {
+			conf.list = func.getEnumList(conf.name);
+		}
+		
+		if (conf.list === "") {
+			value = '<input type="text" value="' + conf.value + '" placeholder="Value">';
+		} else {
+			list = conf.list.split(",");
+
+			var len = list.length,
+				options = [];
+
+			for (var i = 0; i < len; i++) {
+				options.push('<option value="' + list[i] + '">' + list[i] + '</option>');
+			}
+
+			value = '<select class="btn btn-default">\
+						<option selected="selected" value="0">-- Select --</option>\
+						' + options.join("") + '\
+					 </select>';
+		}
 
 		switch (conf.dataType) {
 			case "struct":
@@ -10702,7 +10730,7 @@ var func = {
 
 				getOption = '<div class="get-option">\
 								<input ' + isReadonly + ' type="text" name="' + conf.name + '" value="' + conf.name + '" placeholder="Name"> \
-								<input type="text" value="' + conf.value + '" placeholder="Value"> \
+								' + value + ' \
 								' + removeOption + '\
 							 </div>';
 		}
@@ -10820,6 +10848,27 @@ var func = {
 		}
 
 		return content;
+
+	},
+
+	getEnumList: function(name) {
+		var modules = idl.mod.filter("[name='" + selector.modules.val() + "']"),
+			element = modules.find("interface[service='" + selector.interfaces.val() + "']")
+							 .find("types element[name='" + name + "']"),
+
+			list = "",
+			source = "";
+
+		if (element.length === 0) {
+			element = modules.find("types element[name='" + name + "']").eq(0);
+		}
+
+		list = element.attr("list") || "";
+		if (list === "") {
+			source = element.attr("source") || "";
+		}
+
+		return list;
 
 	},
 
