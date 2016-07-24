@@ -11709,18 +11709,18 @@ var func = {
 
 		switch (method) {
 			case "GET":
-				content = "GET 参数预览：<br>" + JSON.stringify(func.collectParams("get").json, null, 4);
+				content = "<strong>GET 参数预览：</strong><br>" + JSON.stringify(func.collectParams("get").json, null, 4);
 				break;
 
 			case "POST":
-				content = "POST 参数预览：<br>" + JSON.stringify(func.collectParams("post").json, null, 4);
+				content = "<strong>POST 参数预览：</strong><br>" + JSON.stringify(func.collectParams("post").json, null, 4);
 				break;
 
 			default:
 				return 0;
 		}
 
-		content += "<br><br>header 信息预览：<br>" + JSON.stringify(func.collectParams("header").json, null, 4);
+		content += "<br><br><strong>header 信息预览：</strong><br>" + JSON.stringify(func.collectParams("header").json, null, 4);
 
 		selector.reponseData.html(content);
 
@@ -11753,7 +11753,7 @@ var func = {
 
 			default:
 				var res = '{"error":"提交方式只支持 GET / POST"}';
-				
+
 				res = JSON.parse(res);
 
 				$('#response-data').html(JSON.stringify(res, null, 4));
@@ -12721,7 +12721,7 @@ selector.headerData.find("span:eq(0) > a").on("click", function() {
 
 // view data
 selector.headerData.find("span:eq(1) > a").on("click", function() {
-	selector.reponseData.html("header 头信息预览：<br>" + JSON.stringify(func.collectParams("header").json, null, 4));
+	selector.reponseData.html("<strong>header 头信息预览：</strong><br>" + JSON.stringify(func.collectParams("header").json, null, 4));
 
 });
 
@@ -12766,7 +12766,7 @@ selector.postData.find("span:eq(0) > a").on("click", function() {
 
 // view data
 selector.postData.find("span:eq(1) > a").on("click", function() {
-	selector.reponseData.html("POST 参数预览：<br>" + JSON.stringify(func.collectParams("post").json, null, 4));
+	selector.reponseData.html("<strong>POST 参数预览：</strong><br>" + JSON.stringify(func.collectParams("post").json, null, 4));
 
 });
 
