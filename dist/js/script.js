@@ -12058,6 +12058,7 @@ var func = {
 							"name": k,
 							"value": v.string,
 							"isRequired": "",
+							"list": "",
 							"fromAnalyze": "true"
 						},
 						removeOption;
@@ -12085,10 +12086,22 @@ var func = {
 
 						// 非必选项一般处理
 						default:
+							opt.list = func.getEnumList(opt.name);
+
 							content = func.getItem(opt);
 
 							$(content).insertBefore(addParams);
 
+							if (opt.list != "") {
+								var selected = addParams.prev().find("select");
+
+								if (opt.value === "") {
+									selected.val("0");
+								} else {
+									selected.val(opt.value);
+								}
+							}
+							
 							// 移除已有参数选项
 							removeOption = addParams.find("option[value='" + k + "']");
 							if (k === (removeOption.attr("value") || "")) {
@@ -12128,6 +12141,7 @@ var func = {
 						opt = {
 							"name": "",
 							"value": "",
+							"list": "",
 							"fromAnalyze": "true",
 							"fromArray": "true"
 						};
@@ -12153,9 +12167,21 @@ var func = {
 
 						default:
 							opt.value = v.string;
+							opt.list = func.getEnumList(opt.name);
+
 							content = func.getItem(opt);
 
 							$(content).insertBefore(addParams);
+
+							if (opt.list != "") {
+								var selected = addParams.prev().find("select");
+
+								if (opt.value === "") {
+									selected.val("0");
+								} else {
+									selected.val(opt.value);
+								}
+							}
 
 							continue;
 					}
