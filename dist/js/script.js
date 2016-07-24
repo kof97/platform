@@ -10538,8 +10538,8 @@ selector.getList
 },{"./common/functions":4,"./common/jquery":7,"./common/selector":8}],4:[function(require,module,exports){
 /**
  * 公共函数定义
- * 
- * 
+ *
+ * @author Arno <arnoliu@tencent.com>
  */
 
 var $ = require("./jquery"),
@@ -12303,7 +12303,7 @@ module.exports = func;
 /**
  * idl selector 缓存
  * 
- * 
+ * @author Arno <arnoliu@tencent.com>
  */
  
 var $ = require("./jquery"),
@@ -12333,7 +12333,7 @@ module.exports = {
 /**
  * idl 数据缓存
  * 
- * 
+ * @author Arno <arnoliu@tencent.com>
  */
 
 var $ = require("./jquery");
@@ -12356,7 +12356,7 @@ module.exports = $;
 /**
  * selector 缓存
  * 
- * 
+ * @author Arno <arnoliu@tencent.com>
  */
 
 var $ = require("./jquery");
@@ -12533,18 +12533,6 @@ require("./post-options");
 require("./get-options");
 
 require("./array-struct-options");
-
-$.ajax({
-	url: './dist/api/testapi.php',
-	method: 'get',
-	dataType: 'json',
-	success: function(data) {
-		// console.log(data);
-
-		$('#response-data').html(JSON.stringify(data, null, 4));
-	}
-});
-
 
 },{"./api-select":2,"./array-struct-options":3,"./common/jquery":7,"./data-tabs":9,"./get-options":10,"./header-options":11,"./post-options":13,"./sdk":14,"./token":15,"./url":16}],13:[function(require,module,exports){
 var $ = require("./common/jquery"),
