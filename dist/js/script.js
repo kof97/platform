@@ -10799,6 +10799,7 @@ var func = {
 					"name": "",
 					"value": "",
 					"isRequired": "",
+					"list": "",
 					"fromArray": "",
 					"fromAnalyze": ""
 				}, opt),
@@ -10810,14 +10811,6 @@ var func = {
 			key = "";
 
 			conf.value = "";
-
-
-
-		var elements = idl.mod
-							.filter("[name='" + selector.modules.val() + "']")
-							.find("types simpleType[name='" + name + "']")
-							.find("attribute[name='list']").attr("list");
-		console.log(elements);
 
 		switch (conf.isRequired) {
 			case "yes":
@@ -10841,6 +10834,10 @@ var func = {
 
 		if (conf.fromArray != "true") {
 			key = '<input ' + isReadonly + ' type="text" name="' + conf.name + '" value="' + conf.name + '" placeholder="Key">:';
+		}
+
+		if (list != "") {
+			
 		}
 
 		content = '<div>\
@@ -10992,14 +10989,21 @@ var func = {
 	getStructElements: function(name) {
 		name = (selector.requestList.find("span[data-post-name='" + name + "']").attr("data-extends") || name).split(".").pop();
 		
-		/*var elements = idl.mod
-							.filter("[name='" + selector.modules.val() + "']")
-							.find("types [name='" + name + "']").eq(0)
-							.find("element"),*/
-		var elements = idl.types.find("[name='" + name + "']").eq(0)
-								.find("element"),
+		/*var elements = idl.types.find("[name='" + name + "']").eq(0)
+								.find("element"),*/
+
+		var modules = idl.mod.filter("[name='" + selector.modules.val() + "']"),
+			elements = modules.find("interface[service='" + selector.interfaces.val() + "']")
+							  .find("types [name='" + name + "']").eq(0)
+							  .find("element"),
+
 			items = [],
 			options = [];
+
+		if (elements.length === 0) {
+			elements = modules.find("types [name='" + name + "']").eq(0)
+						  	  .find("element");
+		}
 
 		elements.each(function(i, data) {
 			var _data = $(data),
@@ -11009,12 +11013,20 @@ var func = {
 				isRequired = _data.attr("require"),
 
 				content = "",
-				opt = {
-					"name": elementName,
-					"isRequired": isRequired
-				};
 
-			var list = _data
+				list = "",
+				source = "";
+
+			list = _data.attr("list") || "";
+			if (list === "") {
+				source = _data.attr("source") || "";
+			}
+
+			var opt = {
+				"name": elementName,
+				"isRequired": isRequired,
+				"list": list
+			};
 
 			if (isRequired === "yes") {
 
