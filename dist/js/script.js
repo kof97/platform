@@ -10342,13 +10342,31 @@ selector.postList
 			dataRepeated = option.attr("data-repeated") || "",
 
 			content = "",
-			opt = {
-				"name": value,
-				"isRequired": "",
-				"extendType": extendType,
-				"fromArray": ""
-			};
 
+			list = "",
+			source = "";
+
+		var modules = idl.mod.filter("[name='" + selector.modules.val() + "']"),
+			element = modules.find("interface[service='" + selector.interfaces.val() + "']")
+							 .find("types element[name='" + value + "']");
+
+		if (element.length === 0) {
+			element = modules.find("types element[name='" + value + "']").eq(0);
+		}
+
+		list = element.attr("list") || "";
+		if (list === "") {
+			source = element.attr("source") || "";
+		}
+
+		var opt = {
+			"name": value,
+			"isRequired": "",
+			"extendType": extendType,
+			"list": list,
+			"fromArray": ""
+		};
+		
 		if (dataRepeated === "repeated") {
 			opt.fromArray = "true";
 		}
