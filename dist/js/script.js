@@ -11810,7 +11810,7 @@ var func = {
 			return 0;
 		}
 
-		var flag = "/ads/" + selector.versions.val() + "/",
+		var flag = "/ads/v3/",
 			flagLength = flag.length,
 			flagStartIndex, flagEndIndex, divideIndex, pathLength, hostname, path, mod, act, param;
 
