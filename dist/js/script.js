@@ -12272,15 +12272,16 @@ if (canvasSupport) {
 		};
 		ctx.restore();
 
-		ctx.font = '50px Georgia';
-		// 渐变
+		/* font */
+		ctx.font = '80px Georgia';
+
 		var gradient = ctx.createLinearGradient(0, 0, canvas.width / 0.6, 0);
 		gradient.addColorStop('0', 'magenta');
 		gradient.addColorStop('0.5', 'blue');
 		gradient.addColorStop('1.0', 'red');
-		// 用渐变填色
-		ctx.fillStyle = gradient;
-		ctx.fillText('Welcome to SPA', canvas.width / 2.8, canvas.height / 2.2);
+
+		ctx.strokeStyle = gradient;
+		ctx.strokeText('Welcome to SPA', canvas.width / 3.5, canvas.height / 2.2);
 
 		window.requestAnimationFrame(animation);
 	}
