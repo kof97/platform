@@ -12203,7 +12203,7 @@ if (canvasSupport) {
 	ctx2.fillStyle = gradient2;
 	ctx2.beginPath();
 	ctx2.arc(half, half, half, 0, Math.PI * 2);
-	ctx2.fill();  
+	ctx2.fill();
 
 	function random(min, max) {
 		if (arguments.length < 2) {
@@ -12226,19 +12226,19 @@ if (canvasSupport) {
 	}
 
 	var Star = function() {
-		this.orbitRadius = random(maxOrbit(w, h));//轨道半径范围
-		this.radius = random(60, this.orbitRadius) / 8;//单个星星的半径
+		this.orbitRadius = random(maxOrbit(w, h)); //轨道半径范围
+		this.radius = random(60, this.orbitRadius) / 8; //单个星星的半径
 		this.orbitX = w / 2;
 		this.orbitY = h / 2;
-		this.timePassed = random(0, maxStars);//运行时间
-		this.speed = random(this.orbitRadius) / 50000;//移动速度，半径越大，最高速度越大
-		this.alpha = random(2, 10) / 10;// 亮度
+		this.timePassed = random(0, maxStars); //运行时间
+		this.speed = random(this.orbitRadius) / 50000; //移动速度，半径越大，最高速度越大
+		this.alpha = random(2, 10) / 10; // 亮度
 		count++;
 		stars[count] = this;
 	}
-	// 绘制星星
+
+	// 星星
 	Star.prototype.draw = function() {
-		/* 计算原理：坐标x = 变换的正弦x最大半径（相当于投影） + canvas半宽 */ 
 		var x = Math.sin(this.timePassed) * this.orbitRadius + this.orbitX,
 		y = Math.cos(this.timePassed) * this.orbitRadius + this.orbitY,
 		twinkle = random(10);
@@ -12267,18 +12267,21 @@ if (canvasSupport) {
 		for (var i = 1, l = stars.length; i < l; i++) {
 
 			if (stars[i]) {
-				//stars[i].orbitRadius += 0.002 * stars[i].orbitRadius;
-				//stars[i].radius += 0.02;
-
 				stars[i].draw();
-				
-				//if( stars[i].orbitRadius > stars[i].orbitX) {
-				//  stars[i] = false;
-				//  stars.push(new Star())
-				//}
 			}
 		};
 		ctx.restore();
+
+		ctx.font = '50px Georgia';
+		// 渐变
+		var gradient = ctx.createLinearGradient(0, 0, canvas.width / 0.6, 0);
+		gradient.addColorStop('0', 'magenta');
+		gradient.addColorStop('0.5', 'blue');
+		gradient.addColorStop('1.0', 'red');
+		// 用渐变填色
+		ctx.fillStyle = gradient;
+		ctx.fillText('Welcome to SPA', canvas.width / 2.8, canvas.height / 2.2);
+
 		window.requestAnimationFrame(animation);
 	}
 	animation();
