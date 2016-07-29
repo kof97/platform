@@ -1,4 +1,5 @@
 <?php include './layout/header.php'; ?>
+	<div class="row"></div>
 
 	<div class="container">
 		<nav class="navbar navbar-default">
