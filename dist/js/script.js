@@ -12284,7 +12284,7 @@ if (canvasSupport) {
 		ctx.strokeText('Welcome to SPA', canvas.width / 3.5, canvas.height / 2.2);
 */
 		ctx.fillStyle = gradient;
-		ctx.fillText('Welcome to SPA', canvas.width / 3.5, canvas.height / 2.2);
+		ctx.fillText('Welcome to SPA', canvas.width / 3.6, canvas.height / 2.2);
 
 		window.requestAnimationFrame(animation);
 	}
