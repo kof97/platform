@@ -12149,10 +12149,140 @@ var selector = {
 module.exports = selector;
 
 },{"./jquery":5}],7:[function(require,module,exports){
+var canvasSupport = !!document.createElement('canvas').getContext;
+if (canvasSupport) {
+    /*兼容不支持requestAnimationFrame的浏览器*/
+    (function() {
+        var lastTime = 0;
+        var vendors = ['ms', 'moz', 'webkit', 'o'];
+        for (var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
+            window.requestAnimationFrame = window[vendors[x] + 'RequestAnimationFrame'];
+            window.cancelAnimationFrame = window[vendors[x] + 'CancelAnimationFrame'] || window[vendors[x] + 'CancelRequestAnimationFrame'];
+        }
+        if (!window.requestAnimationFrame) window.requestAnimationFrame = function(callback, element) {
+            var currTime = new Date().getTime();
+            var timeToCall = Math.max(0, 16 - (currTime - lastTime));
+            var id = window.setTimeout(function() {
+                callback(currTime + timeToCall);
+            },
+            timeToCall);
+            lastTime = currTime + timeToCall;
+            return id;
+        };
+        if (!window.cancelAnimationFrame) window.cancelAnimationFrame = function(id) {
+            clearTimeout(id);
+        };
+    } ());
+
+    var canvas = document.getElementById('canvas'),
+    ctx = canvas.getContext('2d'),
+    w = canvas.width = document.body.offsetWidth,
+    //h = canvas.height = window.innerHeight,
+    h = canvas.height = 480,
+    hue = 217,
+    stars = [],
+    count = 0,
+    maxStars = 500;//星星个数
+
+    /*canvas2 是单个星星的效果*/
+    var canvas2 = document.createElement('canvas'),
+    ctx2 = canvas2.getContext('2d');
+    canvas2.width = 100;
+    canvas2.height = 100;
+    var half = canvas2.width / 2,
+    gradient2 = ctx2.createRadialGradient(half, half, 0, half, half, half);
+    gradient2.addColorStop(0.025, '#CCC');
+    gradient2.addColorStop(0.1, 'hsl(' + hue + ', 61%, 33%)');
+    gradient2.addColorStop(0.25, 'hsl(' + hue + ', 64%, 6%)');
+    gradient2.addColorStop(1, 'transparent');
+    ctx2.fillStyle = gradient2;
+    ctx2.beginPath();
+    ctx2.arc(half, half, half, 0, Math.PI * 2);
+    ctx2.fill();  
+
+    function random(min, max) {
+        if (arguments.length < 2) {
+            max = min;
+            min = 0;
+        }
+        if (min > max) {
+            var hold = max;
+            max = min;
+            min = hold;
+        }
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    /* 星星移动范围 */
+    function maxOrbit(x, y) {
+        var max = Math.max(x, y),
+            diameter = Math.round(Math.sqrt(max * max + max * max));
+        return diameter / 2;
+    }
+
+    var Star = function() {
+        this.orbitRadius = random(maxOrbit(w, h));//轨道半径范围
+        this.radius = random(60, this.orbitRadius) / 8;//单个星星的半径
+        this.orbitX = w / 2;
+        this.orbitY = h / 2;
+        this.timePassed = random(0, maxStars);//运行时间
+        this.speed = random(this.orbitRadius) / 50000;//移动速度，半径越大，最高速度越大
+        this.alpha = random(2, 10) / 10;// 亮度
+        count++;
+        stars[count] = this;
+    }
+    // 绘制星星
+    Star.prototype.draw = function() {
+        /* 计算原理：坐标x = 变换的正弦x最大半径（相当于投影） + canvas半宽 */ 
+        var x = Math.sin(this.timePassed) * this.orbitRadius + this.orbitX,
+        y = Math.cos(this.timePassed) * this.orbitRadius + this.orbitY,
+        twinkle = random(10);
+        if (twinkle === 1 && this.alpha > 0) {
+            this.alpha -= 0.05;
+        } else if (twinkle === 2 && this.alpha < 1) {
+            this.alpha += 0.05;
+        }
+        ctx.globalAlpha = this.alpha;
+        ctx.drawImage(canvas2, x - this.radius / 2, y - this.radius / 2, this.radius, this.radius);
+        this.timePassed += this.speed;
+    }
+
+    for (var i = 0; i < maxStars; i++) {
+        new Star();
+    }
+
+    function animation() {
+        ctx.save();
+        ctx.globalCompositeOperation = 'source-over';
+        /* 通过多次层叠半透明覆盖，实现尾巴效果，globalAlpha数值越低，尾巴越长 */
+        ctx.globalAlpha = 0.5;
+        ctx.fillStyle = 'hsla(' + hue + ', 64%, 6%, 2)';
+        ctx.fillRect(0, 0, w, h)
+        ctx.globalCompositeOperation = 'lighter';
+        for (var i = 1, l = stars.length; i < l; i++) {
+
+            if (stars[i]) {
+                //stars[i].orbitRadius += 0.002 * stars[i].orbitRadius;
+                //stars[i].radius += 0.02;
+
+                stars[i].draw();
+                
+                //if( stars[i].orbitRadius > stars[i].orbitX) {
+                //  stars[i] = false;
+                //  stars.push(new Star())
+                //}
+            }
+        };
+        ctx.restore();
+        window.requestAnimationFrame(animation);
+    }
+    animation();
+}       
+},{}],8:[function(require,module,exports){
 var $ = require("./common/jquery");
 
 /* index */
-
+require("./index/interstellar");
 
 
 /* tools */
@@ -12166,7 +12296,7 @@ require("./tools/post-options");
 require("./tools/get-options");
 require("./tools/array-struct-options");
 
-},{"./common/jquery":5,"./tools/api-select":8,"./tools/array-struct-options":9,"./tools/data-tabs":10,"./tools/get-options":11,"./tools/header-options":12,"./tools/post-options":13,"./tools/sdk":14,"./tools/token":15,"./tools/url":16}],8:[function(require,module,exports){
+},{"./common/jquery":5,"./index/interstellar":7,"./tools/api-select":9,"./tools/array-struct-options":10,"./tools/data-tabs":11,"./tools/get-options":12,"./tools/header-options":13,"./tools/post-options":14,"./tools/sdk":15,"./tools/token":16,"./tools/url":17}],9:[function(require,module,exports){
 var $ = require("../common/jquery"),
 	func = require("../common/functions"),
 	idl = require("../common/idl-data"),
@@ -12327,7 +12457,7 @@ selector.versions.on("change", function() {
 
 });
 
-},{"../common/functions":2,"../common/idl-data":3,"../common/jquery":5,"../common/selector":6}],9:[function(require,module,exports){
+},{"../common/functions":2,"../common/idl-data":3,"../common/jquery":5,"../common/selector":6}],10:[function(require,module,exports){
 var $ = require("../common/jquery"),
 	idl = require("../common/idl-data"),
 	func = require("../common/functions"),
@@ -12640,7 +12770,7 @@ selector.getList
 
 	});
 
-},{"../common/functions":2,"../common/idl-data":3,"../common/jquery":5,"../common/selector":6}],10:[function(require,module,exports){
+},{"../common/functions":2,"../common/idl-data":3,"../common/jquery":5,"../common/selector":6}],11:[function(require,module,exports){
 var $ = require("../common/jquery"),
 	func = require("../common/functions"),
 	selector = require("../common/selector");
@@ -12657,7 +12787,7 @@ selector.dataTabOption.find("li").on("click", function() {
 
 });
 
-},{"../common/functions":2,"../common/jquery":5,"../common/selector":6}],11:[function(require,module,exports){
+},{"../common/functions":2,"../common/jquery":5,"../common/selector":6}],12:[function(require,module,exports){
 var $ = require("../common/jquery"),
 	func = require("../common/functions"),
 	selector = require("../common/selector");
@@ -12716,7 +12846,7 @@ selector.requestList.on("click", "li[method='GET']", function() {
 
 });
 
-},{"../common/functions":2,"../common/jquery":5,"../common/selector":6}],12:[function(require,module,exports){
+},{"../common/functions":2,"../common/jquery":5,"../common/selector":6}],13:[function(require,module,exports){
 var $ = require("../common/jquery"),
 	func = require("../common/functions"),
 	selector = require("../common/selector");
@@ -12743,7 +12873,7 @@ selector.headerData.find("span:eq(1) > a").on("click", function() {
 
 });
 
-},{"../common/functions":2,"../common/jquery":5,"../common/selector":6}],13:[function(require,module,exports){
+},{"../common/functions":2,"../common/jquery":5,"../common/selector":6}],14:[function(require,module,exports){
 var $ = require("../common/jquery"),
 	func = require("../common/functions"),
 	selector = require("../common/selector");
@@ -12813,7 +12943,7 @@ selector.requestList
 
 	});
 
-},{"../common/functions":2,"../common/jquery":5,"../common/selector":6}],14:[function(require,module,exports){
+},{"../common/functions":2,"../common/jquery":5,"../common/selector":6}],15:[function(require,module,exports){
 var $ = require("../common/jquery"),
 	func = require("../common/functions"),
 	selector = require("../common/selector");
@@ -12852,7 +12982,7 @@ selector.sdkTab.on("click", "a:not('.copy-sdk')", function() {
 
 
 	
-},{"../common/functions":2,"../common/jquery":5,"../common/selector":6}],15:[function(require,module,exports){
+},{"../common/functions":2,"../common/jquery":5,"../common/selector":6}],16:[function(require,module,exports){
 var $ = require("../common/jquery"),
 	func = require("../common/functions"),
 	selector = require("../common/selector");
@@ -12890,7 +13020,7 @@ selector.tokenItem
 
 	});
 
-},{"../common/functions":2,"../common/jquery":5,"../common/selector":6}],16:[function(require,module,exports){
+},{"../common/functions":2,"../common/jquery":5,"../common/selector":6}],17:[function(require,module,exports){
 var $ = require("../common/jquery"),
 	func = require("../common/functions"),
 	selector = require("../common/selector");
@@ -12932,7 +13062,7 @@ selector.analyzeWarning.on("click", function(event) {
 
 });
 
-},{"../common/functions":2,"../common/jquery":5,"../common/selector":6}]},{},[7])
+},{"../common/functions":2,"../common/jquery":5,"../common/selector":6}]},{},[8])
 
 
 //# sourceMappingURL=script.js.map
