@@ -12276,12 +12276,15 @@ if (canvasSupport) {
 		ctx.font = '80px Georgia';
 
 		var gradient = ctx.createLinearGradient(0, 0, canvas.width / 0.6, 0);
-		gradient.addColorStop('0', 'magenta');
-		gradient.addColorStop('0.5', 'blue');
-		gradient.addColorStop('1.0', 'red');
-
+		gradient.addColorStop('0', 'white');
+		gradient.addColorStop('0.8', 'blue');
+		gradient.addColorStop('0.8', 'red');
+/*
 		ctx.strokeStyle = gradient;
 		ctx.strokeText('Welcome to SPA', canvas.width / 3.5, canvas.height / 2.2);
+*/
+		ctx.fillStyle = gradient;
+		ctx.fillText('Welcome to SPA', canvas.width / 3.5, canvas.height / 2.2);
 
 		window.requestAnimationFrame(animation);
 	}
