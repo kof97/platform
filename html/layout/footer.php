@@ -55,7 +55,7 @@
 	
 	// copy code
 	$(".copy-sdk").zclip({
-		path: "./dist/swf/ZeroClipboard.swf",
+		path: "../dist/swf/ZeroClipboard.swf",
 		copy: function() {
 			var num = $(".sdk-tab").find("a[class='selected']").index();
 

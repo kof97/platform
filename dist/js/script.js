@@ -10075,480 +10075,6 @@ return jQuery;
 } );
 
 },{}],2:[function(require,module,exports){
-var $ = require("./common/jquery"),
-	func = require("./common/functions"),
-	idl = require("./common/idl-data"),
-	selector = require("./common/selector");
-
-var list = [];
-
-// module lists
-idl.mod.each(function(i, data) {
-	var _data = $(data),
-		moduleName = _data.attr("name"),
-		moduleTitle = _data.find("documentation > title:eq(0)").text();
-
-	list.push("<option value='" + moduleName + "'>" + moduleTitle + "</option>");
-
-});
-
-selector.modules.append(list.join(""));
-list = [];
-
-/**
- * 一级联动，生成接口列表
- * 
- * @param moduleName {string} 模块名
- * @param interfaceData {selector} 模块下接口集合
- * @param interfaceName {string} 接口名
- * @param interfaceTitle {string} 接口描述
- */
-selector.modules.on("change", function() {
-	var moduleName = $(this).val(),
-		interfaceData = idl.mod.filter("[name='" + moduleName + "']").find("interface");
-
-	selector.interfaces.html('<option selected="selected" value="0">--请选择API--</option>');
-
-	func.createUrl();
-
-	func.clearReponse();
-
-	func.clearField();
-	selector.requestList.html("");
-
-	if (moduleName === "0") {
-		func.initTab();
-		return 0;
-	}
-
-	interfaceData.each(function(i, data) {
-		var _data = $(data),
-			interfaceName = _data.attr("service"),
-			interfaceTitle = _data.find("documentation > title:eq(0)").text();
-
-		list.push("<option value='" + interfaceName + "'>" + interfaceTitle + "</option>");
-	});
-
-	selector.interfaces.append(list.join(""));
-	list = [];
-
-});
-
-/**
- * 二级联动，生成接口字段列表和必填字段的 field
- *
- * @param interfaceName {string} 接口名
- * @param moduleName {string} 模块名
- * @param requestData {selector} 请求字段集合
- * @param method {string} 接口提交方式 get/post
- * @param requestName {string} 字段名
- * @param extendType/ext {string} 所继承的父字段名
- * @param isRequired {string} 是否必填字段 yes/no
- * @param dataType {string} 字段类型
- */
-selector.interfaces.on("change", function() {
-	var interfaceName = $(this).val(),
-		moduleName = selector.modules.val();
-
-	func.createUrl();
-
-	func.clearReponse();
-
-	func.clearField();
-	selector.requestList.html("");
-
-	if (interfaceName === "0") {
-		func.initTab();
-		return 0;
-	}
-
-	var requestData =  idl.mod.filter("[name='" + moduleName + "']")
-							  .find("interface[service='" + interfaceName + "']")
-							  .find("request"),
-		method = requestData.attr("source"),
-		requestData = requestData.find("element");
-
-	func.methodAction(method);
-
-	requestData.each(function(i, data) {
-		var _data = $(data),
-			requestName = _data.attr("name"),
-			extendType = _data.attr("type"),
-			isRequired = _data.attr("require"),
-
-			ext = extendType.split(".").pop(),
-			dataType = func.getType(ext),
-
-			opt = {
-				"name": requestName,
-				"value": "",
-				"dataType": dataType,
-				"isRequired": isRequired
-			},
-
-			visibility = "",
-			selected = "";
-		
-		if (isRequired === "yes") {
-			visibility = 'style="visibility: visible"';
-			selected = 'class="selected"';
-
-			if (method === "POST") {
-				func.addPostField(opt);
-			} else {
-				func.addGetField(opt);
-			}
-			
-		}
-
-		list.push('<li ' + selected + ' \
-							data-' + method.toLowerCase() + '-name="' + requestName + '" \
-							data-type="' + dataType + '" \
-							method="' + method + '">\
-						<lable class="checked" ' + visibility + '>✓</lable>\
-						<a href="javascript:void(0)">' + requestName + '</a>\
-						<span data-' + method.toLowerCase() + '-name="' + requestName + '" \
-							data-extends="' + extendType + '" \
-							class="note-icon"></span>\
-						<span>' + isRequired + '</span>\
-				   </li>');
-
-	});
-
-	// list.reverse();
-	list.sort(function(a, b) {
-		return ($(a).find("span").last().text() > $(b).find("span").last().text()) ? -1 : 1;
-	}).join("");
-
-	selector.requestList.append(list);
-	list = [];
-
-});
-
-selector.environments.on("change", function() {
-	func.createUrl();
-
-});
-
-selector.versions.on("change", function() {
-	func.createUrl();
-
-});
-
-},{"./common/functions":4,"./common/idl-data":5,"./common/jquery":7,"./common/selector":8}],3:[function(require,module,exports){
-var $ = require("./common/jquery"),
-	idl = require("./common/idl-data"),
-	func = require("./common/functions"),
-	selector = require("./common/selector");
-
-// remove the remove
-selector.dom.on("click", "div", function() {
-	$(".array-big-options")
-		.css("border", "1px solid #fff")
-		.find("a").fadeOut(100);
-
-	$(".add-params").slideUp(100);
-
-});
-
-selector.dom.on("click", "div", function() {
-	$(".struct-big-options")
-		.css("border", "1px solid #fff")
-		.find("a").fadeOut(100);
-
-	$(".add-params").slideUp(100);
-
-});
-
-selector.postList
-	/**
-	 * array 类型的相关事件操作
-	 * 阻止默认事件
-	 * 显示 remove
-	 * 移除条目
-	 */
-	.on("click", ".array-big-options", function(event) {
-		event.stopPropagation();
-
-	})
-
-	.on("click", ".array-big-options", function() {	
-		var _this = $(this);
-		_this.css("border", "1px solid #A6C8FF")
-			 .find("a").fadeIn(100);
-
-		_this.find(".add-params").slideDown(100);
-
-	})
-
-	.on("click", ".array-big-options > a", function() {
-		func.removePostField(this, 2);
-		
-	})
-
-	/**
-	 * struct 类型的相关事件操作
-	 * 阻止默认事件
-	 * 显示 remove
-	 * 移除 field
-	 */
-	.on("click", ".struct-big-options", function(event) {
-		event.stopPropagation();
-
-	})
-
-	.on("click", ".struct-big-options", function() {	
-		var _this = $(this);
-		_this.css("border", "1px solid #A6C8FF")
-			 .find("a").fadeIn(100);
-
-		_this.find(".add-params").slideDown(100);
-
-	})
-
-	.on("click", ".struct-big-options > a", function() {
-		func.removePostField(this, 2);
-		
-	})
-
-	/**
-	 * array 和 struct 公共事件
-	 * 移除字段
-	 * 添加子字段 item/array/struct
-	 * 
-	 */
-	.on("click", ".remove-params", function() {
-		var _this = $(this),
-			elementName = _this.attr("data-element-name") || "";
-
-		if (elementName != "") {
-
-			var option = _this.parent().siblings(".add-params").find("option[value='3']"),
-				content = '<option value="' + elementName + '">' + elementName + '</option>';
-
-			$(content).insertAfter(option);
-		}
-
-		_this.parent().remove();
-
-	})
-
-	.on("change", ".add-params select", function() {
-		var _this = $(this),
-			value = _this.val(),
-			option = _this.find("option[value='" + value + "']"),
-			extendType = option.attr("data-extends"),
-			dataType = option.attr("data-type"),
-			dataRepeated = option.attr("data-repeated") || "",
-
-			content = "",
-
-			list = "";
-
-		list = func.getEnumList(value);
-
-		var opt = {
-			"name": value,
-			"isRequired": "",
-			"extendType": extendType,
-			"list": list,
-			"fromArray": ""
-		};
-
-		if (dataRepeated === "repeated") {
-			opt.fromArray = "true";
-		}
-
-		switch (value) {
-			// item
-			case "1":
-				content = func.getItem(opt);
-				break;
-
-			// array
-			case "2":
-				content = func.getArrayItem(opt);
-				break;
-
-			// struct
-			case "3":
-				content = func.getStructItem(opt);
-				break;
-
-			default:
-				opt.isRequired = "no";
-
-				switch (dataType) {
-
-					case "array":
-						content = func.getArrayItem(opt);
-						break;
-
-					case "struct":
-						content = func.getStructItem(opt);
-						break;
-
-					default: 
-						content = func.getItem(opt);
-
-				}
-
-				if (dataRepeated != "repeated") {
-					_this.find("option[value='" + value + "']").remove();
-				}
-
-		}
-
-		_this.val("0");
-		$(content).insertBefore(_this.parent());
-
-	});
-
-selector.getList
-	/**
-	 * array 类型的相关事件操作
-	 * 阻止默认事件
-	 * 显示 remove
-	 * 移除条目
-	 */
-	.on("click", ".array-big-options", function(event) {
-		event.stopPropagation();
-
-	})
-
-	.on("click", ".array-big-options", function() {	
-		var _this = $(this);
-		_this.css("border", "1px solid #A6C8FF")
-			 .find("a").fadeIn(100);
-
-		_this.find(".add-params").slideDown(100);
-
-	})
-
-	.on("click", ".array-big-options > a", function() {
-		func.removeGetField(this, 2);
-		
-	})
-
-	/**
-	 * struct 类型的相关事件操作
-	 * 阻止默认事件
-	 * 显示 remove
-	 * 移除 field
-	 */
-	.on("click", ".struct-big-options", function(event) {
-		event.stopPropagation();
-
-	})
-
-	.on("click", ".struct-big-options", function() {	
-		var _this = $(this);
-		_this.css("border", "1px solid #A6C8FF")
-			 .find("a").fadeIn(100);
-
-		_this.find(".add-params").slideDown(100);
-
-	})
-
-	.on("click", ".struct-big-options > a", function() {
-		func.removeGetField(this, 2);
-		
-	})
-
-	/**
-	 * array 和 struct 公共事件
-	 * 移除字段
-	 * 添加子字段 item/array/struct
-	 * 
-	 */
-	.on("click", ".remove-params", function() {
-		var _this = $(this),
-			elementName = _this.attr("data-element-name") || "";
-
-		if (elementName != "") {
-
-			var option = _this.parent().siblings(".add-params").find("option[value='3']"),
-				content = '<option value="' + elementName + '">' + elementName + '</option>';
-
-			$(content).insertAfter(option);
-		}
-
-		_this.parent().remove();
-
-	})
-
-	.on("change", ".add-params select", function() {
-		var _this = $(this),
-			value = _this.val(),
-			option = _this.find("option[value='" + value + "']"),
-			extendType = option.attr("data-extends"),
-			dataType = option.attr("data-type"),
-			dataRepeated = option.attr("data-repeated") || "",
-
-			content = "",
-
-			list = "";
-
-		list = func.getEnumList(value);
-
-		var opt = {
-			"name": value,
-			"isRequired": "",
-			"extendType": extendType,
-			"list": list,
-			"fromArray": ""
-		};
-
-		if (dataRepeated === "repeated") {
-			opt.fromArray = "true";
-		}
-
-		switch (value) {
-			// item
-			case "1":
-				content = func.getItem(opt);
-				break;
-
-			// array
-			case "2":
-				content = func.getArrayItem(opt);
-				break;
-
-			// struct
-			case "3":
-				content = func.getStructItem(opt);
-				break;
-
-			default:
-				opt.isRequired = "no";
-
-				switch (dataType) {
-
-					case "array":
-						content = func.getArrayItem(opt);
-						break;
-
-					case "struct":
-						content = func.getStructItem(opt);
-						break;
-
-					default: 
-						content = func.getItem(opt);
-
-				}
-
-				if (dataRepeated != "repeated") {
-					_this.find("option[value='" + value + "']").remove();
-				}
-
-		}
-
-		_this.val("0");
-		$(content).insertBefore(_this.parent());
-
-	});
-
-},{"./common/functions":4,"./common/idl-data":5,"./common/jquery":7,"./common/selector":8}],4:[function(require,module,exports){
 /**
  * 公共函数定义
  *
@@ -11768,7 +11294,7 @@ var func = {
 			'params': params
 		}
 
-		$.post('./dist/api/proxy.php', data, function(res) {
+		$.post('../dist/api/proxy.php', data, function(res) {
 			//res = JSON.parse(res);
 
 			$('#response-data').html(JSON.stringify(res, null, 4));
@@ -12293,7 +11819,7 @@ var func = {
 		}
 
 		$.ajax({
-			url: './dist/api/token.php',
+			url: '../dist/api/token.php',
 			method: 'post',
 			dataType: 'text',
 			data: { 'key': appkey, 'id': appid, 'uid': uid },
@@ -12508,7 +12034,7 @@ func.createUrl();
 
 module.exports = func;
 
-},{"./idl-data":5,"./jquery":7,"./selector":8}],5:[function(require,module,exports){
+},{"./idl-data":3,"./jquery":5,"./selector":6}],3:[function(require,module,exports){
 /**
  * idl selector 缓存
  * 
@@ -12538,7 +12064,7 @@ module.exports = {
 }
 
 
-},{"./idl":6,"./jquery":7}],6:[function(require,module,exports){
+},{"./idl":4,"./jquery":5}],4:[function(require,module,exports){
 /**
  * idl 数据缓存
  * 
@@ -12548,7 +12074,7 @@ module.exports = {
 var $ = require("./jquery");
 
 $.ajax({
-	url: './dist/api/luna.idl.xml',
+	url: '../dist/api/luna.idl.xml',
 	method: 'get',
 	dataType: 'xml',
 	async: false,
@@ -12557,11 +12083,11 @@ $.ajax({
 	}
 });
 
-},{"./jquery":7}],7:[function(require,module,exports){
+},{"./jquery":5}],5:[function(require,module,exports){
 var $ = require("jquery");
 
 module.exports = $;
-},{"jquery":1}],8:[function(require,module,exports){
+},{"jquery":1}],6:[function(require,module,exports){
 /**
  * selector 缓存
  * 
@@ -12622,10 +12148,502 @@ var selector = {
 
 module.exports = selector;
 
-},{"./jquery":7}],9:[function(require,module,exports){
-var $ = require("./common/jquery"),
-	func = require("./common/functions"),
-	selector = require("./common/selector");
+},{"./jquery":5}],7:[function(require,module,exports){
+var $ = require("./common/jquery");
+
+/* index */
+
+
+
+/* tools */
+require("./tools/token");
+require("./tools/api-select");
+require("./tools/url");
+require("./tools/data-tabs");
+require("./tools/sdk");
+require("./tools/header-options");
+require("./tools/post-options");
+require("./tools/get-options");
+require("./tools/array-struct-options");
+
+},{"./common/jquery":5,"./tools/api-select":8,"./tools/array-struct-options":9,"./tools/data-tabs":10,"./tools/get-options":11,"./tools/header-options":12,"./tools/post-options":13,"./tools/sdk":14,"./tools/token":15,"./tools/url":16}],8:[function(require,module,exports){
+var $ = require("../common/jquery"),
+	func = require("../common/functions"),
+	idl = require("../common/idl-data"),
+	selector = require("../common/selector");
+
+var list = [];
+
+// module lists
+idl.mod.each(function(i, data) {
+	var _data = $(data),
+		moduleName = _data.attr("name"),
+		moduleTitle = _data.find("documentation > title:eq(0)").text();
+
+	list.push("<option value='" + moduleName + "'>" + moduleTitle + "</option>");
+
+});
+
+selector.modules.append(list.join(""));
+list = [];
+
+/**
+ * 一级联动，生成接口列表
+ * 
+ * @param moduleName {string} 模块名
+ * @param interfaceData {selector} 模块下接口集合
+ * @param interfaceName {string} 接口名
+ * @param interfaceTitle {string} 接口描述
+ */
+selector.modules.on("change", function() {
+	var moduleName = $(this).val(),
+		interfaceData = idl.mod.filter("[name='" + moduleName + "']").find("interface");
+
+	selector.interfaces.html('<option selected="selected" value="0">--请选择API--</option>');
+
+	func.createUrl();
+
+	func.clearReponse();
+
+	func.clearField();
+	selector.requestList.html("");
+
+	if (moduleName === "0") {
+		func.initTab();
+		return 0;
+	}
+
+	interfaceData.each(function(i, data) {
+		var _data = $(data),
+			interfaceName = _data.attr("service"),
+			interfaceTitle = _data.find("documentation > title:eq(0)").text();
+
+		list.push("<option value='" + interfaceName + "'>" + interfaceTitle + "</option>");
+	});
+
+	selector.interfaces.append(list.join(""));
+	list = [];
+
+});
+
+/**
+ * 二级联动，生成接口字段列表和必填字段的 field
+ *
+ * @param interfaceName {string} 接口名
+ * @param moduleName {string} 模块名
+ * @param requestData {selector} 请求字段集合
+ * @param method {string} 接口提交方式 get/post
+ * @param requestName {string} 字段名
+ * @param extendType/ext {string} 所继承的父字段名
+ * @param isRequired {string} 是否必填字段 yes/no
+ * @param dataType {string} 字段类型
+ */
+selector.interfaces.on("change", function() {
+	var interfaceName = $(this).val(),
+		moduleName = selector.modules.val();
+
+	func.createUrl();
+
+	func.clearReponse();
+
+	func.clearField();
+	selector.requestList.html("");
+
+	if (interfaceName === "0") {
+		func.initTab();
+		return 0;
+	}
+
+	var requestData =  idl.mod.filter("[name='" + moduleName + "']")
+							  .find("interface[service='" + interfaceName + "']")
+							  .find("request"),
+		method = requestData.attr("source"),
+		requestData = requestData.find("element");
+
+	func.methodAction(method);
+
+	requestData.each(function(i, data) {
+		var _data = $(data),
+			requestName = _data.attr("name"),
+			extendType = _data.attr("type"),
+			isRequired = _data.attr("require"),
+
+			ext = extendType.split(".").pop(),
+			dataType = func.getType(ext),
+
+			opt = {
+				"name": requestName,
+				"value": "",
+				"dataType": dataType,
+				"isRequired": isRequired
+			},
+
+			visibility = "",
+			selected = "";
+		
+		if (isRequired === "yes") {
+			visibility = 'style="visibility: visible"';
+			selected = 'class="selected"';
+
+			if (method === "POST") {
+				func.addPostField(opt);
+			} else {
+				func.addGetField(opt);
+			}
+			
+		}
+
+		list.push('<li ' + selected + ' \
+							data-' + method.toLowerCase() + '-name="' + requestName + '" \
+							data-type="' + dataType + '" \
+							method="' + method + '">\
+						<lable class="checked" ' + visibility + '>✓</lable>\
+						<a href="javascript:void(0)">' + requestName + '</a>\
+						<span data-' + method.toLowerCase() + '-name="' + requestName + '" \
+							data-extends="' + extendType + '" \
+							class="note-icon"></span>\
+						<span>' + isRequired + '</span>\
+				   </li>');
+
+	});
+
+	// list.reverse();
+	list.sort(function(a, b) {
+		return ($(a).find("span").last().text() > $(b).find("span").last().text()) ? -1 : 1;
+	}).join("");
+
+	selector.requestList.append(list);
+	list = [];
+
+});
+
+selector.environments.on("change", function() {
+	func.createUrl();
+
+});
+
+selector.versions.on("change", function() {
+	func.createUrl();
+
+});
+
+},{"../common/functions":2,"../common/idl-data":3,"../common/jquery":5,"../common/selector":6}],9:[function(require,module,exports){
+var $ = require("../common/jquery"),
+	idl = require("../common/idl-data"),
+	func = require("../common/functions"),
+	selector = require("../common/selector");
+
+// remove the remove
+selector.dom.on("click", "div", function() {
+	$(".array-big-options")
+		.css("border", "1px solid #fff")
+		.find("a").fadeOut(100);
+
+	$(".add-params").slideUp(100);
+
+});
+
+selector.dom.on("click", "div", function() {
+	$(".struct-big-options")
+		.css("border", "1px solid #fff")
+		.find("a").fadeOut(100);
+
+	$(".add-params").slideUp(100);
+
+});
+
+selector.postList
+	/**
+	 * array 类型的相关事件操作
+	 * 阻止默认事件
+	 * 显示 remove
+	 * 移除条目
+	 */
+	.on("click", ".array-big-options", function(event) {
+		event.stopPropagation();
+
+	})
+
+	.on("click", ".array-big-options", function() {	
+		var _this = $(this);
+		_this.css("border", "1px solid #A6C8FF")
+			 .find("a").fadeIn(100);
+
+		_this.find(".add-params").slideDown(100);
+
+	})
+
+	.on("click", ".array-big-options > a", function() {
+		func.removePostField(this, 2);
+		
+	})
+
+	/**
+	 * struct 类型的相关事件操作
+	 * 阻止默认事件
+	 * 显示 remove
+	 * 移除 field
+	 */
+	.on("click", ".struct-big-options", function(event) {
+		event.stopPropagation();
+
+	})
+
+	.on("click", ".struct-big-options", function() {	
+		var _this = $(this);
+		_this.css("border", "1px solid #A6C8FF")
+			 .find("a").fadeIn(100);
+
+		_this.find(".add-params").slideDown(100);
+
+	})
+
+	.on("click", ".struct-big-options > a", function() {
+		func.removePostField(this, 2);
+		
+	})
+
+	/**
+	 * array 和 struct 公共事件
+	 * 移除字段
+	 * 添加子字段 item/array/struct
+	 * 
+	 */
+	.on("click", ".remove-params", function() {
+		var _this = $(this),
+			elementName = _this.attr("data-element-name") || "";
+
+		if (elementName != "") {
+
+			var option = _this.parent().siblings(".add-params").find("option[value='3']"),
+				content = '<option value="' + elementName + '">' + elementName + '</option>';
+
+			$(content).insertAfter(option);
+		}
+
+		_this.parent().remove();
+
+	})
+
+	.on("change", ".add-params select", function() {
+		var _this = $(this),
+			value = _this.val(),
+			option = _this.find("option[value='" + value + "']"),
+			extendType = option.attr("data-extends"),
+			dataType = option.attr("data-type"),
+			dataRepeated = option.attr("data-repeated") || "",
+
+			content = "",
+
+			list = "";
+
+		list = func.getEnumList(value);
+
+		var opt = {
+			"name": value,
+			"isRequired": "",
+			"extendType": extendType,
+			"list": list,
+			"fromArray": ""
+		};
+
+		if (dataRepeated === "repeated") {
+			opt.fromArray = "true";
+		}
+
+		switch (value) {
+			// item
+			case "1":
+				content = func.getItem(opt);
+				break;
+
+			// array
+			case "2":
+				content = func.getArrayItem(opt);
+				break;
+
+			// struct
+			case "3":
+				content = func.getStructItem(opt);
+				break;
+
+			default:
+				opt.isRequired = "no";
+
+				switch (dataType) {
+
+					case "array":
+						content = func.getArrayItem(opt);
+						break;
+
+					case "struct":
+						content = func.getStructItem(opt);
+						break;
+
+					default: 
+						content = func.getItem(opt);
+
+				}
+
+				if (dataRepeated != "repeated") {
+					_this.find("option[value='" + value + "']").remove();
+				}
+
+		}
+
+		_this.val("0");
+		$(content).insertBefore(_this.parent());
+
+	});
+
+selector.getList
+	/**
+	 * array 类型的相关事件操作
+	 * 阻止默认事件
+	 * 显示 remove
+	 * 移除条目
+	 */
+	.on("click", ".array-big-options", function(event) {
+		event.stopPropagation();
+
+	})
+
+	.on("click", ".array-big-options", function() {	
+		var _this = $(this);
+		_this.css("border", "1px solid #A6C8FF")
+			 .find("a").fadeIn(100);
+
+		_this.find(".add-params").slideDown(100);
+
+	})
+
+	.on("click", ".array-big-options > a", function() {
+		func.removeGetField(this, 2);
+		
+	})
+
+	/**
+	 * struct 类型的相关事件操作
+	 * 阻止默认事件
+	 * 显示 remove
+	 * 移除 field
+	 */
+	.on("click", ".struct-big-options", function(event) {
+		event.stopPropagation();
+
+	})
+
+	.on("click", ".struct-big-options", function() {	
+		var _this = $(this);
+		_this.css("border", "1px solid #A6C8FF")
+			 .find("a").fadeIn(100);
+
+		_this.find(".add-params").slideDown(100);
+
+	})
+
+	.on("click", ".struct-big-options > a", function() {
+		func.removeGetField(this, 2);
+		
+	})
+
+	/**
+	 * array 和 struct 公共事件
+	 * 移除字段
+	 * 添加子字段 item/array/struct
+	 * 
+	 */
+	.on("click", ".remove-params", function() {
+		var _this = $(this),
+			elementName = _this.attr("data-element-name") || "";
+
+		if (elementName != "") {
+
+			var option = _this.parent().siblings(".add-params").find("option[value='3']"),
+				content = '<option value="' + elementName + '">' + elementName + '</option>';
+
+			$(content).insertAfter(option);
+		}
+
+		_this.parent().remove();
+
+	})
+
+	.on("change", ".add-params select", function() {
+		var _this = $(this),
+			value = _this.val(),
+			option = _this.find("option[value='" + value + "']"),
+			extendType = option.attr("data-extends"),
+			dataType = option.attr("data-type"),
+			dataRepeated = option.attr("data-repeated") || "",
+
+			content = "",
+
+			list = "";
+
+		list = func.getEnumList(value);
+
+		var opt = {
+			"name": value,
+			"isRequired": "",
+			"extendType": extendType,
+			"list": list,
+			"fromArray": ""
+		};
+
+		if (dataRepeated === "repeated") {
+			opt.fromArray = "true";
+		}
+
+		switch (value) {
+			// item
+			case "1":
+				content = func.getItem(opt);
+				break;
+
+			// array
+			case "2":
+				content = func.getArrayItem(opt);
+				break;
+
+			// struct
+			case "3":
+				content = func.getStructItem(opt);
+				break;
+
+			default:
+				opt.isRequired = "no";
+
+				switch (dataType) {
+
+					case "array":
+						content = func.getArrayItem(opt);
+						break;
+
+					case "struct":
+						content = func.getStructItem(opt);
+						break;
+
+					default: 
+						content = func.getItem(opt);
+
+				}
+
+				if (dataRepeated != "repeated") {
+					_this.find("option[value='" + value + "']").remove();
+				}
+
+		}
+
+		_this.val("0");
+		$(content).insertBefore(_this.parent());
+
+	});
+
+},{"../common/functions":2,"../common/idl-data":3,"../common/jquery":5,"../common/selector":6}],10:[function(require,module,exports){
+var $ = require("../common/jquery"),
+	func = require("../common/functions"),
+	selector = require("../common/selector");
 
 selector.dataTabOption.find("li").on("click", function() {
 	var _this = $(this),
@@ -12639,10 +12657,10 @@ selector.dataTabOption.find("li").on("click", function() {
 
 });
 
-},{"./common/functions":4,"./common/jquery":7,"./common/selector":8}],10:[function(require,module,exports){
-var $ = require("./common/jquery"),
-	func = require("./common/functions"),
-	selector = require("./common/selector");
+},{"../common/functions":2,"../common/jquery":5,"../common/selector":6}],11:[function(require,module,exports){
+var $ = require("../common/jquery"),
+	func = require("../common/functions"),
+	selector = require("../common/selector");
 
 // Remove a Field
 selector.getList.on("click", ".get-option > a", function() {
@@ -12698,10 +12716,10 @@ selector.requestList.on("click", "li[method='GET']", function() {
 
 });
 
-},{"./common/functions":4,"./common/jquery":7,"./common/selector":8}],11:[function(require,module,exports){
-var $ = require("./common/jquery"),
-	func = require("./common/functions"),
-	selector = require("./common/selector");
+},{"../common/functions":2,"../common/jquery":5,"../common/selector":6}],12:[function(require,module,exports){
+var $ = require("../common/jquery"),
+	func = require("../common/functions"),
+	selector = require("../common/selector");
 
 // Remove a Field
 selector.headerList.on("click", ".header-option > a", function() {
@@ -12725,28 +12743,10 @@ selector.headerData.find("span:eq(1) > a").on("click", function() {
 
 });
 
-},{"./common/functions":4,"./common/jquery":7,"./common/selector":8}],12:[function(require,module,exports){
-var $ = require("./common/jquery");
-
-require("./token");
-require("./api-select");
-
-require("./url");
-
-require("./data-tabs");
-
-require("./sdk");
-
-require("./header-options");
-require("./post-options");
-require("./get-options");
-
-require("./array-struct-options");
-
-},{"./api-select":2,"./array-struct-options":3,"./common/jquery":7,"./data-tabs":9,"./get-options":10,"./header-options":11,"./post-options":13,"./sdk":14,"./token":15,"./url":16}],13:[function(require,module,exports){
-var $ = require("./common/jquery"),
-	func = require("./common/functions"),
-	selector = require("./common/selector");
+},{"../common/functions":2,"../common/jquery":5,"../common/selector":6}],13:[function(require,module,exports){
+var $ = require("../common/jquery"),
+	func = require("../common/functions"),
+	selector = require("../common/selector");
 
 // Remove a Field
 selector.postList.on("click", ".post-option > a", function() {
@@ -12813,10 +12813,10 @@ selector.requestList
 
 	});
 
-},{"./common/functions":4,"./common/jquery":7,"./common/selector":8}],14:[function(require,module,exports){
-var $ = require("./common/jquery"),
-	func = require("./common/functions"),
-	selector = require("./common/selector");
+},{"../common/functions":2,"../common/jquery":5,"../common/selector":6}],14:[function(require,module,exports){
+var $ = require("../common/jquery"),
+	func = require("../common/functions"),
+	selector = require("../common/selector");
 
 // hide sdk
 selector.dom.on("click", function() {
@@ -12852,10 +12852,10 @@ selector.sdkTab.on("click", "a:not('.copy-sdk')", function() {
 
 
 	
-},{"./common/functions":4,"./common/jquery":7,"./common/selector":8}],15:[function(require,module,exports){
-var $ = require("./common/jquery"),
-	func = require("./common/functions"),
-	selector = require("./common/selector");
+},{"../common/functions":2,"../common/jquery":5,"../common/selector":6}],15:[function(require,module,exports){
+var $ = require("../common/jquery"),
+	func = require("../common/functions"),
+	selector = require("../common/selector");
 
 selector.dom.on("click", "div", function() {
 	func.hideTokenItem();
@@ -12890,10 +12890,10 @@ selector.tokenItem
 
 	});
 
-},{"./common/functions":4,"./common/jquery":7,"./common/selector":8}],16:[function(require,module,exports){
-var $ = require("./common/jquery"),
-	func = require("./common/functions"),
-	selector = require("./common/selector");
+},{"../common/functions":2,"../common/jquery":5,"../common/selector":6}],16:[function(require,module,exports){
+var $ = require("../common/jquery"),
+	func = require("../common/functions"),
+	selector = require("../common/selector");
 
 selector.showUrl.on("click", function() {
 	func.showResult();
@@ -12932,7 +12932,7 @@ selector.analyzeWarning.on("click", function(event) {
 
 });
 
-},{"./common/functions":4,"./common/jquery":7,"./common/selector":8}]},{},[12])
+},{"../common/functions":2,"../common/jquery":5,"../common/selector":6}]},{},[7])
 
 
 //# sourceMappingURL=script.js.map
