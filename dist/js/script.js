@@ -12161,22 +12161,8 @@ var selector = {
 module.exports = selector;
 
 },{"./jquery":5}],7:[function(require,module,exports){
-var $ = require('../common/jquery');
-$(function() {
 
-	setTimeout(function() {
-		$('#docs').height(docs.document.body.scrollHeight);
-	}, 1);
-
-	$('.doc-list').on('click', 'a', function() {
-		$('#docs').height($(window).height());
-
-		setTimeout(function() {
-			$('#docs').height(docs.body.scrollHeight);
-		}, 1);
-	});
-})
-},{"../common/jquery":5}],8:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 var canvasSupport = !!document.createElement('canvas').getContext;
 if (canvasSupport) {
 	/*兼容不支持requestAnimationFrame的浏览器*/
