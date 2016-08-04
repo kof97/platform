@@ -11255,7 +11255,7 @@ var func = {
 
 		content += "<br><br><strong>header 信息预览：</strong><br>" + JSON.stringify(func.collectParams("header").json, null, 4);
 
-		selector.reponseData.html(content);
+		selector.reponseData.html(content).show();
 	},
 
 	checkRequest: function() {
@@ -11312,7 +11312,7 @@ var func = {
 			//res = JSON.parse(res);
 
 			if (res.hasOwnProperty('debug message')) {
-				$('#response-data').hide()
+				$('#response-data').hide();
 				$('#debug-data').html(JSON.stringify(res, null, 4)).show();
 			} else {
 				$('#debug-data').hide();
@@ -12810,7 +12810,7 @@ selector.getData.find("span:eq(0) > a").on("click", function() {
 
 // view data
 selector.getData.find("span:eq(1) > a").on("click", function() {
-	selector.reponseData.html("<strong>GET 参数预览：</strong><br>" + JSON.stringify(func.collectParams("get").json, null, 4));
+	selector.reponseData.html("<strong>GET 参数预览：</strong><br>" + JSON.stringify(func.collectParams("get").json, null, 4)).show();
 
 });
 
@@ -12868,7 +12868,7 @@ selector.headerData.find("span:eq(0) > a").on("click", function() {
 
 // view data
 selector.headerData.find("span:eq(1) > a").on("click", function() {
-	selector.reponseData.html("<strong>header 头信息预览：</strong><br>" + JSON.stringify(func.collectParams("header").json, null, 4));
+	selector.reponseData.html("<strong>header 头信息预览：</strong><br>" + JSON.stringify(func.collectParams("header").json, null, 4)).show();
 });
 
 },{"../common/functions":2,"../common/jquery":5,"../common/selector":6}],14:[function(require,module,exports){
@@ -12892,7 +12892,7 @@ selector.postData.find("span:eq(0) > a").on("click", function() {
 
 // view data
 selector.postData.find("span:eq(1) > a").on("click", function() {
-	selector.reponseData.html("<strong>POST 参数预览：</strong><br>" + JSON.stringify(func.collectParams("post").json, null, 4));
+	selector.reponseData.html("<strong>POST 参数预览：</strong><br>" + JSON.stringify(func.collectParams("post").json, null, 4)).show();
 });
 
 // selected
