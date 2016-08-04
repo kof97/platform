@@ -10111,7 +10111,7 @@ var func = {
 
 			value = "",
 			list = [];		
-console.log(conf);
+
 		if (conf.name != "") {
 			conf.list = func.getEnumList(conf.name);
 		}
@@ -10138,8 +10138,8 @@ console.log(conf);
 			case "struct":
 				func.addStructField(conf);
 				func.toggleTab(1);
+
 				return 0;
-				break;
 
 			case "array":
 				func.addArrayField(conf);
@@ -10564,7 +10564,10 @@ console.log(conf);
 
 		switch (conf.isRequired) {
 			case "yes":
+				var elements = func.getStructElements(conf.extendType);
 
+				items = elements.items;
+				options = elements.options;
 				break;
 
 			case "no":
@@ -10614,15 +10617,16 @@ console.log(conf);
 
 	/**
 	 * 获取 struct 类型的子元素字段（拼接好的html），可以递归操作
-	 * @param name {string} 字段名
+	 * @param extendType {string} 字段名
 	 * @return items {string} item 项的 html
 	 * @return options {string} option 项的 html
 	 */
-	getStructElements: function(name) {
-		name = (selector.requestList.find("span[data-post-name='" + name + "']").attr("data-extends") || name).split(".").pop();
+	getStructElements: function(extendType) {
+		var extInfo = extendType.split('.'),
+			name = extInfo[1],
+			moduleName = extInfo[0];
 
-		var moduleName = selector.modules.val(),
-			interfaceName = selector.interfaces.val(),
+		var interfaceName = selector.interfaces.val(),
 			modules = idl.mod.filter("[name='" + moduleName + "']"),
 			elements = modules.find("interface[service='" + interfaceName + "']")
 							  .find("types [name='" + name + "']").eq(0)
@@ -10666,6 +10670,7 @@ console.log(conf);
 
 			var opt = {
 				"name": elementName,
+				"extendType": extModule + '.' + extendType,
 				"isRequired": isRequired,
 				"list": list
 			};
@@ -10714,6 +10719,7 @@ console.log(conf);
 		var conf = $.extend({}, {
 					"name": "",
 					"isRequired": "",
+					"extendType": "",
 					"method": ""
 				}, opt),
 			removeOption = "";
@@ -10722,7 +10728,7 @@ console.log(conf);
 			removeOption = '<a href="javascript:void(0)" data-' + conf.method + '-name="' + conf.name + '">Remove The Param</a>';
 		}
 
-		var elements = func.getStructElements(conf.name),
+		var elements = func.getStructElements(conf.extendType),
 			dataOption = '<div class="' + conf.method + '-option">\
 							<input readonly type="text" name="' + conf.name + '" value="' + conf.name + '" placeholder="Name">\
 							<div class="struct-options shadow struct-big-options">\
@@ -12407,7 +12413,7 @@ selector.interfaces.on("change", function() {
 			opt = {
 				"name": requestName,
 				"value": "",
-				"extendType": extendType,
+				"extendType": extModule + '.' + extendType,
 				"dataType": dataType,
 				"isRequired": isRequired
 			};
