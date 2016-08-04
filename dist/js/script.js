@@ -12161,6 +12161,22 @@ var selector = {
 module.exports = selector;
 
 },{"./jquery":5}],7:[function(require,module,exports){
+var $ = require('../common/jquery');
+$(function() {
+
+	setTimeout(function() {
+		$('#docs').height(docs.document.body.scrollHeight);
+	}, 1);
+
+	$('.doc-list').on('click', 'a', function() {
+		$('#docs').height($(window).height());
+
+		setTimeout(function() {
+			$('#docs').height(docs.body.scrollHeight);
+		}, 1);
+	});
+})
+},{"../common/jquery":5}],8:[function(require,module,exports){
 var canvasSupport = !!document.createElement('canvas').getContext;
 if (canvasSupport) {
 	/*兼容不支持requestAnimationFrame的浏览器*/
@@ -12303,11 +12319,14 @@ if (canvasSupport) {
 	animation();
 }
 
-},{}],8:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 var $ = require("./common/jquery");
 
 /* index */
 require("./index/interstellar");
+
+/* docs */
+require("./docs/docs-bar");
 
 /* tools */
 require("./tools/token");
@@ -12320,7 +12339,7 @@ require("./tools/post-options");
 require("./tools/get-options");
 require("./tools/array-struct-options");
 
-},{"./common/jquery":5,"./index/interstellar":7,"./tools/api-select":9,"./tools/array-struct-options":10,"./tools/data-tabs":11,"./tools/get-options":12,"./tools/header-options":13,"./tools/post-options":14,"./tools/sdk":15,"./tools/token":16,"./tools/url":17}],9:[function(require,module,exports){
+},{"./common/jquery":5,"./docs/docs-bar":7,"./index/interstellar":8,"./tools/api-select":10,"./tools/array-struct-options":11,"./tools/data-tabs":12,"./tools/get-options":13,"./tools/header-options":14,"./tools/post-options":15,"./tools/sdk":16,"./tools/token":17,"./tools/url":18}],10:[function(require,module,exports){
 var $ = require("../common/jquery"),
 	func = require("../common/functions"),
 	idl = require("../common/idl-data"),
@@ -12484,7 +12503,7 @@ selector.versions.on("change", function() {
 	func.createUrl();
 });
 
-},{"../common/functions":2,"../common/idl-data":3,"../common/jquery":5,"../common/selector":6}],10:[function(require,module,exports){
+},{"../common/functions":2,"../common/idl-data":3,"../common/jquery":5,"../common/selector":6}],11:[function(require,module,exports){
 var $ = require("../common/jquery"),
 	idl = require("../common/idl-data"),
 	func = require("../common/functions"),
@@ -12777,7 +12796,7 @@ selector.getList
 		$(content).insertBefore(_this.parent());
 	});
 
-},{"../common/functions":2,"../common/idl-data":3,"../common/jquery":5,"../common/selector":6}],11:[function(require,module,exports){
+},{"../common/functions":2,"../common/idl-data":3,"../common/jquery":5,"../common/selector":6}],12:[function(require,module,exports){
 var $ = require("../common/jquery"),
 	func = require("../common/functions"),
 	selector = require("../common/selector");
@@ -12793,7 +12812,7 @@ selector.dataTabOption.find("li").on("click", function() {
 	func.toggleTab(_this.index());
 });
 
-},{"../common/functions":2,"../common/jquery":5,"../common/selector":6}],12:[function(require,module,exports){
+},{"../common/functions":2,"../common/jquery":5,"../common/selector":6}],13:[function(require,module,exports){
 var $ = require("../common/jquery"),
 	func = require("../common/functions"),
 	selector = require("../common/selector");
@@ -12851,7 +12870,7 @@ selector.requestList.on("click", "li[method='GET']", function() {
 	_this.find(".checked").css("visibility", "visible");
 });
 
-},{"../common/functions":2,"../common/jquery":5,"../common/selector":6}],13:[function(require,module,exports){
+},{"../common/functions":2,"../common/jquery":5,"../common/selector":6}],14:[function(require,module,exports){
 var $ = require("../common/jquery"),
 	func = require("../common/functions"),
 	selector = require("../common/selector");
@@ -12875,7 +12894,7 @@ selector.headerData.find("span:eq(1) > a").on("click", function() {
 	selector.reponseData.html("<strong>header 头信息预览：</strong><br>" + JSON.stringify(func.collectParams("header").json, null, 4)).show();
 });
 
-},{"../common/functions":2,"../common/jquery":5,"../common/selector":6}],14:[function(require,module,exports){
+},{"../common/functions":2,"../common/jquery":5,"../common/selector":6}],15:[function(require,module,exports){
 var $ = require("../common/jquery"),
 	func = require("../common/functions"),
 	selector = require("../common/selector");
@@ -12941,7 +12960,7 @@ selector.requestList
 		func.hideNote();
 	});
 
-},{"../common/functions":2,"../common/jquery":5,"../common/selector":6}],15:[function(require,module,exports){
+},{"../common/functions":2,"../common/jquery":5,"../common/selector":6}],16:[function(require,module,exports){
 var $ = require("../common/jquery"),
 	func = require("../common/functions"),
 	selector = require("../common/selector");
@@ -12975,7 +12994,7 @@ selector.sdkTab.on("click", "a:not('.copy-sdk')", function() {
 
 
 	
-},{"../common/functions":2,"../common/jquery":5,"../common/selector":6}],16:[function(require,module,exports){
+},{"../common/functions":2,"../common/jquery":5,"../common/selector":6}],17:[function(require,module,exports){
 var $ = require("../common/jquery"),
 	func = require("../common/functions"),
 	selector = require("../common/selector");
@@ -13014,7 +13033,7 @@ selector.tokenItem
 		event.stopPropagation();
 	});
 
-},{"../common/functions":2,"../common/jquery":5,"../common/selector":6}],17:[function(require,module,exports){
+},{"../common/functions":2,"../common/jquery":5,"../common/selector":6}],18:[function(require,module,exports){
 var $ = require("../common/jquery"),
 	func = require("../common/functions"),
 	selector = require("../common/selector");
@@ -13048,7 +13067,7 @@ selector.analyzeWarning.on("click", function(event) {
 	event.stopPropagation();
 });
 
-},{"../common/functions":2,"../common/jquery":5,"../common/selector":6}]},{},[8])
+},{"../common/functions":2,"../common/jquery":5,"../common/selector":6}]},{},[9])
 
 
 //# sourceMappingURL=script.js.map
