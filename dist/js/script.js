@@ -10383,6 +10383,10 @@ var func = {
 	 * @return {string}
 	 */
 	getEnumList: function(name) {
+		if (name === 'ui_visibility') {
+			return '';
+		}
+
 		var modules = idl.mod.filter("[name='" + selector.modules.val() + "']"),
 			element = modules.find("interface[service='" + selector.interfaces.val() + "']")
 							 .find("types element[name='" + name + "']"),
