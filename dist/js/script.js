@@ -12479,7 +12479,6 @@ selector.dom.on("click", "div", function() {
 		.find("a").fadeOut(100);
 
 	$(".add-params").slideUp(100);
-
 });
 
 selector.dom.on("click", "div", function() {
@@ -12488,7 +12487,6 @@ selector.dom.on("click", "div", function() {
 		.find("a").fadeOut(100);
 
 	$(".add-params").slideUp(100);
-
 });
 
 selector.postList
@@ -12500,7 +12498,6 @@ selector.postList
 	 */
 	.on("click", ".array-big-options", function(event) {
 		event.stopPropagation();
-
 	})
 
 	.on("click", ".array-big-options", function() {	
@@ -12509,12 +12506,10 @@ selector.postList
 			 .find("a").fadeIn(100);
 
 		_this.find(".add-params").slideDown(100);
-
 	})
 
 	.on("click", ".array-big-options > a", function() {
 		func.removePostField(this, 2);
-		
 	})
 
 	/**
@@ -12525,7 +12520,6 @@ selector.postList
 	 */
 	.on("click", ".struct-big-options", function(event) {
 		event.stopPropagation();
-
 	})
 
 	.on("click", ".struct-big-options", function() {	
@@ -12534,12 +12528,10 @@ selector.postList
 			 .find("a").fadeIn(100);
 
 		_this.find(".add-params").slideDown(100);
-
 	})
 
 	.on("click", ".struct-big-options > a", function() {
 		func.removePostField(this, 2);
-		
 	})
 
 	/**
@@ -12561,7 +12553,6 @@ selector.postList
 		}
 
 		_this.parent().remove();
-
 	})
 
 	.on("change", ".add-params select", function() {
@@ -12627,12 +12618,10 @@ selector.postList
 				if (dataRepeated != "repeated") {
 					_this.find("option[value='" + value + "']").remove();
 				}
-
 		}
 
 		_this.val("0");
 		$(content).insertBefore(_this.parent());
-
 	});
 
 selector.getList
@@ -12644,7 +12633,6 @@ selector.getList
 	 */
 	.on("click", ".array-big-options", function(event) {
 		event.stopPropagation();
-
 	})
 
 	.on("click", ".array-big-options", function() {	
@@ -12653,12 +12641,10 @@ selector.getList
 			 .find("a").fadeIn(100);
 
 		_this.find(".add-params").slideDown(100);
-
 	})
 
 	.on("click", ".array-big-options > a", function() {
 		func.removeGetField(this, 2);
-		
 	})
 
 	/**
@@ -12669,7 +12655,6 @@ selector.getList
 	 */
 	.on("click", ".struct-big-options", function(event) {
 		event.stopPropagation();
-
 	})
 
 	.on("click", ".struct-big-options", function() {	
@@ -12678,12 +12663,10 @@ selector.getList
 			 .find("a").fadeIn(100);
 
 		_this.find(".add-params").slideDown(100);
-
 	})
 
 	.on("click", ".struct-big-options > a", function() {
 		func.removeGetField(this, 2);
-		
 	})
 
 	/**
@@ -12705,7 +12688,6 @@ selector.getList
 		}
 
 		_this.parent().remove();
-
 	})
 
 	.on("change", ".add-params select", function() {
@@ -12771,12 +12753,10 @@ selector.getList
 				if (dataRepeated != "repeated") {
 					_this.find("option[value='" + value + "']").remove();
 				}
-
 		}
 
 		_this.val("0");
 		$(content).insertBefore(_this.parent());
-
 	});
 
 },{"../common/functions":2,"../common/idl-data":3,"../common/jquery":5,"../common/selector":6}],11:[function(require,module,exports){
@@ -12793,7 +12773,6 @@ selector.dataTabOption.find("li").on("click", function() {
 	}
 
 	func.toggleTab(_this.index());
-
 });
 
 },{"../common/functions":2,"../common/jquery":5,"../common/selector":6}],12:[function(require,module,exports){
@@ -12804,7 +12783,6 @@ var $ = require("../common/jquery"),
 // Remove a Field
 selector.getList.on("click", ".get-option > a", function() {
 	func.removeGetField(this);
-
 });
 
 // Add a Field
@@ -12814,7 +12792,6 @@ selector.getData.find("span:eq(0) > a").on("click", function() {
 	}
 
 	func.addGetField();
-
 });
 
 // view data
@@ -12854,7 +12831,6 @@ selector.requestList.on("click", "li[method='GET']", function() {
 
 	_this.addClass("selected");
 	_this.find(".checked").css("visibility", "visible");
-
 });
 
 },{"../common/functions":2,"../common/jquery":5,"../common/selector":6}],13:[function(require,module,exports){
@@ -12865,7 +12841,6 @@ var $ = require("../common/jquery"),
 // Remove a Field
 selector.headerList.on("click", ".header-option > a", function() {
 	func.removeHeaderField(this);
-
 });
 
 // Add a Field
@@ -12875,13 +12850,11 @@ selector.headerData.find("span:eq(0) > a").on("click", function() {
 	}
 
 	func.addHeaderField();
-
 });
 
 // view data
 selector.headerData.find("span:eq(1) > a").on("click", function() {
 	selector.reponseData.html("<strong>header 头信息预览：</strong><br>" + JSON.stringify(func.collectParams("header").json, null, 4));
-
 });
 
 },{"../common/functions":2,"../common/jquery":5,"../common/selector":6}],14:[function(require,module,exports){
@@ -12892,7 +12865,6 @@ var $ = require("../common/jquery"),
 // Remove a Field
 selector.postList.on("click", ".post-option > a", function() {
 	func.removePostField(this);
-	
 });
 
 // Add a Field
@@ -12902,13 +12874,11 @@ selector.postData.find("span:eq(0) > a").on("click", function() {
 	}
 
 	func.addPostField();
-
 });
 
 // view data
 selector.postData.find("span:eq(1) > a").on("click", function() {
 	selector.reponseData.html("<strong>POST 参数预览：</strong><br>" + JSON.stringify(func.collectParams("post").json, null, 4));
-
 });
 
 // selected
@@ -12942,18 +12912,15 @@ selector.requestList
 
 		_this.addClass("selected");
 		_this.find(".checked").css("visibility", "visible");
-		
 	})
 
 	// show note
 	.on("mouseover", ".note-icon", function() {
 		func.showNote(this);
-
 	})
 
 	.on("mouseout", ".note-icon", function() {
 		func.hideNote();
-
 	});
 
 },{"../common/functions":2,"../common/jquery":5,"../common/selector":6}],15:[function(require,module,exports){
@@ -12964,24 +12931,20 @@ var $ = require("../common/jquery"),
 // hide sdk
 selector.dom.on("click", function() {
 	func.hideSDK();
-
 });
 
 // show sdk
 selector.showSDK
 	.on("click", function() {
 		func.showSDK();
-
 	})
 
 	.on("click", function(event) {
 		event.stopPropagation();
-
 	});
 
 selector.sdk.on("click", function(event) {
 	event.stopPropagation();
-
 });
 
 // toggle tab
@@ -12989,7 +12952,6 @@ selector.sdkTab.on("click", "a:not('.copy-sdk')", function() {
 	var _this = $(this);
 
 	func.toggleSDK(_this.index());
-
 });
 
 
