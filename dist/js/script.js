@@ -11292,17 +11292,25 @@ var func = {
 
 				return 0;
 		}
-
+/*
 		var data = {
 			'url': url,
 			'header': headerData,
 			'method': method,
 			'params': params
 		}
+*/
+		var data = {
+			'mod': selector.modules.val(),
+			'act': selector.interfaces.val(),
+			'header': headerData,
+			'params': params,
+			'token': selector.token.val()
+		}
 
 		$.post('../dist/api/proxy.php', data, function(res) {
 			//res = JSON.parse(res);
-
+			console.log(res);
 			$('#response-data').html(JSON.stringify(res, null, 4));
 		});
 	},
