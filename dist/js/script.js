@@ -11310,7 +11310,7 @@ var func = {
 
 		$.post('../dist/api/proxy.php', data, function(res) {
 			//res = JSON.parse(res);
-			console.log(res);
+
 			$('#response-data').html(JSON.stringify(res, null, 4));
 		});
 	},
