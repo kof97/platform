@@ -10174,7 +10174,6 @@ var func = {
 		selector.postList.append(postOption);
 
 		func.toggleTab(1);
-
 	},
 
 	/**
@@ -10264,7 +10263,6 @@ var func = {
 		selector.getList.append(getOption);
 
 		func.toggleTab(0);
-
 	},
 
 	/**
@@ -10291,7 +10289,6 @@ var func = {
 						</div>';
 
 		selector.headerList.append(headerOption);
-
 	},
 
 	/**
@@ -10344,7 +10341,6 @@ var func = {
 
 			default: ;
 		}
-
 	},
 
 	/**
@@ -10374,7 +10370,6 @@ var func = {
 		}
 
 		return content;
-
 	},
 
 	/**
@@ -10400,7 +10395,6 @@ var func = {
 		}
 
 		return list;
-
 	},
 
 	/**
@@ -10481,7 +10475,6 @@ var func = {
 				   </div>';
 
 		return content;
-
 	},
 
 	/**
@@ -10539,7 +10532,6 @@ var func = {
 				   </div>';
 
 		return content;
-
 	},
 
 	/**
@@ -10616,7 +10608,6 @@ var func = {
 				   </div>';
 
 		return content;
-
 	},
 
 	/**
@@ -10700,7 +10691,6 @@ var func = {
 			items: items.join(""),
 			options: options.join("")
 		}
-
 	},
 
 	/**
@@ -10755,7 +10745,6 @@ var func = {
 
 			default: ;
 		}
-
 	},
 
 	/**
@@ -10777,7 +10766,6 @@ var func = {
 
 		list.removeClass("selected");
 		list.find(".checked").css("visibility", "hidden");
-
 	},
 
 	/**
@@ -10799,7 +10787,6 @@ var func = {
 
 		list.removeClass("selected");
 		list.find(".checked").css("visibility", "hidden");
-
 	},
 
 	/**
@@ -10817,7 +10804,6 @@ var func = {
 		} else {
 			that.parent().parent().remove();
 		}
-
 	},
 
 	/**
@@ -10826,7 +10812,6 @@ var func = {
 	 */
 	clearHeaderField: function() {
 		selector.headerList.html("");
-
 	},
 
 	/**
@@ -10839,7 +10824,6 @@ var func = {
 
 		selector.getData.hide();
 		selector.getList.html("");
-
 	},
 
 	/**
@@ -10862,7 +10846,6 @@ var func = {
 		}
 
 		func.toggleTab(num);
-
 	},
 
 	/**
@@ -10876,7 +10859,6 @@ var func = {
 		that.siblings().addClass("disabled").removeClass("selected");
 
 		func.toggleTab(num);
-
 	},
 
 	/**
@@ -10913,7 +10895,6 @@ var func = {
 
 		selectors.slideDown(300)
 				 .siblings().hide();
-
 	},
 
 	/**
@@ -10955,7 +10936,6 @@ var func = {
 		selector.noteData.css("left", that.offset().left + 20 + "px")
 						 .css("top", that.offset().top + "px")
 						 .show();
-
 	},
 
 	/**
@@ -10965,7 +10945,6 @@ var func = {
 	hideNote: function() {
 		selector.noteData.hide();
 		selector.noteData.html("");
-
 	},
 
 	/**
@@ -11045,7 +11024,6 @@ var func = {
 			json: JSON.parse(content),
 			string: content
 		}
-
 	},
 
 	/**
@@ -11125,7 +11103,6 @@ var func = {
 			return "[" + params.join(",") + "]";
 
 		}
-
 	},
 
 	/**
@@ -11143,7 +11120,6 @@ var func = {
 				  act;
 
 		return url;
-
 	},
 
 	/**
@@ -11154,7 +11130,6 @@ var func = {
 		var url = func.getUrl();
 
 		selector.url.val(url);
-
 	},
 
 	/**
@@ -11204,7 +11179,6 @@ var func = {
 		content = params.join("&");
 
 		return content;
-	
 	},
 
 	/**
@@ -11219,7 +11193,6 @@ var func = {
 		content = params === "" ? func.getBaseUrl() : func.getBaseUrl() + "?" + params;
 
 		return content;
-
 	},
 
 	/**
@@ -11249,7 +11222,6 @@ var func = {
 		content += "<br><br><strong>header 信息预览：</strong><br>" + JSON.stringify(func.collectParams("header").json, null, 4);
 
 		selector.reponseData.html(content);
-
 	},
 
 	checkRequest: function() {
@@ -11299,7 +11271,6 @@ var func = {
 
 			$('#response-data').html(JSON.stringify(res, null, 4));
 		});
-
 	},
 
 	/**
@@ -11431,7 +11402,6 @@ var func = {
 
 				return 0;
 		}
-
 	},
 
 	/**
@@ -11547,7 +11517,6 @@ var func = {
 			}
 
 		}
-
 	},
 
 	/**
@@ -11758,7 +11727,6 @@ var func = {
 
 			default: ;
 		}
-
 	},
 
 	/**
@@ -11773,7 +11741,6 @@ var func = {
 					.css("right", selector.analyzeUrl.width() + 60 + "px")
 					.css("top", "-" + selector.analyzeUrl.height() * 1.8 + "px")
 					.fadeIn(300);
-
 	},
 
 	/**
@@ -11793,7 +11760,6 @@ var func = {
 					.css("right", that.width() + "px")
 					.css("top", that.height() * 1.9 + "px")
 					.fadeIn(500);
-
 	},
 
 	/**
@@ -11828,7 +11794,6 @@ var func = {
 				func.addHeaderField({"name": "Authorization", "value": "Bearer " + data});
 			}
 		});
-
 	},
 
 	/**
@@ -11849,7 +11814,6 @@ var func = {
 		var type = idl.types.find("[name='" + extendType + "']").attr("extends");
 
 		return type;
-
 	},
 
 	/**
@@ -11862,7 +11826,6 @@ var func = {
 			extendType = type.split(".").pop();
 
 		return extendType;
-
 	},
 
 	/**
@@ -11882,7 +11845,6 @@ var func = {
 
 			return 1;
 		}
-
 	},
 
 	/**
@@ -11902,7 +11864,6 @@ var func = {
 		
 			return 1;
 		}
-
 	},
 
 	/**
@@ -11922,7 +11883,6 @@ var func = {
 
 			return 1;
 		}
-
 	},
 
 	/**
@@ -11935,7 +11895,6 @@ var func = {
 		func.creatCurlSDK();
 
 		selector.sdk.css("top", "20%");
-
 	},
 
 	/**
@@ -11957,7 +11916,6 @@ var func = {
 		_this.addClass("selected").siblings().removeClass("selected");
 
 		info.show().siblings().hide();
-
 	},
 
 	/**
@@ -11976,7 +11934,6 @@ var func = {
 			v = headers[k];
 
 			headerParams.push("-H '" + k + ": " + v + "'");
-
 		}
 
 		switch (selector.method.text()) {
@@ -12016,7 +11973,6 @@ var func = {
 		}
 
 		selector.sdkInfo.find("pre:eq(0)").text(code);
-
 	},
 
 	/**
@@ -12025,7 +11981,6 @@ var func = {
 	 */
 	clearReponse: function() {
 		selector.reponseData.html("");
-
 	},
 
 }
