@@ -20,7 +20,7 @@
 				<strong>SPA</strong> for developers |
 			</a>
 			<a href="">OPEN SDK</a>
-			<a href="">文档</a>
+			<a href="./doc.php">文档</a>
 			<a href="./tools.php" class="nav-select">工具</a>
 			<a href="">新闻</a>
 			<a href="">支持中心</a>
