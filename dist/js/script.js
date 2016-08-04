@@ -10102,6 +10102,7 @@ var func = {
 				"name": "",
 				"value": "",
 				"dataType": "",
+				"extendType": "",
 				"isRequired": "",
 				"list": "",
 				"method": "post"
@@ -10110,7 +10111,7 @@ var func = {
 
 			value = "",
 			list = [];		
-
+console.log(conf);
 		if (conf.name != "") {
 			conf.list = func.getEnumList(conf.name);
 		}
@@ -10191,6 +10192,7 @@ var func = {
 					"name": "",
 					"value": "",
 					"dataType": "",
+					"extendType": "",
 					"isRequired": "",
 					"list": "",
 					"method": "get"
@@ -10619,8 +10621,10 @@ var func = {
 	getStructElements: function(name) {
 		name = (selector.requestList.find("span[data-post-name='" + name + "']").attr("data-extends") || name).split(".").pop();
 
-		var modules = idl.mod.filter("[name='" + selector.modules.val() + "']"),
-			elements = modules.find("interface[service='" + selector.interfaces.val() + "']")
+		var moduleName = selector.modules.val(),
+			interfaceName = selector.interfaces.val(),
+			modules = idl.mod.filter("[name='" + moduleName + "']"),
+			elements = modules.find("interface[service='" + interfaceName + "']")
 							  .find("types [name='" + name + "']").eq(0)
 							  .find("element"),
 
@@ -10640,14 +10644,20 @@ var func = {
 		elements.each(function(i, data) {
 			var _data = $(data),
 				elementName = _data.attr("name"),
-				extendType = _data.attr("type").split(".").pop(),
-				dataType = func.getType(extendType),
+				extendType = _data.attr("type"),
 				isRequired = _data.attr("require"),
-
 				content = "",
-
 				list = "",
-				source = "";
+				source = ""
+				ext = extendType,
+				extModule = moduleName;
+
+			var pos = extendType.indexOf('.');
+			if (pos !== -1) {
+				ext = extendType.split(".").pop();
+				extModule = extendType.substr(0, pos);
+			}
+			var dataType = func.getType(extModule, interfaceName, ext).type,
 
 			list = _data.attr("list") || "";
 			if (list === "") {
@@ -11802,18 +11812,36 @@ var func = {
 	 */
 	hideTokenItem: function() {
 		selector.tokenItem.hide().html("");
-
 	},
 
 	/**
 	 * 获得字段的类型
-	 * @param extendType {string} 字段名/继承的父字段名
+	 * @param extendMod     {string} 字段名所属模块
+	 * @param interfaceName {string} 字段名所属接口
+	 * @param extendType    {string} 字段名/继承的父字段名
 	 * 
 	 */
-	getType: function(extendType) {
-		var type = idl.types.find("[name='" + extendType + "']").attr("extends");
+	getType: function(extendMod, interfaceName, extendType) {
+		var modules = idl.mod.filter("[name='" + extendMod + "']"),
+			interfaces = modules.find("interface[service='" + interfaceName + "']"),
+			element = interfaces.find("types simpleType[name='" + extendType + "']");
 
-		return type;
+		element = element.length === 0 ? interfaces.find("types complexType[name='" + extendType + "']") : element;
+
+		if (element.length === 0) {
+			element = modules.find("types simpleType[name='" + extendType + "']");
+			element = element.length === 0 ? modules.find("types complexType[name='" + extendType + "']") : element;
+		}
+
+		if (element.length === 0) {
+			element = idl.types.find("simpleType[name='" + extendType + "']");
+			element = element.length === 0 ? idl.types.find("complexType[name='" + extendType + "']") : element;
+		}
+
+		return {
+			type: element.attr('extends'),
+
+		};
 	},
 
 	/**
@@ -12252,7 +12280,6 @@ var $ = require("./common/jquery");
 /* index */
 require("./index/interstellar");
 
-
 /* tools */
 require("./tools/token");
 require("./tools/api-select");
@@ -12365,20 +12392,26 @@ selector.interfaces.on("change", function() {
 			requestName = _data.attr("name"),
 			extendType = _data.attr("type"),
 			isRequired = _data.attr("require"),
+			visibility = "",
+			selected = "",
+			ext = extendType,
+			extModule = moduleName;
 
-			ext = extendType.split(".").pop(),
-			dataType = func.getType(ext),
+		var pos = extendType.indexOf('.');
+		if (pos !== -1) {
+			ext = extendType.split(".").pop();
+			extModule = extendType.substr(0, pos);
+		}
 
+		var dataType = func.getType(extModule, interfaceName, ext).type,
 			opt = {
 				"name": requestName,
 				"value": "",
+				"extendType": extendType,
 				"dataType": dataType,
 				"isRequired": isRequired
-			},
+			};
 
-			visibility = "",
-			selected = "";
-		
 		if (isRequired === "yes") {
 			visibility = 'style="visibility: visible"';
 			selected = 'class="selected"';
@@ -12388,12 +12421,12 @@ selector.interfaces.on("change", function() {
 			} else {
 				func.addGetField(opt);
 			}
-			
 		}
 
 		list.push('<li ' + selected + ' \
 							data-' + method.toLowerCase() + '-name="' + requestName + '" \
 							data-type="' + dataType + '" \
+							data-extends="' + extendType + '" \
 							method="' + method + '">\
 						<lable class="checked" ' + visibility + '>✓</lable>\
 						<a href="javascript:void(0)">' + requestName + '</a>\
@@ -12795,6 +12828,7 @@ selector.requestList.on("click", "li[method='GET']", function() {
 	}
 
 	var dataType = _this.attr("data-type"),
+		extendType = _this.attr("data-extends"),
 		name = _this.find("a").text(),
 		isRequired = _this.find("span:eq(1)").text(),
 
@@ -12802,6 +12836,7 @@ selector.requestList.on("click", "li[method='GET']", function() {
 			"name": name,
 			"value": "",
 			"dataType": dataType,
+			"extendType": extendType,
 			"isRequired": isRequired
 		};
 
@@ -12882,12 +12917,14 @@ selector.requestList
 		}
 
 		var dataType = _this.attr("data-type"),
+			extendType = _this.attr("data-extends"),
 			name = _this.find("a").text(),
 			isRequired = _this.find("span:eq(1)").text(),
 			opt = {
 				"name": name,
 				"value": "",
 				"dataType": dataType,
+				"extendType": extendType,
 				"isRequired": isRequired
 			};
 
