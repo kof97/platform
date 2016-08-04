@@ -133,7 +133,11 @@
 				<span class="header-warning"></span>
 
 				<div class="header-list">
-
+					<div class="header-option">
+						<input type="text" value="Authorization" placeholder="Key" readonly="true">
+						<input type="text" value="Bearer " placeholder="Value">
+						<span>*</span>
+					</div>
 				</div>
 			</div>
 		</div>

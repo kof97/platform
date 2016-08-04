@@ -10880,7 +10880,7 @@ var func = {
 		var num = 2,
 			that = selector.dataTabOption.find("li:eq(" + num + ")");
 
-		that.siblings().addClass("disabled").removeClass("selected");
+		that.siblings().not("a").addClass("disabled").removeClass("selected");
 
 		func.toggleTab(num);
 	},
@@ -11824,8 +11824,8 @@ var func = {
 			dataType: 'text',
 			data: { 'key': appkey, 'id': appid, 'uid': uid },
 			success: function(data) {
-				$("input[name='token']").val(data);
-				func.addHeaderField({"name": "Authorization", "value": "Bearer " + data});
+				selector.token.val(data);
+				selector.headerList.find("input[value='Authorization']").next().val('Bearer ' + data);
 			}
 		});
 	},
@@ -12445,7 +12445,6 @@ selector.interfaces.on("change", function() {
 							class="note-icon"></span>\
 						<span>' + isRequired + '</span>\
 				   </li>');
-
 	});
 
 	// list.reverse();
@@ -12461,12 +12460,10 @@ selector.interfaces.on("change", function() {
 
 selector.environments.on("change", function() {
 	func.createUrl();
-
 });
 
 selector.versions.on("change", function() {
 	func.createUrl();
-
 });
 
 },{"../common/functions":2,"../common/idl-data":3,"../common/jquery":5,"../common/selector":6}],10:[function(require,module,exports){
@@ -13005,18 +13002,21 @@ var $ = require("../common/jquery"),
 
 selector.dom.on("click", "div", function() {
 	func.hideTokenItem();
+});
 
+selector.token.on("change", function() {
+	var token = selector.token.val();
+
+	selector.headerList.find("input[value='Authorization']").next().val('Bearer ' + token);
 });
 
 selector.tokenPanel
 	.on("click", function() {
 		func.showTokenItem(this);
-
 	})
 
 	.on("click", function() {
 		event.stopPropagation();
-
 	});
 
 selector.tokenItem
@@ -13028,12 +13028,10 @@ selector.tokenItem
 		}
 
 		func.hideTokenItem();
-
 	})
 
 	.on("click", function() {
 		event.stopPropagation();
-
 	});
 
 },{"../common/functions":2,"../common/jquery":5,"../common/selector":6}],17:[function(require,module,exports){
@@ -13043,12 +13041,10 @@ var $ = require("../common/jquery"),
 
 selector.showUrl.on("click", function() {
 	func.showResult();
-
 });
 
 selector.submitUrl.on("click", function() {
 	func.requestUrl();
-
 });
 
 selector.analyzeUrl
@@ -13057,25 +13053,19 @@ selector.analyzeUrl
 
 		var token = selector.token.val();
 
-		func.clearHeaderField();
-		func.addHeaderField({ 'name': 'Authorization', 'value': 'Bearer ' + token });
-		//func.toggleTab(2);
-
+		selector.headerList.find("input[value='Authorization']").next().val('Bearer ' + token);
 	})
 	.on("click", function(event) {
 		event.stopPropagation();
-
 	});
 
 // hide warning
 selector.dom.on("click", function() {
 	selector.analyzeWarning.hide();
-
 });
 
 selector.analyzeWarning.on("click", function(event) {
 	event.stopPropagation();
-
 });
 
 },{"../common/functions":2,"../common/jquery":5,"../common/selector":6}]},{},[8])
