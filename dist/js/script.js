@@ -11151,7 +11151,17 @@ var func = {
 	 * 
 	 */
 	createUrl: function() {
-		var url = func.getUrl();
+		var url = '';
+
+		switch (selector.method.text()) {
+			case 'GET':
+				url = func.getUrl();
+				break;
+
+			case 'POST':
+			default:
+				url = func.getBaseUrl();
+		}
 
 		selector.url.val(url);
 	},
@@ -11837,10 +11847,10 @@ var func = {
 	 */
 	getType: function(extendMod, interfaceName, extendType) {
 		var modules = idl.mod.filter("[name='" + extendMod + "']"),
-			interfaces = modules.find("interface[service='" + interfaceName + "']"),
-			element = interfaces.find("types simpleType[name='" + extendType + "']");
+			types = modules.find("interface[service='" + interfaceName + "'] > types"),
+			element = types.find("simpleType[name='" + extendType + "']");
 
-		element = element.length === 0 ? interfaces.find("types complexType[name='" + extendType + "']") : element;
+		element = element.length === 0 ? types.find("complexType[name='" + extendType + "']") : element;
 
 		if (element.length === 0) {
 			element = modules.find("types simpleType[name='" + extendType + "']");
@@ -11854,7 +11864,6 @@ var func = {
 
 		return {
 			type: element.attr('extends'),
-
 		};
 	},
 
@@ -12328,15 +12337,14 @@ selector.modules.on("change", function() {
 
 	selector.interfaces.html('<option selected="selected" value="0">--请选择API--</option>');
 
-	func.createUrl();
-
+	func.initTab();
 	func.clearReponse();
 
 	func.clearField();
 	selector.requestList.html("");
 
 	if (moduleName === "0") {
-		func.initTab();
+		func.createUrl();
 		return 0;
 	}
 
@@ -12351,6 +12359,7 @@ selector.modules.on("change", function() {
 	selector.interfaces.append(list.join(""));
 	list = [];
 
+	func.createUrl();
 });
 
 /**
@@ -12369,8 +12378,6 @@ selector.interfaces.on("change", function() {
 	var interfaceName = $(this).val(),
 		moduleName = selector.modules.val();
 
-	func.createUrl();
-
 	func.clearReponse();
 
 	func.clearField();
@@ -12378,6 +12385,7 @@ selector.interfaces.on("change", function() {
 
 	if (interfaceName === "0") {
 		func.initTab();
+		func.createUrl();
 		return 0;
 	}
 
@@ -12448,6 +12456,7 @@ selector.interfaces.on("change", function() {
 	selector.requestList.append(list);
 	list = [];
 
+	func.createUrl();
 });
 
 selector.environments.on("change", function() {
