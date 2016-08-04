@@ -1,0 +1,52 @@
+<meta charset="utf-8">
+<style>* { padding: 0; margin: 0; }body { width: 80%; margin: 0 auto; padding: 1em 4em; font-family: "Times New Roman"; border: 1px solid #eee; }h1 { border-bottom: 1px solid #eee; }h1, h2, h3, h4, h5 { padding: 0.5em 0; margin-bottom: 0.5em; }p { border-left: 0.4em #DDDDDD solid; padding: 0.1em 1em; background: #FEFFFF; font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace; }hr { background: #E7E7E7; height: 0.2em; border: 0px; margin: 1em 0; }pre { margin: 1em 0; padding-bottom: 1em; background: #F7F7F7; font-size: 0.9em; font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace; word-wrap: break-word; overflow-x: auto; }code { background: #F5F5F5; padding: 0 0.5em; border: #E0E0E0 1px solid; color: #E21149; font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace; }</style>
+<body>
+<h1>SPA PHP SDK token 类 Spa\Authentication\AccessToken</h1>
+
+Spa\Authentication\AccessToken 类提供了 access token 相关的操作
+
+<hr>
+
+<h1>Spa\Authentication\AccessToken</h1>
+
+<h2>实例介绍</h2>
+
+<h3>初始化实例</h3>
+
+<pre><codeblock>
+    $conf = array(
+        'uid'               => '{uid}',
+        'appid'             => '{appid}',
+        'appkey'            => '{appkey}',
+        'http_client_type'  => 'curl',
+        'version'           => 'v3'
+    );
+
+    $spa = new Spa\Spa($conf);
+
+    $spaApp = $spa->getApp();
+
+    $accessToken = $spaApp->getAccessToken();
+</codeblock></pre>
+
+或直接创建
+
+<pre><codeblock>
+    $accessToken = new Spa\Authentication\AccessToken({$uid}, {$appid}, {$appkey});
+</codeblock></pre>
+
+<h2>主要方法</h2>
+
+<h3>getValue()</h3>
+
+<pre><codeblock>
+    public string getValue()
+</codeblock></pre>
+
+返回 access token 的值
+
+<hr>
+
+PS：当该类作为字符串处理时，会自动进行类型转换，返回 access token 的值
+
+</body>
