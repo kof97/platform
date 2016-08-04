@@ -11311,7 +11311,13 @@ var func = {
 		$.post('../dist/api/proxy.php', data, function(res) {
 			//res = JSON.parse(res);
 
-			$('#response-data').html(JSON.stringify(res, null, 4));
+			if (res.hasOwnProperty('debug message')) {
+				$('#response-data').hide()
+				$('#debug-data').html(JSON.stringify(res, null, 4)).show();
+			} else {
+				$('#debug-data').hide();
+				$('#response-data').html(JSON.stringify(res, null, 4)).show();
+			}
 		});
 	},
 

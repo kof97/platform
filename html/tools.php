@@ -156,7 +156,7 @@
 			</div>
 
 			<div class="response pull-right">
-				
+				<p id="debug-data"></p>
 				<pre id="response-data">
 
 				</pre>
