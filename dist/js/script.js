@@ -10115,7 +10115,7 @@ var func = {
 		if (conf.name != "") {
 			conf.list = func.getEnumList(conf.name);
 		}
-		
+
 		if (conf.list === "") {
 			value = '<input type="text" value="' + conf.value + '" placeholder="Value">';
 		} else {
@@ -10135,6 +10135,8 @@ var func = {
 		}
 
 		switch (conf.dataType) {
+			case "file":
+
 			case "struct":
 				func.addStructField(conf);
 				func.toggleTab(1);
@@ -11854,18 +11856,6 @@ var func = {
 			type: element.attr('extends'),
 
 		};
-	},
-
-	/**
-	 * 从 idl 获得字段所继承的父字段
-	 * @param name {string} 字段名
-	 * 
-	 */
-	getExtendsType: function(name) {
-		var type = idl.service.find("element[name='" + name + "']").attr("type"),
-			extendType = type.split(".").pop();
-
-		return extendType;
 	},
 
 	/**
