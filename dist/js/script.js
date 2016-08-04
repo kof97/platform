@@ -10305,6 +10305,7 @@ var func = {
 		var conf = $.extend({}, {
 					"name": "",
 					"isRequired": "no",
+					"extendType": "",
 					"method": ""
 				}, opt),
 			removeOption = "";
@@ -10622,9 +10623,14 @@ var func = {
 	 * @return options {string} option 项的 html
 	 */
 	getStructElements: function(extendType) {
-		var extInfo = extendType.split('.'),
-			name = extInfo[1],
-			moduleName = extInfo[0];
+		if (extendType.indexOf('.') !== -1) {
+			var extInfo = extendType.split('.'),
+				name = extInfo[1],
+				moduleName = extInfo[0];
+			} else {
+				moduleName = selector.modules.val();
+				name = extendType;
+			}
 
 		var interfaceName = selector.interfaces.val(),
 			modules = idl.mod.filter("[name='" + moduleName + "']"),
