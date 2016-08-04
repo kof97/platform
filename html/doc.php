@@ -17,5 +17,5 @@
 		var doc = document.getElementById('docs');
 		var header = document.getElementsByTagName('header')[0];
 
-		doc.style.height = document.body.scrollHeight - header.offsetHeight - 2 + 'px';
+		doc.style.height = document.body.scrollHeight - header.offsetHeight - 4 + 'px';
 	</script>
