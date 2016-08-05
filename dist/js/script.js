@@ -12028,8 +12028,8 @@ var func = {
 
                 if (v.indexOf('[') === 0) {
                     v = v.substr(1);
-
-                    console.log(v);
+                    v = v.substr(0, v.length - 1);
+                    v = "array(" + v + ")";
                 }
             }
             process_params.push("    '" + k + "' => '" + v + "',");
