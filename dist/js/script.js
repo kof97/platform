@@ -10082,2053 +10082,2040 @@ return jQuery;
  */
 
 var $ = require("./jquery"),
-	idl = require("./idl-data"),
-	selector = require("./selector");
+    idl = require("./idl-data"),
+    selector = require("./selector");
 
 var func = {
 
-	/**
-	 * @description 添加 post 字段
-	 * @param opt {json}
-	 * @param name {string} 字段名
-	 * @param value {string} 值
-	 * @param dataType {string} 字段类型
-	 * @param isRequired {string} 是否必填字段
-	 * @param method {string} 提交方式
-	 * @return void
-	 */
-	addPostField: function(opt = {}) {
-		var conf = $.extend({}, {
-				"name": "",
-				"value": "",
-				"dataType": "",
-				"extendType": "",
-				"isRequired": "",
-				"list": "",
-				"method": "post"
-			}, opt),
-			postOption = "",
-
-			value = "",
-			list = [];		
-
-		if (conf.name != "") {
-			conf.list = func.getEnumList(conf.name);
-		}
-
-		if (conf.list === "") {
-			value = '<input type="text" value="' + conf.value + '" placeholder="Value">';
-		} else {
-			list = conf.list.split(",");
-
-			var len = list.length,
-				options = [];
-
-			for (var i = 0; i < len; i++) {
-				options.push('<option value="' + list[i] + '">' + list[i] + '</option>');
-			}
-
-			value = '<select class="btn btn-default">\
-						<option selected="selected" value="0">-- Select a Value --</option>\
-						' + options.join("") + '\
-					 </select>';
-		}
-
-		switch (conf.dataType) {
-			case "file":
-
-			case "struct":
-				func.addStructField(conf);
-				func.toggleTab(1);
-
-				return 0;
-
-			case "array":
-				func.addArrayField(conf);
-				func.toggleTab(1);
-				return 0;
-				break;
-
-			default:
-				var isReadonly = "readonly",
-					removeOption = "";
-
-				switch (conf.isRequired) {
-					case "yes":
-						removeOption = '<span>*</span>';
-						break;
-
-					case "no":
-						removeOption = '<a data-post-name="' + conf.name + '" href="javascript:void(0)">Remove</a>';
-						break;
-
-					default:
-						isReadonly = "";
-						removeOption = '<a href="javascript:void(0)">Remove</a>';
-				}
-
-				postOption = '<div class="post-option">\
-								<input ' + isReadonly + ' type="text" name="' + conf.name + '" value="' + conf.name + '" placeholder="Name">\
-								' + value + '\
-								' + removeOption + '\
-							  </div>';
-		}
-
-		selector.postList.append(postOption);
-
-		func.toggleTab(1);
-	},
-
-	/**
-	 * 添加 get 字段
-	 * @param opt {json}
-	 * @param name {string} 字段名
-	 * @param value {string} 值
-	 * @param dataType {string} 字段类型
-	 * @param isRequired {string} 是否必填字段
-	 * @param method {string} 提交方式
-	 * @return void
-	 */
-	addGetField: function(opt = {}) {
-		var conf = $.extend({}, {
-					"name": "",
-					"value": "",
-					"dataType": "",
-					"extendType": "",
-					"isRequired": "",
-					"list": "",
-					"method": "get"
-				}, opt),
-
-			isReadonly = "readonly",
-			removeOption = "",
-			getOption = "",
-
-			value = "",
-			list = [];
-
-		if (conf.name != "") {
-			conf.list = func.getEnumList(conf.name);
-		}
-		
-		if (conf.list === "") {
-			value = '<input type="text" value="' + conf.value + '" placeholder="Value">';
-		} else {
-			list = conf.list.split(",");
-
-			var len = list.length,
-				options = [];
-
-			for (var i = 0; i < len; i++) {
-				options.push('<option value="' + list[i] + '">' + list[i] + '</option>');
-			}
-
-			value = '<select class="btn btn-default">\
-						<option selected="selected" value="0">-- Select a Value --</option>\
-						' + options.join("") + '\
-					 </select>';
-		}
-
-		switch (conf.dataType) {
-			case "struct":
-				func.addStructField(conf);
-				func.toggleTab(0);
-
-				return 0;
-
-			case "array":
-				func.addArrayField(conf);
-				func.toggleTab(0);
-
-				return 0;
-
-			default:
-				switch (conf.isRequired) {
-					case "yes":
-						removeOption = '<span>*</span>';
-						break;
-
-					case "no":
-						removeOption = '<a data-get-name="' + conf.name + '" href="javascript:void(0)">Remove</a>';
-						break;
-
-					default:
-						isReadonly = "";
-						removeOption = '<a href="javascript:void(0)">Remove</a>';
-				}
-
-				getOption = '<div class="get-option">\
-								<input ' + isReadonly + ' type="text" name="' + conf.name + '" value="' + conf.name + '" placeholder="Name"> \
-								' + value + ' \
-								' + removeOption + '\
-							 </div>';
-		}
-
-		selector.getList.append(getOption);
-
-		func.toggleTab(0);
-	},
-
-	/**
-	 * 添加 header 信息
-	 * @param opt {json}
-	 * @param name {string} 字段名
-	 * @param value {string} 值
-	 * @param method {string} 提交方式
-	 * @return void
-	 */
-	addHeaderField: function(opt = {}) {
-		var conf = $.extend({}, {
-					"name": "",
-					"value": "",
-					"method": ""
-				}, opt),
-
-			headerOption;
-
-		headerOption = '<div class="header-option"> \
-							<input type="text" value="' + conf.name + '" placeholder="Key"> \
-							<input type="text" value="' + conf.value + '" placeholder="Value"> \
-							<a href="javascript:void(0)">Remove</a> \
-						</div>';
-
-		selector.headerList.append(headerOption);
-	},
-
-	/**
-	 * 添加 array 类型字段
-	 * @param opt {json}
-	 * @param name {string} 字段名
-	 * @param isRequired {string} 是否必填字段
-	 * @param method {string} 提交方式
-	 * @return void
-	 */
-	addArrayField: function(opt = {}) {
-		var conf = $.extend({}, {
-					"name": "",
-					"isRequired": "no",
-					"extendType": "",
-					"method": ""
-				}, opt),
-			removeOption = "";
-
-		if (conf.isRequired === "no") {
-			removeOption = '<a href="javascript:void(0)" data-' + conf.method + '-name="' + conf.name + '">Remove The Param</a>';
-		}
-
-		var option = func.getArrayRepeated(conf.name),
-			dataOption = '<div class="' + conf.method + '-option"> \
-							<input readonly type="text" name="' + conf.name + '" value="' + conf.name + '" placeholder="Name"> \
-							<div class="array-options shadow array-big-options">\
-								<span class="array-lable">[</span>\
-								<div class="array-item">\
-									<div class="add-params">\
-										<select>\
-											<option value="0" selected>-- Please Select Params --</option>\
-											' + option + '\
-										</select>\
-									</div>\
-								</div>\
-								<span class="array-lable">]</span>\
-								' + removeOption + '\
-							</div>\
-						  </div>';
-
-		switch (conf.method) {
-
-			case "get":
-				selector.getList.append(dataOption);
-				break;
-
-			case "post":
-				selector.postList.append(dataOption);
-				break;
-
-			default: ;
-		}
-	},
-
-	/**
-	 * 获得 array 类型的 repeated 类型
-	 * @param name {string}
-	 *
-	 */
-	getArrayRepeated: function(name) {
-		var repeatedType = idl.complexTypeArray.filter("[name='" + name + "']").find("repeated").attr("type"),
-			content = "";
-
-		switch (repeatedType) {
-			case "creative_struct":
-
-			case "filter_struct":
-				content = '<option value="' + repeatedType + '" \
-								   data-extends="' + repeatedType + '" \
-								   data-type="struct"\
-								   data-repeated="repeated">\
-								' + repeatedType + '\
-						   </option>';
-
-				break;
-
-			default:
-				content = '<option value="" data-repeated="repeated">-- Add a Item --</option>';
-		}
-
-		return content;
-	},
-
-	/**
-	 * 获取枚举值
-	 * @param name {string}
-	 * @return {string}
-	 */
-	getEnumList: function(name) {
-		if (name === 'ui_visibility') {
-			return '';
-		}
-
-		var modules = idl.mod.filter("[name='" + selector.modules.val() + "']"),
-			element = modules.find("interface[service='" + selector.interfaces.val() + "']")
-							 .find("types element[name='" + name + "']"),
-
-			list = "",
-			source = "";
-
-		if (element.length === 0) {
-			element = modules.find("types element[name='" + name + "']").eq(0);
-		}
-
-		list = element.attr("list") || "";
-		if (list === "") {
-			source = element.attr("source") || "";
-		}
-
-		return list;
-	},
-
-	/**
-	 * 获取普通字段
-	 * @param opt {json}
-	 * @param name {string} 字段名
-	 * @param isRequired {string} 是否必填 yes/no/""
-	 * @param fromArray {string} 是否属于数组添加项 "true"/""
-	 * @return {string}
-	 */
-	getItem: function(opt = {}) {
-		var conf = $.extend({}, {
-					"name": "",
-					"value": "",
-					"isRequired": "",
-					"list": "",
-					"fromArray": "",
-					"fromAnalyze": ""
-				}, opt),
-
-			content = "",
-			removeOption = "",
-			isReadonly = "readonly",
-
-			key = "",
-			value = "",
-			list = [];
-
-			conf.value = "";
-
-		switch (conf.isRequired) {
-			case "yes":
-				removeOption = '<span class="warning-params">*</span>';
-				break;
-
-			case "no":
-				removeOption = '<a class="remove-params" data-element-name="' + conf.name + '" href="javascript:(0)">×</a>';
-				break;
-
-			default:
-				conf.name = "";
-				isReadonly = "";
-				removeOption = '<a class="remove-params" href="javascript:(0)">×</a>';
-		}
-
-		if (conf.fromAnalyze === "true") {
-			conf.name = opt.name;
-			conf.value = opt.value;
-		}
-
-		if (conf.fromArray != "true") {
-			key = '<input ' + isReadonly + ' type="text" name="' + conf.name + '" value="' + conf.name + '" placeholder="Key">:';
-		}
-
-		if (conf.list === "") {
-			value = '<input type="text" value="' + conf.value + '" placeholder="Value">';
-		} else {
-			list = conf.list.split(",");
-
-			var len = list.length,
-				options = [];
-
-			for (var i = 0; i < len; i++) {
-				options.push('<option value="' + list[i] + '">' + list[i] + '</option>');
-			}
-
-			value = '<select class="btn btn-default">\
-						<option selected="selected" value="0">-- Select a Value --</option>\
-						' + options.join("") + '\
-					 </select>';
-
-		}
-
-		content = '<div>\
-					' + key + ' \
-					' + value + '\
-					' + removeOption + '\
-				   </div>';
-
-		return content;
-	},
-
-	/**
-	 * 获取 array 类型字段
-	 * @param opt {json}
-	 * @param name {string} 字段名
-	 * @param isRequired {string} 是否必填 yes/no/""
-	 * @return {string}
-	 */
-	getArrayItem: function(opt) {
-		var conf = $.extend({}, {
-					"name": "",
-					"isRequired": "",
-					"fromAnalyze": ""
-				}, opt),
-
-			option = "",
-			content = "",
-			removeOption = "",
-			isReadonly = "readonly";
-
-		switch (conf.isRequired) {
-			case "yes":
-
-				break;
-
-			case "no":
-				removeOption = '<a class="remove-params" data-element-name="' + conf.name + '" href="javascript:(0)">×</a>';
-				break;
-
-			default:
-				conf.name = "";
-				isReadonly = "";
-				removeOption = '<a class="remove-params" href="javascript:(0)">×</a>';
-		}
-
-		if (conf.fromAnalyze === "true") {
-			conf.name = opt.name;
-		}
-
-		option = func.getArrayRepeated(conf.name);
-		content = '<div class="array-options">\
-					<input ' + isReadonly + ' type="text" name="' + conf.name + '" value="' + conf.name + '" placeholder="Key">: \
-					<span class="array-lable">[</span>\
-					<div class="array-item">\
-						<div class="add-params">\
-							<select>\
-								<option value="0" selected>-- Please Select Params --</option>\
-								' + option + '\
-							</select>\
-						</div>\
-					</div>\
-					<span class="array-lable">]</span>\
-					' + removeOption + '\
-				   </div>';
-
-		return content;
-	},
-
-	/**
-	 * 获取 struct 类型字段
-	 * @param opt {json}
-	 * @param name {string} 字段名
-	 * @param isRequired {string} 是否必填 yes/no/""
-	 * @param extendType {string} 字段名/继承的父字段名
-	 * @param fromArray {string} 是否属于数组添加项 "true"/""
-	 * @return {string}
-	 */
-	getStructItem: function(opt) {
-		var conf = $.extend({}, {
-					"name": "",
-					"isRequired": "",
-					"extendType": "",
-					"fromArray": "",
-					"fromAnalyze": ""
-				}, opt),
-
-			content = "",
-			removeOption = "",
-			isReadonly = "readonly",
-			items = "",
-			options = "",
-
-			key = "";
-
-		switch (conf.isRequired) {
-			case "yes":
-				var elements = func.getStructElements(conf.extendType);
-
-				items = elements.items;
-				options = elements.options;
-				break;
-
-			case "no":
-				var elements = func.getStructElements(conf.extendType);
-
-				items = elements.items;
-				options = elements.options;
-
-				removeOption = '<a class="remove-params" data-element-name="' + conf.name + '" href="javascript:(0)">×</a>';
-				break;
-
-			default:
-				conf.name = "";
-				isReadonly = "";
-				removeOption = '<a class="remove-params" href="javascript:(0)">×</a>';
-		}
-
-		if (conf.fromAnalyze === "true") {
-			conf.name = opt.name;
-		}
-
-		if (conf.fromArray != "true") {
-			key = '<input ' + isReadonly + ' type="text" name="' + conf.name + '" value="' + conf.name + '" placeholder="Key">:';
-		}
-
-		content = '<div class="struct-options">\
-					' + key + ' \
-					<span class="struct-lable">{</span>\
-					<div class="struct-item">\
-						' + items + '\
-						<div class="add-params">\
-							<select>\
-								<option value="0" selected>-- Please Select Params --</option>\
-								<option value="1">-- Add a Item --</option>\
-								<option value="2">-- Add a Array --</option>\
-								<option value="3">-- Add a Struct --</option>\
-								' + options + '\
-							</select>\
-						</div>\
-					</div>\
-					<span class="struct-lable">}</span>\
-					' + removeOption + '\
-				   </div>';
-
-		return content;
-	},
-
-	/**
-	 * 获取 struct 类型的子元素字段（拼接好的html），可以递归操作
-	 * @param extendType {string} 字段名
-	 * @return items {string} item 项的 html
-	 * @return options {string} option 项的 html
-	 */
-	getStructElements: function(extendType) {
-		if (extendType.indexOf('.') !== -1) {
-			var extInfo = extendType.split('.'),
-				name = extInfo[1],
-				moduleName = extInfo[0];
-			} else {
-				moduleName = selector.modules.val();
-				name = extendType;
-			}
-
-		var interfaceName = selector.interfaces.val(),
-			modules = idl.mod.filter("[name='" + moduleName + "']"),
-			elements = modules.find("interface[service='" + interfaceName + "']")
-							  .find("types [name='" + name + "']").eq(0)
-							  .find("element"),
-
-			items = [],
-			options = [];
-
-		if (elements.length === 0) {
-			elements = modules.find("types [name='" + name + "']").eq(0)
-							  .find("element");
-		}
-
-		if (elements.length === 0) {
-			elements = idl.types.find("[name='" + name + "']").eq(0)
-								.find("element");
-		}
-
-		elements.each(function(i, data) {
-			var _data = $(data),
-				elementName = _data.attr("name"),
-				extendType = _data.attr("type"),
-				isRequired = _data.attr("require"),
-				content = "",
-				list = "",
-				source = ""
-				ext = extendType,
-				extModule = moduleName;
-
-			var pos = extendType.indexOf('.');
-			if (pos !== -1) {
-				ext = extendType.split(".").pop();
-				extModule = extendType.substr(0, pos);
-			}
-			var dataType = func.getType(extModule, interfaceName, ext).type,
-
-			list = _data.attr("list") || "";
-			if (list === "") {
-				source = _data.attr("source") || "";
-			}
-
-			var opt = {
-				"name": elementName,
-				"extendType": extModule + '.' + extendType,
-				"isRequired": isRequired,
-				"list": list
-			};
-
-			if (isRequired === "yes") {
-
-				switch (dataType) {
-					case "array":
-						content = func.getArrayItem(opt);
-						break;
-
-					case "struct":
-						content = func.getStructItem(opt);
-						break;
-
-					default: 
-						content = func.getItem(opt);
-				}
-
-				items.push(content);
-
-			} else {
-				options.push('<option value="' + elementName + '" \
-									  data-extends="' + extendType + '" \
-									  data-type="' + dataType + '">\
-								' + elementName + '\
-							  </option>');
-			}
-
-		});
-
-		return {
-			items: items.join(""),
-			options: options.join("")
-		}
-	},
-
-	/**
-	 * 添加 struct 类型字段
-	 * @param opt {json}
-	 * @param name {string} 字段名
-	 * @param isRequired {string} 是否必填字段
-	 * @param method {string} 提交方式
-	 */
-	addStructField: function(opt = {}) {
-		var conf = $.extend({}, {
-					"name": "",
-					"isRequired": "",
-					"extendType": "",
-					"method": ""
-				}, opt),
-			removeOption = "";
-
-		if (conf.isRequired === "no") {
-			removeOption = '<a href="javascript:void(0)" data-' + conf.method + '-name="' + conf.name + '">Remove The Param</a>';
-		}
-
-		var elements = func.getStructElements(conf.extendType),
-			dataOption = '<div class="' + conf.method + '-option">\
-							<input readonly type="text" name="' + conf.name + '" value="' + conf.name + '" placeholder="Name">\
-							<div class="struct-options shadow struct-big-options">\
-								<span class="struct-lable">{</span>\
-								<div class="struct-item">\
-									' + elements.items + '\
-									<div class="add-params">\
-										<select>\
-											<option value="0" selected>-- Please Select Params --</option>\
-											<option value="1">-- Add a Item --</option>\
-											<option value="2">-- Add a Array --</option>\
-											<option value="3">-- Add a Struct --</option>\
-											' + elements.options + '\
-										</select>\
-									</div>\
-								</div>\
-								<span class="struct-lable">}</span>\
-								' + removeOption + '\
-							</div>\
-						  </div>';
-
-		switch (conf.method) {
-			case "get":
-				selector.getList.append(dataOption);
-				break;
-
-			case "post":
-				selector.postList.append(dataOption);
-				break;
-
-			default: ;
-		}
-	},
-
-	/**
-	 * 移除 post 字段
-	 * @param that {dom object} 移除对象，this
-	 * @param flag {number} 移除层次，默认为1
-	 */
-	removePostField: function(that, flag = 1) {
-		var that = $(that),
-			list = selector.requestList.find("li[data-post-name='" + that.attr("data-post-name") + "']");
-
-		selector.postWarning.html("").hide();
-
-		if (flag === 1) {
-			that.parent().remove();
-		} else {
-			that.parent().parent().remove();
-		}
-
-		list.removeClass("selected");
-		list.find(".checked").css("visibility", "hidden");
-	},
-
-	/**
-	 * 移除 get 字段
-	 * @param that {dom object} 移除对象，this
-	 * @param flag {number} 移除层次，默认为1
-	 */
-	removeGetField: function(that, flag = 1) {
-		var that = $(that),
-			list = selector.requestList.find("li[data-get-name='" + that.attr("data-get-name") + "']");
-
-		selector.getWarning.html("").hide();
-
-		if (flag === 1) {
-			that.parent().remove();
-		} else {
-			that.parent().parent().remove();
-		}
-
-		list.removeClass("selected");
-		list.find(".checked").css("visibility", "hidden");
-	},
-
-	/**
-	 * 移除 header 信息
-	 * @param that {dom object} 移除对象，this
-	 * @param flag {number} 移除层次，默认为1
-	 */
-	removeHeaderField: function(that, flag = 1) {
-		var that = $(that);
-
-		selector.headerWarning.html("").hide();
-
-		if (flag === 1) {
-			that.parent().remove();
-		} else {
-			that.parent().parent().remove();
-		}
-	},
-
-	/**
-	 * 清除 header 所有字段
-	 * 
-	 */
-	clearHeaderField: function() {
-		selector.headerList.html("");
-	},
-
-	/**
-	 * 清除 post get 所有字段
-	 * 
-	 */
-	clearField: function() {
-		selector.postData.hide();
-		selector.postList.html("");
-
-		selector.getData.hide();
-		selector.getList.html("");
-	},
-
-	/**
-	 * 切换 get post 操作需要的相应处理
-	 * @param method {string} post 或 get
-	 * 
-	 */
-	methodAction: function(method) {
-		selector.method.html(method);
-
-		var num = 0;
-
-		method = method.toLowerCase();
-		if (method === "get") {
-			num = 0;
-		} else if (method === "post") {
-			num = 1;
-		} else {
-			return 0;
-		}
-
-		func.toggleTab(num);
-	},
-
-	/**
-	 * 初始化数据切换菜单
-	 * 
-	 */
-	initTab: function() {
-		var num = 2,
-			that = selector.dataTabOption.find("li:eq(" + num + ")");
-
-		that.siblings().not("a").addClass("disabled").removeClass("selected");
-
-		func.toggleTab(num);
-	},
-
-	/**
-	 * 切换菜单
-	 * @param num {number} ｛0|get, 1|post, 2|header｝
-	 * @param that {dom object}
-	 */
-	toggleTab: function(num) {
-		var selectors,
-			that = selector.dataTabOption.find("li:eq(" + num + ")");
-
-		switch (num) {
-			case 0:
-				selectors = selector.getData;
-				that.next().addClass("disabled");
-				break;
-
-			case 1:
-				selectors = selector.postData;
-				that.prev().addClass("disabled");
-				break;
-
-			case 2:
-				selectors = selector.headerData;
-				break;
-
-			default: 
-				return 0;
-		}
-
-		that.addClass("selected")
-			.removeClass("disabled")
-			.siblings().removeClass("selected");
-
-		selectors.slideDown(300)
-				 .siblings().hide();
-	},
-
-	/**
-	 * 显示 request-list 中各条目的注释
-	 * @param that {dom object}
-	 * 
-	 */
-	showNote: function(that) {
-		that = $(that);
-
-		var moduleName = selector.modules.val(),
-			interfaceName = selector.interfaces.val();
-
-		if (moduleName === "0") {
-			return 0;
-		}
-
-		var data = that.attr("data-extends").split(".").pop();
-
-		var paramInfo = idl.types.find("simpleType[name='" + data + "']:eq(0)");
-			if (paramInfo.attr("name") === undefined) {
-				paramInfo = idl.types.find("complexType[name='" + data + "']:eq(0)");
-			}
-
-		var type = paramInfo.attr("extends"),
-			description = paramInfo.find("attribute[name='description']").attr("value"),
-			restraint = paramInfo.find("attribute[name='restraint']").attr("value");
-
-		if (restraint === "详见附录") {
-			restraint = paramInfo.find("attribute[name='description']").eq(1).attr("value");
-		}
-
-		var content = "<li><strong>描 述: </strong>" + description + "</li>" + 
-					  "<li><strong>类 型: </strong>" + type + "</li>" + 
-					  "<li><strong>限 制: </strong>" + restraint + "</li>";
-
-		selector.noteData.append(content);
-
-		selector.noteData.css("left", that.offset().left + 20 + "px")
-						 .css("top", that.offset().top + "px")
-						 .show();
-	},
-
-	/**
-	 * 隐藏注释
-	 * 
-	 */
-	hideNote: function() {
-		selector.noteData.hide();
-		selector.noteData.html("");
-	},
-
-	/**
-	 * 参数收集
-	 * @param method {string} get/post/header
-	 * @return {json} json 格式数据
-	 * @return {string} 字符串格式数据
-	 */
-	collectParams: function(method) {
-		var options,
-			params = [],
-
-			key = "",
-			value = "",
-			isItem = "",
-			option = "",
-			content = "";
-
-		switch (method) {
-			case "get":
-				options = selector.getList.find(".get-option");
-				break;
-
-			case "post":
-				options = selector.postList.find(".post-option");
-				break;
-
-			default:
-				options = selector.headerList.find(".header-option");
-		}
-
-		var len = options.length;
-
-		for (var i = 0; i < len; i++) {
-			option = $(options[i]);
-
-			isItem = option.find(".add-params").eq(0).attr("class") || "";
-
-			// item
-			key = option.find("input:eq(0)").val() || "";
-			if (isItem === "") {
-
-				value = option.find("input:eq(1)").val() || "";
-
-				if (value === "") {
-					value = option.find("select:eq(0)").val() || "";
-				}
-
-				if (value === "0") {
-					value = "";
-				}
-
-				value = "\"" + value + "\"";
-
-			} else {
-				value = func.collectComplexParams(option);
-			}
-
-			if (key.trim() === "") {
-				continue;
-			}
-
-			params.push("\"" + key + "\"" + ":" + value);
-
-		}
-
-		content = "{" + params.join(",") + "}";
-		//console.log(content);
-
-		//var a = content;
-		//console.log(a);
-		//var c = JSON.parse(a);
-		//
-		//selector.responseData.html(JSON.stringify(c, null, 4));
-
-		return {
-			json: JSON.parse(content),
-			string: content
-		}
-	},
-
-	/**
-	 * 收集复杂类型数据
-	 * @param that {dom object} get/post option
-	 * @return {string}
-	 */
-	collectComplexParams: function(that) {
-		var flag = that.find("span").eq(0).text().trim(),
-			items = [],
-			item = "",
-			len = 0,
-
-			key = "",
-			value = "",
-			params = [];
-
-		if (flag === "{") {
-			items = that.find("[class='struct-item']:eq(0) > div");
-			len = items.length;
-
-			for (var i = 0; i < len; i++) {
-				item = $(items[i]);
-
-				key = item.find("input:eq(0)").val() || "";
-				if ((item.attr("class") || "") === "") {
-
-					value = item.find("input:eq(1)").val() || "";
-
-					if (value === "") {
-						value = item.find("select:eq(0)").val() || "";
-					}
-
-					if (value === "0") {
-						value = "";
-					}
-					
-					value = "\"" + value + "\"";
-
-				} else {
-					value = func.collectComplexParams(item);
-				}
-
-				if (key.trim() === "") {
-					continue;
-				}
-
-				params.push("\"" + key + "\"" + ":" + value);
-
-			}
-
-			return "{" + params.join(",") + "}";
-
-		} else if (flag === "[") {
-			items = that.find("[class='array-item']:eq(0) > div");
-			len = items.length;
-
-			for (var i = 0; i < len; i++) {
-				item = $(items[i]);
-
-				if ((item.attr("class") || "") === "") {
-					value = "\"" + (item.find("input:eq(0)").val() || "") + "\"";
-
-				} else {
-					value = func.collectComplexParams(item);
-
-				}
-
-				if ((value || "").trim() === "") {
-					continue;
-				}
-
-				params.push(value);
-
-			}
-
-			return "[" + params.join(",") + "]";
-
-		}
-	},
-
-	/**
-	 * 根据填写数据生成对应请求 URL
-	 * @return {string} url
-	 */
-	getBaseUrl: function() {
-		var environment = $("input[type='radio'][name='environment']:checked");
-			mod = selector.modules.val() === "0" ? "{mod}" : selector.modules.val();
-			act = selector.interfaces.val() === "0" ? "{act}" : selector.interfaces.val();
-
-		var url = environment.val() + "/ads/" + 
-				  selector.versions.val() + "/" + 
-				  mod + "/" + 
-				  act;
-
-		return url;
-	},
-
-	/**
-	 * 填充 URL
-	 * 
-	 */
-	createUrl: function() {
-		var url = '';
-
-		switch (selector.method.text()) {
-			case 'GET':
-				url = func.getUrl();
-				break;
-
-			case 'POST':
-			default:
-				url = func.getBaseUrl();
-		}
-
-		selector.url.val(url);
-	},
-
-	/**
-	 * 获取 get 参数
-	 * @return {string}
-	 */
-	getGetOptions: function() {
-		var options,
-			params = [],
-
-			key = "",
-			value = "",
-			isItem = "",
-			option = "",
-			content = "";
-
-		options = selector.getList.find(".get-option");
-
-		var len = options.length;
-
-		if (len === 0) {
-			return "";
-		}
-
-		for (var i = 0; i < len; i++) {
-			option = $(options[i]);
-
-			isItem = option.find(".add-params").eq(0).attr("class") || "";
-
-			// item
-			key = option.find("input:eq(0)").val() || "";
-			if (isItem === "") {
-				value = option.find("input:eq(1)").val() || "";
-
-			} else {
-				value = func.collectComplexParams(option);
-			}
-
-			if (key.trim() === "") {
-				continue;
-			}
-
-			params.push(key + "=" + value);
-
-		}
-
-		content = params.join("&");
-
-		return content;
-	},
-
-	/**
-	 * 获得完整的请求 URL
-	 * @return {string} url
-	 */
-	getUrl: function() {
-		var params = "",
-			content = "";
-
-		params = func.getGetOptions();
-		content = params === "" ? func.getBaseUrl() : func.getBaseUrl() + "?" + params;
-
-		return content;
-	},
-
-	/**
-	 * 预览所有参数结果
-	 * @return void
-	 */
-	showResult: function() {
-		var url = func.getUrl(),
-			method = selector.method.text(),
-			content = "";
-
-		selector.url.val(url);
-
-		switch (method) {
-			case "GET":
-				content = "<strong>GET 参数预览：</strong><br>" + JSON.stringify(func.collectParams("get").json, null, 4);
-				break;
-
-			case "POST":
-				content = "<strong>POST 参数预览：</strong><br>" + JSON.stringify(func.collectParams("post").json, null, 4);
-				break;
-
-			default:
-				return 0;
-		}
-
-		content += "<br><br><strong>header 信息预览：</strong><br>" + JSON.stringify(func.collectParams("header").json, null, 4);
-
-		selector.responseData.html(content).show();
-	},
-
-	checkRequest: function() {
-
-	},
-
-	/**
-	 * 发送请求 URL
-	 * @return void
-	 */
-	requestUrl: function() {
-		var url = func.getUrl(),
-			method = selector.method.text(),
-			headerData,
-			params;
-
-		selector.debugData.hide();
-
-		headerData = func.collectParams("header").json;
-
-		switch (method) {
-			case "GET":
-				params = func.collectParams("get").json;
-				break;
-
-			case "POST":
-				params = func.collectParams("post").json;
-				break;
-
-			default:
-				var res = '{"error":"提交方式只支持 GET / POST"}';
-
-				res = JSON.parse(res);
-
-				selector.responseData.html(JSON.stringify(res, null, 4));
-
-				return 0;
-		}
+    /**
+     * @description 添加 post 字段
+     * @param opt {json}
+     * @param name {string} 字段名
+     * @param value {string} 值
+     * @param dataType {string} 字段类型
+     * @param isRequired {string} 是否必填字段
+     * @param method {string} 提交方式
+     * @return void
+     */
+    addPostField: function(opt = {}) {
+        var conf = $.extend({}, {
+                "name": "",
+                "value": "",
+                "dataType": "",
+                "extendType": "",
+                "isRequired": "",
+                "list": "",
+                "method": "post"
+            }, opt),
+            postOption = "",
+
+            value = "",
+            list = [];      
+
+        if (conf.name != "") {
+            conf.list = func.getEnumList(conf.name);
+        }
+
+        if (conf.list === "") {
+            value = '<input type="text" value="' + conf.value + '" placeholder="Value">';
+        } else {
+            list = conf.list.split(",");
+
+            var len = list.length,
+                options = [];
+
+            for (var i = 0; i < len; i++) {
+                options.push('<option value="' + list[i] + '">' + list[i] + '</option>');
+            }
+
+            value = '<select class="btn btn-default">\
+                        <option selected="selected" value="0">-- Select a Value --</option>\
+                        ' + options.join("") + '\
+                     </select>';
+        }
+
+        switch (conf.dataType) {
+            case "file":
+
+            case "struct":
+                func.addStructField(conf);
+                func.toggleTab(1);
+
+                return 0;
+
+            case "array":
+                func.addArrayField(conf);
+                func.toggleTab(1);
+                return 0;
+                break;
+
+            default:
+                var isReadonly = "readonly",
+                    removeOption = "";
+
+                switch (conf.isRequired) {
+                    case "yes":
+                        removeOption = '<span>*</span>';
+                        break;
+
+                    case "no":
+                        removeOption = '<a data-post-name="' + conf.name + '" href="javascript:void(0)">Remove</a>';
+                        break;
+
+                    default:
+                        isReadonly = "";
+                        removeOption = '<a href="javascript:void(0)">Remove</a>';
+                }
+
+                postOption = '<div class="post-option">\
+                                <input ' + isReadonly + ' type="text" name="' + conf.name + '" value="' + conf.name + '" placeholder="Name">\
+                                ' + value + '\
+                                ' + removeOption + '\
+                              </div>';
+        }
+
+        selector.postList.append(postOption);
+
+        func.toggleTab(1);
+    },
+
+    /**
+     * 添加 get 字段
+     * @param opt {json}
+     * @param name {string} 字段名
+     * @param value {string} 值
+     * @param dataType {string} 字段类型
+     * @param isRequired {string} 是否必填字段
+     * @param method {string} 提交方式
+     * @return void
+     */
+    addGetField: function(opt = {}) {
+        var conf = $.extend({}, {
+                    "name": "",
+                    "value": "",
+                    "dataType": "",
+                    "extendType": "",
+                    "isRequired": "",
+                    "list": "",
+                    "method": "get"
+                }, opt),
+
+            isReadonly = "readonly",
+            removeOption = "",
+            getOption = "",
+
+            value = "",
+            list = [];
+
+        if (conf.name != "") {
+            conf.list = func.getEnumList(conf.name);
+        }
+        
+        if (conf.list === "") {
+            value = '<input type="text" value="' + conf.value + '" placeholder="Value">';
+        } else {
+            list = conf.list.split(",");
+
+            var len = list.length,
+                options = [];
+
+            for (var i = 0; i < len; i++) {
+                options.push('<option value="' + list[i] + '">' + list[i] + '</option>');
+            }
+
+            value = '<select class="btn btn-default">\
+                        <option selected="selected" value="0">-- Select a Value --</option>\
+                        ' + options.join("") + '\
+                     </select>';
+        }
+
+        switch (conf.dataType) {
+            case "struct":
+                func.addStructField(conf);
+                func.toggleTab(0);
+
+                return 0;
+
+            case "array":
+                func.addArrayField(conf);
+                func.toggleTab(0);
+
+                return 0;
+
+            default:
+                switch (conf.isRequired) {
+                    case "yes":
+                        removeOption = '<span>*</span>';
+                        break;
+
+                    case "no":
+                        removeOption = '<a data-get-name="' + conf.name + '" href="javascript:void(0)">Remove</a>';
+                        break;
+
+                    default:
+                        isReadonly = "";
+                        removeOption = '<a href="javascript:void(0)">Remove</a>';
+                }
+
+                getOption = '<div class="get-option">\
+                                <input ' + isReadonly + ' type="text" name="' + conf.name + '" value="' + conf.name + '" placeholder="Name"> \
+                                ' + value + ' \
+                                ' + removeOption + '\
+                             </div>';
+        }
+
+        selector.getList.append(getOption);
+
+        func.toggleTab(0);
+    },
+
+    /**
+     * 添加 header 信息
+     * @param opt {json}
+     * @param name {string} 字段名
+     * @param value {string} 值
+     * @param method {string} 提交方式
+     * @return void
+     */
+    addHeaderField: function(opt = {}) {
+        var conf = $.extend({}, {
+                    "name": "",
+                    "value": "",
+                    "method": ""
+                }, opt),
+
+            headerOption;
+
+        headerOption = '<div class="header-option"> \
+                            <input type="text" value="' + conf.name + '" placeholder="Key"> \
+                            <input type="text" value="' + conf.value + '" placeholder="Value"> \
+                            <a href="javascript:void(0)">Remove</a> \
+                        </div>';
+
+        selector.headerList.append(headerOption);
+    },
+
+    /**
+     * 添加 array 类型字段
+     * @param opt {json}
+     * @param name {string} 字段名
+     * @param isRequired {string} 是否必填字段
+     * @param method {string} 提交方式
+     * @return void
+     */
+    addArrayField: function(opt = {}) {
+        var conf = $.extend({}, {
+                    "name": "",
+                    "isRequired": "no",
+                    "extendType": "",
+                    "method": ""
+                }, opt),
+            removeOption = "";
+
+        if (conf.isRequired === "no") {
+            removeOption = '<a href="javascript:void(0)" data-' + conf.method + '-name="' + conf.name + '">Remove The Param</a>';
+        }
+
+        var option = func.getArrayRepeated(conf.name),
+            dataOption = '<div class="' + conf.method + '-option"> \
+                            <input readonly type="text" name="' + conf.name + '" value="' + conf.name + '" placeholder="Name"> \
+                            <div class="array-options shadow array-big-options">\
+                                <span class="array-lable">[</span>\
+                                <div class="array-item">\
+                                    <div class="add-params">\
+                                        <select>\
+                                            <option value="0" selected>-- Please Select Params --</option>\
+                                            ' + option + '\
+                                        </select>\
+                                    </div>\
+                                </div>\
+                                <span class="array-lable">]</span>\
+                                ' + removeOption + '\
+                            </div>\
+                          </div>';
+
+        switch (conf.method) {
+
+            case "get":
+                selector.getList.append(dataOption);
+                break;
+
+            case "post":
+                selector.postList.append(dataOption);
+                break;
+
+            default: ;
+        }
+    },
+
+    /**
+     * 获得 array 类型的 repeated 类型
+     * @param name {string}
+     *
+     */
+    getArrayRepeated: function(name) {
+        var repeatedType = idl.complexTypeArray.filter("[name='" + name + "']").find("repeated").attr("type"),
+            content = "";
+
+        switch (repeatedType) {
+            case "creative_struct":
+
+            case "filter_struct":
+                content = '<option value="' + repeatedType + '" \
+                                   data-extends="' + repeatedType + '" \
+                                   data-type="struct"\
+                                   data-repeated="repeated">\
+                                ' + repeatedType + '\
+                           </option>';
+
+                break;
+
+            default:
+                content = '<option value="" data-repeated="repeated">-- Add a Item --</option>';
+        }
+
+        return content;
+    },
+
+    /**
+     * 获取枚举值
+     * @param name {string}
+     * @return {string}
+     */
+    getEnumList: function(name) {
+        if (name === 'ui_visibility') {
+            return '';
+        }
+
+        var modules = idl.mod.filter("[name='" + selector.modules.val() + "']"),
+            element = modules.find("interface[service='" + selector.interfaces.val() + "']")
+                             .find("types element[name='" + name + "']"),
+
+            list = "",
+            source = "";
+
+        if (element.length === 0) {
+            element = modules.find("types element[name='" + name + "']").eq(0);
+        }
+
+        list = element.attr("list") || "";
+        if (list === "") {
+            source = element.attr("source") || "";
+        }
+
+        return list;
+    },
+
+    /**
+     * 获取普通字段
+     * @param opt {json}
+     * @param name {string} 字段名
+     * @param isRequired {string} 是否必填 yes/no/""
+     * @param fromArray {string} 是否属于数组添加项 "true"/""
+     * @return {string}
+     */
+    getItem: function(opt = {}) {
+        var conf = $.extend({}, {
+                    "name": "",
+                    "value": "",
+                    "isRequired": "",
+                    "list": "",
+                    "fromArray": "",
+                    "fromAnalyze": ""
+                }, opt),
+
+            content = "",
+            removeOption = "",
+            isReadonly = "readonly",
+
+            key = "",
+            value = "",
+            list = [];
+
+            conf.value = "";
+
+        switch (conf.isRequired) {
+            case "yes":
+                removeOption = '<span class="warning-params">*</span>';
+                break;
+
+            case "no":
+                removeOption = '<a class="remove-params" data-element-name="' + conf.name + '" href="javascript:(0)">×</a>';
+                break;
+
+            default:
+                conf.name = "";
+                isReadonly = "";
+                removeOption = '<a class="remove-params" href="javascript:(0)">×</a>';
+        }
+
+        if (conf.fromAnalyze === "true") {
+            conf.name = opt.name;
+            conf.value = opt.value;
+        }
+
+        if (conf.fromArray != "true") {
+            key = '<input ' + isReadonly + ' type="text" name="' + conf.name + '" value="' + conf.name + '" placeholder="Key">:';
+        }
+
+        if (conf.list === "") {
+            value = '<input type="text" value="' + conf.value + '" placeholder="Value">';
+        } else {
+            list = conf.list.split(",");
+
+            var len = list.length,
+                options = [];
+
+            for (var i = 0; i < len; i++) {
+                options.push('<option value="' + list[i] + '">' + list[i] + '</option>');
+            }
+
+            value = '<select class="btn btn-default">\
+                        <option selected="selected" value="0">-- Select a Value --</option>\
+                        ' + options.join("") + '\
+                     </select>';
+
+        }
+
+        content = '<div>\
+                    ' + key + ' \
+                    ' + value + '\
+                    ' + removeOption + '\
+                   </div>';
+
+        return content;
+    },
+
+    /**
+     * 获取 array 类型字段
+     * @param opt {json}
+     * @param name {string} 字段名
+     * @param isRequired {string} 是否必填 yes/no/""
+     * @return {string}
+     */
+    getArrayItem: function(opt) {
+        var conf = $.extend({}, {
+                    "name": "",
+                    "isRequired": "",
+                    "fromAnalyze": ""
+                }, opt),
+
+            option = "",
+            content = "",
+            removeOption = "",
+            isReadonly = "readonly";
+
+        switch (conf.isRequired) {
+            case "yes":
+
+                break;
+
+            case "no":
+                removeOption = '<a class="remove-params" data-element-name="' + conf.name + '" href="javascript:(0)">×</a>';
+                break;
+
+            default:
+                conf.name = "";
+                isReadonly = "";
+                removeOption = '<a class="remove-params" href="javascript:(0)">×</a>';
+        }
+
+        if (conf.fromAnalyze === "true") {
+            conf.name = opt.name;
+        }
+
+        option = func.getArrayRepeated(conf.name);
+        content = '<div class="array-options">\
+                    <input ' + isReadonly + ' type="text" name="' + conf.name + '" value="' + conf.name + '" placeholder="Key">: \
+                    <span class="array-lable">[</span>\
+                    <div class="array-item">\
+                        <div class="add-params">\
+                            <select>\
+                                <option value="0" selected>-- Please Select Params --</option>\
+                                ' + option + '\
+                            </select>\
+                        </div>\
+                    </div>\
+                    <span class="array-lable">]</span>\
+                    ' + removeOption + '\
+                   </div>';
+
+        return content;
+    },
+
+    /**
+     * 获取 struct 类型字段
+     * @param opt {json}
+     * @param name {string} 字段名
+     * @param isRequired {string} 是否必填 yes/no/""
+     * @param extendType {string} 字段名/继承的父字段名
+     * @param fromArray {string} 是否属于数组添加项 "true"/""
+     * @return {string}
+     */
+    getStructItem: function(opt) {
+        var conf = $.extend({}, {
+                    "name": "",
+                    "isRequired": "",
+                    "extendType": "",
+                    "fromArray": "",
+                    "fromAnalyze": ""
+                }, opt),
+
+            content = "",
+            removeOption = "",
+            isReadonly = "readonly",
+            items = "",
+            options = "",
+
+            key = "";
+
+        switch (conf.isRequired) {
+            case "yes":
+                var elements = func.getStructElements(conf.extendType);
+
+                items = elements.items;
+                options = elements.options;
+                break;
+
+            case "no":
+                var elements = func.getStructElements(conf.extendType);
+
+                items = elements.items;
+                options = elements.options;
+
+                removeOption = '<a class="remove-params" data-element-name="' + conf.name + '" href="javascript:(0)">×</a>';
+                break;
+
+            default:
+                conf.name = "";
+                isReadonly = "";
+                removeOption = '<a class="remove-params" href="javascript:(0)">×</a>';
+        }
+
+        if (conf.fromAnalyze === "true") {
+            conf.name = opt.name;
+        }
+
+        if (conf.fromArray != "true") {
+            key = '<input ' + isReadonly + ' type="text" name="' + conf.name + '" value="' + conf.name + '" placeholder="Key">:';
+        }
+
+        content = '<div class="struct-options">\
+                    ' + key + ' \
+                    <span class="struct-lable">{</span>\
+                    <div class="struct-item">\
+                        ' + items + '\
+                        <div class="add-params">\
+                            <select>\
+                                <option value="0" selected>-- Please Select Params --</option>\
+                                <option value="1">-- Add a Item --</option>\
+                                <option value="2">-- Add a Array --</option>\
+                                <option value="3">-- Add a Struct --</option>\
+                                ' + options + '\
+                            </select>\
+                        </div>\
+                    </div>\
+                    <span class="struct-lable">}</span>\
+                    ' + removeOption + '\
+                   </div>';
+
+        return content;
+    },
+
+    /**
+     * 获取 struct 类型的子元素字段（拼接好的html），可以递归操作
+     * @param extendType {string} 字段名
+     * @return items {string} item 项的 html
+     * @return options {string} option 项的 html
+     */
+    getStructElements: function(extendType) {
+        if (extendType.indexOf('.') !== -1) {
+            var extInfo = extendType.split('.'),
+                name = extInfo[1],
+                moduleName = extInfo[0];
+            } else {
+                moduleName = selector.modules.val();
+                name = extendType;
+            }
+
+        var interfaceName = selector.interfaces.val(),
+            modules = idl.mod.filter("[name='" + moduleName + "']"),
+            elements = modules.find("interface[service='" + interfaceName + "']")
+                              .find("types [name='" + name + "']").eq(0)
+                              .find("element"),
+
+            items = [],
+            options = [];
+
+        if (elements.length === 0) {
+            elements = modules.find("types [name='" + name + "']").eq(0)
+                              .find("element");
+        }
+
+        if (elements.length === 0) {
+            elements = idl.types.find("[name='" + name + "']").eq(0)
+                                .find("element");
+        }
+
+        elements.each(function(i, data) {
+            var _data = $(data),
+                elementName = _data.attr("name"),
+                extendType = _data.attr("type"),
+                isRequired = _data.attr("require"),
+                content = "",
+                list = "",
+                source = ""
+                ext = extendType,
+                extModule = moduleName;
+
+            var pos = extendType.indexOf('.');
+            if (pos !== -1) {
+                ext = extendType.split(".").pop();
+                extModule = extendType.substr(0, pos);
+            }
+            var dataType = func.getType(extModule, interfaceName, ext).type,
+
+            list = _data.attr("list") || "";
+            if (list === "") {
+                source = _data.attr("source") || "";
+            }
+
+            var opt = {
+                "name": elementName,
+                "extendType": extModule + '.' + extendType,
+                "isRequired": isRequired,
+                "list": list
+            };
+
+            if (isRequired === "yes") {
+
+                switch (dataType) {
+                    case "array":
+                        content = func.getArrayItem(opt);
+                        break;
+
+                    case "struct":
+                        content = func.getStructItem(opt);
+                        break;
+
+                    default: 
+                        content = func.getItem(opt);
+                }
+
+                items.push(content);
+
+            } else {
+                options.push('<option value="' + elementName + '" \
+                                      data-extends="' + extendType + '" \
+                                      data-type="' + dataType + '">\
+                                ' + elementName + '\
+                              </option>');
+            }
+
+        });
+
+        return {
+            items: items.join(""),
+            options: options.join("")
+        }
+    },
+
+    /**
+     * 添加 struct 类型字段
+     * @param opt {json}
+     * @param name {string} 字段名
+     * @param isRequired {string} 是否必填字段
+     * @param method {string} 提交方式
+     */
+    addStructField: function(opt = {}) {
+        var conf = $.extend({}, {
+                    "name": "",
+                    "isRequired": "",
+                    "extendType": "",
+                    "method": ""
+                }, opt),
+            removeOption = "";
+
+        if (conf.isRequired === "no") {
+            removeOption = '<a href="javascript:void(0)" data-' + conf.method + '-name="' + conf.name + '">Remove The Param</a>';
+        }
+
+        var elements = func.getStructElements(conf.extendType),
+            dataOption = '<div class="' + conf.method + '-option">\
+                            <input readonly type="text" name="' + conf.name + '" value="' + conf.name + '" placeholder="Name">\
+                            <div class="struct-options shadow struct-big-options">\
+                                <span class="struct-lable">{</span>\
+                                <div class="struct-item">\
+                                    ' + elements.items + '\
+                                    <div class="add-params">\
+                                        <select>\
+                                            <option value="0" selected>-- Please Select Params --</option>\
+                                            <option value="1">-- Add a Item --</option>\
+                                            <option value="2">-- Add a Array --</option>\
+                                            <option value="3">-- Add a Struct --</option>\
+                                            ' + elements.options + '\
+                                        </select>\
+                                    </div>\
+                                </div>\
+                                <span class="struct-lable">}</span>\
+                                ' + removeOption + '\
+                            </div>\
+                          </div>';
+
+        switch (conf.method) {
+            case "get":
+                selector.getList.append(dataOption);
+                break;
+
+            case "post":
+                selector.postList.append(dataOption);
+                break;
+
+            default: ;
+        }
+    },
+
+    /**
+     * 移除 post 字段
+     * @param that {dom object} 移除对象，this
+     * @param flag {number} 移除层次，默认为1
+     */
+    removePostField: function(that, flag = 1) {
+        var that = $(that),
+            list = selector.requestList.find("li[data-post-name='" + that.attr("data-post-name") + "']");
+
+        selector.postWarning.html("").hide();
+
+        if (flag === 1) {
+            that.parent().remove();
+        } else {
+            that.parent().parent().remove();
+        }
+
+        list.removeClass("selected");
+        list.find(".checked").css("visibility", "hidden");
+    },
+
+    /**
+     * 移除 get 字段
+     * @param that {dom object} 移除对象，this
+     * @param flag {number} 移除层次，默认为1
+     */
+    removeGetField: function(that, flag = 1) {
+        var that = $(that),
+            list = selector.requestList.find("li[data-get-name='" + that.attr("data-get-name") + "']");
+
+        selector.getWarning.html("").hide();
+
+        if (flag === 1) {
+            that.parent().remove();
+        } else {
+            that.parent().parent().remove();
+        }
+
+        list.removeClass("selected");
+        list.find(".checked").css("visibility", "hidden");
+    },
+
+    /**
+     * 移除 header 信息
+     * @param that {dom object} 移除对象，this
+     * @param flag {number} 移除层次，默认为1
+     */
+    removeHeaderField: function(that, flag = 1) {
+        var that = $(that);
+
+        selector.headerWarning.html("").hide();
+
+        if (flag === 1) {
+            that.parent().remove();
+        } else {
+            that.parent().parent().remove();
+        }
+    },
+
+    /**
+     * 清除 header 所有字段
+     * 
+     */
+    clearHeaderField: function() {
+        selector.headerList.html("");
+    },
+
+    /**
+     * 清除 post get 所有字段
+     * 
+     */
+    clearField: function() {
+        selector.postData.hide();
+        selector.postList.html("");
+
+        selector.getData.hide();
+        selector.getList.html("");
+    },
+
+    /**
+     * 切换 get post 操作需要的相应处理
+     * @param method {string} post 或 get
+     * 
+     */
+    methodAction: function(method) {
+        selector.method.html(method);
+
+        var num = 0;
+
+        method = method.toLowerCase();
+        if (method === "get") {
+            num = 0;
+        } else if (method === "post") {
+            num = 1;
+        } else {
+            return 0;
+        }
+
+        func.toggleTab(num);
+    },
+
+    /**
+     * 初始化数据切换菜单
+     * 
+     */
+    initTab: function() {
+        var num = 2,
+            that = selector.dataTabOption.find("li:eq(" + num + ")");
+
+        that.siblings().not("a").addClass("disabled").removeClass("selected");
+
+        func.toggleTab(num);
+    },
+
+    /**
+     * 切换菜单
+     * @param num {number} ｛0|get, 1|post, 2|header｝
+     * @param that {dom object}
+     */
+    toggleTab: function(num) {
+        var selectors,
+            that = selector.dataTabOption.find("li:eq(" + num + ")");
+
+        switch (num) {
+            case 0:
+                selectors = selector.getData;
+                that.next().addClass("disabled");
+                break;
+
+            case 1:
+                selectors = selector.postData;
+                that.prev().addClass("disabled");
+                break;
+
+            case 2:
+                selectors = selector.headerData;
+                break;
+
+            default: 
+                return 0;
+        }
+
+        that.addClass("selected")
+            .removeClass("disabled")
+            .siblings().removeClass("selected");
+
+        selectors.slideDown(300)
+                 .siblings().hide();
+    },
+
+    /**
+     * 显示 request-list 中各条目的注释
+     * @param that {dom object}
+     * 
+     */
+    showNote: function(that) {
+        that = $(that);
+
+        var moduleName = selector.modules.val(),
+            interfaceName = selector.interfaces.val();
+
+        if (moduleName === "0") {
+            return 0;
+        }
+
+        var data = that.attr("data-extends").split(".").pop();
+
+        var paramInfo = idl.types.find("simpleType[name='" + data + "']:eq(0)");
+            if (paramInfo.attr("name") === undefined) {
+                paramInfo = idl.types.find("complexType[name='" + data + "']:eq(0)");
+            }
+
+        var type = paramInfo.attr("extends"),
+            description = paramInfo.find("attribute[name='description']").attr("value"),
+            restraint = paramInfo.find("attribute[name='restraint']").attr("value");
+
+        if (restraint === "详见附录") {
+            restraint = paramInfo.find("attribute[name='description']").eq(1).attr("value");
+        }
+
+        var content = "<li><strong>描 述: </strong>" + description + "</li>" + 
+                      "<li><strong>类 型: </strong>" + type + "</li>" + 
+                      "<li><strong>限 制: </strong>" + restraint + "</li>";
+
+        selector.noteData.append(content);
+
+        selector.noteData.css("left", that.offset().left + 20 + "px")
+                         .css("top", that.offset().top + "px")
+                         .show();
+    },
+
+    /**
+     * 隐藏注释
+     * 
+     */
+    hideNote: function() {
+        selector.noteData.hide();
+        selector.noteData.html("");
+    },
+
+    /**
+     * 参数收集
+     * @param method {string} get/post/header
+     * @return {json} json 格式数据
+     * @return {string} 字符串格式数据
+     */
+    collectParams: function(method) {
+        var options,
+            params = [],
+
+            key = "",
+            value = "",
+            isItem = "",
+            option = "",
+            content = "";
+
+        switch (method) {
+            case "get":
+                options = selector.getList.find(".get-option");
+                break;
+
+            case "post":
+                options = selector.postList.find(".post-option");
+                break;
+
+            default:
+                options = selector.headerList.find(".header-option");
+        }
+
+        var len = options.length;
+
+        for (var i = 0; i < len; i++) {
+            option = $(options[i]);
+
+            isItem = option.find(".add-params").eq(0).attr("class") || "";
+
+            // item
+            key = option.find("input:eq(0)").val() || "";
+            if (isItem === "") {
+
+                value = option.find("input:eq(1)").val() || "";
+
+                if (value === "") {
+                    value = option.find("select:eq(0)").val() || "";
+                }
+
+                if (value === "0") {
+                    value = "";
+                }
+
+                value = "\"" + value + "\"";
+
+            } else {
+                value = func.collectComplexParams(option);
+            }
+
+            if (key.trim() === "") {
+                continue;
+            }
+
+            params.push("\"" + key + "\"" + ":" + value);
+
+        }
+
+        content = "{" + params.join(",") + "}";
+        //console.log(content);
+
+        //var a = content;
+        //console.log(a);
+        //var c = JSON.parse(a);
+        //
+        //selector.responseData.html(JSON.stringify(c, null, 4));
+
+        return {
+            json: JSON.parse(content),
+            string: content
+        }
+    },
+
+    /**
+     * 收集复杂类型数据
+     * @param that {dom object} get/post option
+     * @return {string}
+     */
+    collectComplexParams: function(that) {
+        var flag = that.find("span").eq(0).text().trim(),
+            items = [],
+            item = "",
+            len = 0,
+
+            key = "",
+            value = "",
+            params = [];
+
+        if (flag === "{") {
+            items = that.find("[class='struct-item']:eq(0) > div");
+            len = items.length;
+
+            for (var i = 0; i < len; i++) {
+                item = $(items[i]);
+
+                key = item.find("input:eq(0)").val() || "";
+                if ((item.attr("class") || "") === "") {
+
+                    value = item.find("input:eq(1)").val() || "";
+
+                    if (value === "") {
+                        value = item.find("select:eq(0)").val() || "";
+                    }
+
+                    if (value === "0") {
+                        value = "";
+                    }
+                    
+                    value = "\"" + value + "\"";
+
+                } else {
+                    value = func.collectComplexParams(item);
+                }
+
+                if (key.trim() === "") {
+                    continue;
+                }
+
+                params.push("\"" + key + "\"" + ":" + value);
+
+            }
+
+            return "{" + params.join(",") + "}";
+
+        } else if (flag === "[") {
+            items = that.find("[class='array-item']:eq(0) > div");
+            len = items.length;
+
+            for (var i = 0; i < len; i++) {
+                item = $(items[i]);
+
+                if ((item.attr("class") || "") === "") {
+                    value = "\"" + (item.find("input:eq(0)").val() || "") + "\"";
+
+                } else {
+                    value = func.collectComplexParams(item);
+
+                }
+
+                if ((value || "").trim() === "") {
+                    continue;
+                }
+
+                params.push(value);
+
+            }
+
+            return "[" + params.join(",") + "]";
+
+        }
+    },
+
+    /**
+     * 根据填写数据生成对应请求 URL
+     * @return {string} url
+     */
+    getBaseUrl: function() {
+        var environment = $("input[type='radio'][name='environment']:checked");
+            mod = selector.modules.val() === "0" ? "{mod}" : selector.modules.val();
+            act = selector.interfaces.val() === "0" ? "{act}" : selector.interfaces.val();
+
+        var url = environment.val() + "/ads/" + 
+                  selector.versions.val() + "/" + 
+                  mod + "/" + 
+                  act;
+
+        return url;
+    },
+
+    /**
+     * 填充 URL
+     * 
+     */
+    createUrl: function() {
+        var url = '';
+
+        switch (selector.method.text()) {
+            case 'GET':
+                url = func.getUrl();
+                break;
+
+            case 'POST':
+            default:
+                url = func.getBaseUrl();
+        }
+
+        selector.url.val(url);
+    },
+
+    /**
+     * 获取 get 参数
+     * @return {string}
+     */
+    getGetOptions: function() {
+        var options,
+            params = [],
+
+            key = "",
+            value = "",
+            isItem = "",
+            option = "",
+            content = "";
+
+        options = selector.getList.find(".get-option");
+
+        var len = options.length;
+
+        if (len === 0) {
+            return "";
+        }
+
+        for (var i = 0; i < len; i++) {
+            option = $(options[i]);
+
+            isItem = option.find(".add-params").eq(0).attr("class") || "";
+
+            // item
+            key = option.find("input:eq(0)").val() || "";
+            if (isItem === "") {
+                value = option.find("input:eq(1)").val() || "";
+
+            } else {
+                value = func.collectComplexParams(option);
+            }
+
+            if (key.trim() === "") {
+                continue;
+            }
+
+            params.push(key + "=" + value);
+
+        }
+
+        content = params.join("&");
+
+        return content;
+    },
+
+    /**
+     * 获得完整的请求 URL
+     * @return {string} url
+     */
+    getUrl: function() {
+        var params = "",
+            content = "";
+
+        params = func.getGetOptions();
+        content = params === "" ? func.getBaseUrl() : func.getBaseUrl() + "?" + params;
+
+        return content;
+    },
+
+    /**
+     * 预览所有参数结果
+     * @return void
+     */
+    showResult: function() {
+        var url = func.getUrl(),
+            method = selector.method.text(),
+            content = "";
+
+        selector.url.val(url);
+
+        switch (method) {
+            case "GET":
+                content = "<strong>GET 参数预览：</strong><br>" + JSON.stringify(func.collectParams("get").json, null, 4);
+                break;
+
+            case "POST":
+                content = "<strong>POST 参数预览：</strong><br>" + JSON.stringify(func.collectParams("post").json, null, 4);
+                break;
+
+            default:
+                return 0;
+        }
+
+        content += "<br><br><strong>header 信息预览：</strong><br>" + JSON.stringify(func.collectParams("header").json, null, 4);
+
+        selector.responseData.html(content).show();
+    },
+
+    checkRequest: function() {
+
+    },
+
+    /**
+     * 发送请求 URL
+     * @return void
+     */
+    requestUrl: function() {
+        var url = func.getUrl(),
+            method = selector.method.text(),
+            headerData,
+            params;
+
+        selector.debugData.hide();
+
+        headerData = func.collectParams("header").json;
+
+        switch (method) {
+            case "GET":
+                params = func.collectParams("get").json;
+                break;
+
+            case "POST":
+                params = func.collectParams("post").json;
+                break;
+
+            default:
+                var res = '{"error":"提交方式只支持 GET / POST"}';
+
+                res = JSON.parse(res);
+
+                selector.responseData.html(JSON.stringify(res, null, 4));
+
+                return 0;
+        }
 /*
-		var data = {
-			'url': url,
-			'header': headerData,
-			'method': method,
-			'params': params
-		}
+        var data = {
+            'url': url,
+            'header': headerData,
+            'method': method,
+            'params': params
+        }
 */
-		var data = {
-			'mod': selector.modules.val(),
-			'act': selector.interfaces.val(),
-			'header': headerData,
-			'params': params,
-			'token': selector.token.val()
-		}
+        var data = {
+            'mod': selector.modules.val(),
+            'act': selector.interfaces.val(),
+            'header': headerData,
+            'params': params,
+            'token': selector.token.val()
+        }
 
-		$.post('../dist/api/proxy.php', data, function(res) {
-			//res = JSON.parse(res);
+        $.post('../dist/api/proxy.php', data, function(res) {
+            //res = JSON.parse(res);
 
-			if (res.hasOwnProperty('debug message')) {
-				selector.responseData.hide();
-				selector.debugData.html(JSON.stringify(res, null, 4)).show();
-			} else {
-				selector.debugData.hide();
-				selector.responseData.html(JSON.stringify(res, null, 4)).show();
-			}
-		});
-	},
+            if (res.hasOwnProperty('debug message')) {
+                selector.responseData.hide();
+                selector.debugData.html(JSON.stringify(res, null, 4)).show();
+            } else {
+                selector.debugData.hide();
+                selector.responseData.html(JSON.stringify(res, null, 4)).show();
+            }
+        });
+    },
 
-	/**
-	 * 解析 URL 到页面各个部分
-	 * @param url {string}
-	 *
-	 */
-	analyzeUrl: function(url) {
-		var position = "",
-			msg = "",
-			checked;
+    /**
+     * 解析 URL 到页面各个部分
+     * @param url {string}
+     *
+     */
+    analyzeUrl: function(url) {
+        var position = "",
+            msg = "",
+            checked;
 
-		if (url.trim() === "") {
-			position = "URL";
-			msg = "请填写正确的 URL";
+        if (url.trim() === "") {
+            position = "URL";
+            msg = "请填写正确的 URL";
 
-			func.showWarning(position, msg);
+            func.showWarning(position, msg);
 
-			return 0;
-		}
+            return 0;
+        }
 
-		checked = url.indexOf("<") != -1 || 
-				  url.indexOf(">") != -1 || 
-				  //url.indexOf("'") != -1 ||
-				  //url.indexOf("\"") != -1 ||
-				  url.indexOf("`") != -1;
+        checked = url.indexOf("<") != -1 || 
+                  url.indexOf(">") != -1 || 
+                  //url.indexOf("'") != -1 ||
+                  //url.indexOf("\"") != -1 ||
+                  url.indexOf("`") != -1;
 
-		if (checked) {
-			position = "非法字符";
-			msg = "URL 中包含不合法字符（<, >）";
+        if (checked) {
+            position = "非法字符";
+            msg = "URL 中包含不合法字符（<, >）";
 
-			func.showWarning(position, msg);
+            func.showWarning(position, msg);
 
-			return 0;
-		}
+            return 0;
+        }
 
-		var flag = "/ads/v3/",
-			flagLength = flag.length,
-			flagStartIndex, flagEndIndex, divideIndex, pathLength, hostname, path, mod, act, param;
+        var flag = "/ads/v3/",
+            flagLength = flag.length,
+            flagStartIndex, flagEndIndex, divideIndex, pathLength, hostname, path, mod, act, param;
 
-		flagStartIndex = url.indexOf(flag);
+        flagStartIndex = url.indexOf(flag);
 
-		divideIndex = url.indexOf("?");
-		divideIndex = divideIndex === -1 ? url.length : divideIndex;
+        divideIndex = url.indexOf("?");
+        divideIndex = divideIndex === -1 ? url.length : divideIndex;
 
-		// check version
-		if (flagStartIndex === -1 || flagStartIndex >= divideIndex) {
-			position = flag;
-			msg = "接口版本信息错误";
+        // check version
+        if (flagStartIndex === -1 || flagStartIndex >= divideIndex) {
+            position = flag;
+            msg = "接口版本信息错误";
 
-			func.showWarning(position, msg);
+            func.showWarning(position, msg);
 
-			return 0;
-		}
+            return 0;
+        }
 
-		flagEndIndex = flagStartIndex + flagLength;
+        flagEndIndex = flagStartIndex + flagLength;
 
-		pathLength = divideIndex - flagEndIndex;
+        pathLength = divideIndex - flagEndIndex;
 
-		hostname = url.substr(0, flagStartIndex);
-		path = url.substr(flagEndIndex, pathLength).split("/");
-		mod = path[0];
-		act = path[1];
+        hostname = url.substr(0, flagStartIndex);
+        path = url.substr(flagEndIndex, pathLength).split("/");
+        mod = path[0];
+        act = path[1];
 
-		param = url.substr(divideIndex + 1);
+        param = url.substr(divideIndex + 1);
 
-		// check hostname
-		switch (hostname) {
-			case "http://sandbox.api.e.qq.com":
-				selector.environments.eq(0).prop("checked", true);
-				break;
+        // check hostname
+        switch (hostname) {
+            case "http://sandbox.api.e.qq.com":
+                selector.environments.eq(0).prop("checked", true);
+                break;
 
-			case "http://api.e.qq.com":
-				selector.environments.eq(1).prop("checked", true);
-				break;
+            case "http://api.e.qq.com":
+                selector.environments.eq(1).prop("checked", true);
+                break;
 
-			default:
-				position = hostname;
-				msg = "接口地址错误，请检查 hostname";
+            default:
+                position = hostname;
+                msg = "接口地址错误，请检查 hostname";
 
-				func.showWarning(position, msg);
+                func.showWarning(position, msg);
 
-				return 0;
-		}
+                return 0;
+        }
 
-		// check mod
-		if ((selector.modules.find("[value='" + mod + "']").attr("value") || "") === "") {
-			position = mod;
-			msg = "API模块错误，请正确填写模块名或从列表选择合适项";
+        // check mod
+        if ((selector.modules.find("[value='" + mod + "']").attr("value") || "") === "") {
+            position = mod;
+            msg = "API模块错误，请正确填写模块名或从列表选择合适项";
 
-			func.showWarning(position, msg);
+            func.showWarning(position, msg);
 
-			return 0;
-		}
-		selector.modules.val(mod).change();
-		selector.url.val(url);
+            return 0;
+        }
+        selector.modules.val(mod).change();
+        selector.url.val(url);
 
-		// check act
-		if ((selector.interfaces.find("[value='" + act + "']").attr("value") || "") === "") {
-			position = act;
-			msg = "API名称错误，请填写正确的API或从列表选择";
+        // check act
+        if ((selector.interfaces.find("[value='" + act + "']").attr("value") || "") === "") {
+            position = act;
+            msg = "API名称错误，请填写正确的API或从列表选择";
 
-			func.showWarning(position, msg);
+            func.showWarning(position, msg);
 
-			return 0;
-		}
-		selector.interfaces.val(act).change();
-		selector.url.val(url);
+            return 0;
+        }
+        selector.interfaces.val(act).change();
+        selector.url.val(url);
 
-		// check mothod
-		switch (selector.method.text()) {
-			case "GET":
-				if (param === "") {
-					return 0
-				}
+        // check mothod
+        switch (selector.method.text()) {
+            case "GET":
+                if (param === "") {
+                    return 0
+                }
 
-				func.analyzeGet(param);
-				break;
+                func.analyzeGet(param);
+                break;
 
-			case "POST":
+            case "POST":
 
-				break;
+                break;
 
-			default:
-				position = method;
-				msg = "提交方式错误，目前只支持 GET/POST";
+            default:
+                position = method;
+                msg = "提交方式错误，目前只支持 GET/POST";
 
-				func.showWarning(position, msg);
+                func.showWarning(position, msg);
 
-				return 0;
-		}
-	},
+                return 0;
+        }
+    },
 
-	/**
-	 * 解析 get 参数
-	 * @param param {string} URL 参数
-	 * 
-	 */
-	analyzeGet: function(param) {
-		var params = param.split("&"),
-			position,
-			msg,
-			item,
-			required,
-			notRequired,
+    /**
+     * 解析 get 参数
+     * @param param {string} URL 参数
+     * 
+     */
+    analyzeGet: function(param) {
+        var params = param.split("&"),
+            position,
+            msg,
+            item,
+            required,
+            notRequired,
 
-			field,
-			tag,
-			dataType,
+            field,
+            tag,
+            dataType,
 
-			paramsLength = params.length;
+            paramsLength = params.length;
 
-		for (var i = 0; i < paramsLength; i++) {
-			item = params[i].split("=");
+        for (var i = 0; i < paramsLength; i++) {
+            item = params[i].split("=");
 
-			if (item[0] === "") {
-				position = item[0];
-				msg = "参数名不能为空";
+            if (item[0] === "") {
+                position = item[0];
+                msg = "参数名不能为空";
 
-				func.showWarning(position, msg);
+                func.showWarning(position, msg);
 
-				return 0;
-			}
+                return 0;
+            }
 
-			if (!item[0].match(/^[a-zA-Z0-9_]{1,}$/)) {
-				position = item[0];
-				msg = "参数名只能包含大小写字母和下划线（a-z, A-Z, 0-9, _）";
+            if (!item[0].match(/^[a-zA-Z0-9_]{1,}$/)) {
+                position = item[0];
+                msg = "参数名只能包含大小写字母和下划线（a-z, A-Z, 0-9, _）";
 
-				func.showWarning(position, msg);
+                func.showWarning(position, msg);
 
-				return 0;
-			}
+                return 0;
+            }
 /*
-			if (item[1] === "") {
-				position = item[0];
-				msg = item[0] + "未填写参数值";
+            if (item[1] === "") {
+                position = item[0];
+                msg = item[0] + "未填写参数值";
 
-				func.showWarning(position, msg);
-				return 0;
-			}
+                func.showWarning(position, msg);
+                return 0;
+            }
 
-			if (item[0] === "token") {
-				selector.token.val(item[1]);
+            if (item[0] === "token") {
+                selector.token.val(item[1]);
 
-				continue;
-			}
+                continue;
+            }
 */
 
-			// 必选字段填充
-			required = selector.getList.find("input[name='" + item[0] + "']");
-
-			if ((required.val() || "") != "") {
-				field = required.next();
-				tag = field.prop("tagName").toLowerCase();
-
-				if (tag === "input" || tag === "select") {
-					field.val(item[1]);
-				} else {
-					func.analyzeComplex(field, item[0], item[1]);
-				}
-
-				continue;
-			}
-
-			// 非必选字段填充
-			notRequired = selector.requestList.find("li[data-get-name='" + item[0] + "']");
-			dataType = notRequired.attr("data-type");
-
-			var opt = {
-				'name': item[0],
-				'value': item[1],
-				'dataType': dataType,
-				"isRequired": "no"
-			};
-
-			if ((notRequired.attr("data-get-name") || "") != "") {
-
-				if (dataType === "array" || dataType === "struct") {
-					opt.value = "";
-				}
-				
-				notRequired.addClass("selected").find(".checked").css("visibility", "visible");
-
-			} else {
-				// 自定义字段
-				opt.dataType = "";
-				opt.isRequired = "";
-			}
-
-			func.addGetField(opt);
-
-			// 非必选字段复杂类型解析
-			required = selector.getList.find("input[name='" + item[0] + "']");
-
-			if ((required.val() || "") != "") {
-
-				field = required.next();
-				tag = field.prop("tagName").toLowerCase();
-
-				if (tag != "input" && tag != "select") {
-					func.analyzeComplex(field, item[0], item[1]);
-				}
-
-			}
-
-		}
-	},
+            // 必选字段填充
+            required = selector.getList.find("input[name='" + item[0] + "']");
+
+            if ((required.val() || "") != "") {
+                field = required.next();
+                tag = field.prop("tagName").toLowerCase();
+
+                if (tag === "input" || tag === "select") {
+                    field.val(item[1]);
+                } else {
+                    func.analyzeComplex(field, item[0], item[1]);
+                }
+
+                continue;
+            }
+
+            // 非必选字段填充
+            notRequired = selector.requestList.find("li[data-get-name='" + item[0] + "']");
+            dataType = notRequired.attr("data-type");
+
+            var opt = {
+                'name': item[0],
+                'value': item[1],
+                'dataType': dataType,
+                "isRequired": "no"
+            };
+
+            if ((notRequired.attr("data-get-name") || "") != "") {
+
+                if (dataType === "array" || dataType === "struct") {
+                    opt.value = "";
+                }
+                
+                notRequired.addClass("selected").find(".checked").css("visibility", "visible");
+
+            } else {
+                // 自定义字段
+                opt.dataType = "";
+                opt.isRequired = "";
+            }
+
+            func.addGetField(opt);
+
+            // 非必选字段复杂类型解析
+            required = selector.getList.find("input[name='" + item[0] + "']");
+
+            if ((required.val() || "") != "") {
+
+                field = required.next();
+                tag = field.prop("tagName").toLowerCase();
+
+                if (tag != "input" && tag != "select") {
+                    func.analyzeComplex(field, item[0], item[1]);
+                }
+
+            }
+
+        }
+    },
 
-	/**
-	 * 复杂类型解析，递归解析
-	 * @param that 	{dom object}
-	 * @param key  	{string}
-	 * @param value {string|json}
-	 */
-	analyzeComplex: function(that, key, value) {
-		var flag = that.find("span").eq(0).text().trim(),
-			items, addParams;
-
-		switch (flag) {
-			// struct 处理
-			case "{":
-				items = that.find("[class='struct-item']:eq(0) > div");
-				addParams = items.filter(".add-params");
-
-				value = JSON.parse(value);
-
-				var i = 0,
-					v = {},
-					k, tag, item;
-
-				for (k in value) {
+    /**
+     * 复杂类型解析，递归解析
+     * @param that  {dom object}
+     * @param key   {string}
+     * @param value {string|json}
+     */
+    analyzeComplex: function(that, key, value) {
+        var flag = that.find("span").eq(0).text().trim(),
+            items, addParams;
+
+        switch (flag) {
+            // struct 处理
+            case "{":
+                items = that.find("[class='struct-item']:eq(0) > div");
+                addParams = items.filter(".add-params");
+
+                value = JSON.parse(value);
+
+                var i = 0,
+                    v = {},
+                    k, tag, item;
+
+                for (k in value) {
 
-					v.json = JSON.stringify(value[k]);
-					v.string = v.json.replace(/"([^"]*)"/g, "$1");
+                    v.json = JSON.stringify(value[k]);
+                    v.string = v.json.replace(/"([^"]*)"/g, "$1");
 
-					item = items.find("input[name='" + k + "']");
-					fieldName = item.attr("name");
-					field = item.next();
+                    item = items.find("input[name='" + k + "']");
+                    fieldName = item.attr("name");
+                    field = item.next();
 
-					tag = v.string.substr(0, 1);
+                    tag = v.string.substr(0, 1);
 
-					// 必选项
-					if ((fieldName || "") === k) {
+                    // 必选项
+                    if ((fieldName || "") === k) {
 
-						// 必选项复杂类型处理
-						if (tag === "{" || tag === "[") {
-							func.analyzeComplex(field, k, v.json);
-							continue;
-						}
-						
-						field.val(v.string);
+                        // 必选项复杂类型处理
+                        if (tag === "{" || tag === "[") {
+                            func.analyzeComplex(field, k, v.json);
+                            continue;
+                        }
+                        
+                        field.val(v.string);
 
-						continue;
-					}
+                        continue;
+                    }
 
-					// 非必选项
-					var content = "",
-						opt = {
-							"name": k,
-							"value": v.string,
-							"isRequired": "",
-							"list": "",
-							"fromAnalyze": "true"
-						},
-						removeOption;
-
-					var hasElement = idl.types.find("complexType[name='" + key + "']")
-											  .find("element[name='" + k + "']")
-											  .attr("name") || "";
-
-					if (hasElement != "") {
-						opt.isRequired = "no";
-					}
-
-					switch (tag) {
-						// 非必选项 struct 处理
-						case "{":
-							content = func.getStructItem(opt);
-							$(content).insertBefore(addParams);
+                    // 非必选项
+                    var content = "",
+                        opt = {
+                            "name": k,
+                            "value": v.string,
+                            "isRequired": "",
+                            "list": "",
+                            "fromAnalyze": "true"
+                        },
+                        removeOption;
+
+                    var hasElement = idl.types.find("complexType[name='" + key + "']")
+                                              .find("element[name='" + k + "']")
+                                              .attr("name") || "";
+
+                    if (hasElement != "") {
+                        opt.isRequired = "no";
+                    }
+
+                    switch (tag) {
+                        // 非必选项 struct 处理
+                        case "{":
+                            content = func.getStructItem(opt);
+                            $(content).insertBefore(addParams);
 
-							// 移除已有参数选项
-							removeOption = addParams.find("option[value='" + k + "']");
-							if (k === (removeOption.attr("value") || "")) {
-								removeOption.remove();
-							}
+                            // 移除已有参数选项
+                            removeOption = addParams.find("option[value='" + k + "']");
+                            if (k === (removeOption.attr("value") || "")) {
+                                removeOption.remove();
+                            }
 
-							func.analyzeComplex(addParams.prev(), k, v.json);
+                            func.analyzeComplex(addParams.prev(), k, v.json);
 
-							continue;
+                            continue;
 
-						// 非必选项 array 处理
-						case "[":
-							opt.isRequired = "";
+                        // 非必选项 array 处理
+                        case "[":
+                            opt.isRequired = "";
 
-							content = func.getArrayItem(opt);
-							$(content).insertBefore(addParams);
+                            content = func.getArrayItem(opt);
+                            $(content).insertBefore(addParams);
 
-							func.analyzeComplex(addParams.prev(), k, v.json);
+                            func.analyzeComplex(addParams.prev(), k, v.json);
 
-							continue;
+                            continue;
 
-						// 非必选项一般处理
-						default:
-							opt.list = func.getEnumList(opt.name);
+                        // 非必选项一般处理
+                        default:
+                            opt.list = func.getEnumList(opt.name);
 
-							content = func.getItem(opt);
+                            content = func.getItem(opt);
 
-							$(content).insertBefore(addParams);
+                            $(content).insertBefore(addParams);
 
-							if (opt.list != "") {
-								var selected = addParams.prev().find("select");
+                            if (opt.list != "") {
+                                var selected = addParams.prev().find("select");
 
-								if (opt.value === "") {
-									selected.val("0");
-								} else {
-									selected.val(opt.value);
-								}
-							}
+                                if (opt.value === "") {
+                                    selected.val("0");
+                                } else {
+                                    selected.val(opt.value);
+                                }
+                            }
 
-							// 移除已有参数选项
-							removeOption = addParams.find("option[value='" + k + "']");
-							if (k === (removeOption.attr("value") || "")) {
-								removeOption.remove();
-							}
+                            // 移除已有参数选项
+                            removeOption = addParams.find("option[value='" + k + "']");
+                            if (k === (removeOption.attr("value") || "")) {
+                                removeOption.remove();
+                            }
 
-							continue;
-					}
+                            continue;
+                    }
 
-					++i;
-				}
+                    ++i;
+                }
 
-				break;
+                break;
 
-			// array 处理
-			case "[":
-				items = that.find("[class='array-item']:eq(0) > div");
-				addParams = items.filter(".add-params");
+            // array 处理
+            case "[":
+                items = that.find("[class='array-item']:eq(0) > div");
+                addParams = items.filter(".add-params");
 
-				value = JSON.parse(value);
+                value = JSON.parse(value);
 
-				var len = value.length,
-					v = {},
-					tag;
+                var len = value.length,
+                    v = {},
+                    tag;
 
-				for (var i = 0; i < len; i++) {
-					v.json = JSON.stringify(value[i]);
-					v.string = v.json.replace(/"([^"]*)"/g, "$1");
+                for (var i = 0; i < len; i++) {
+                    v.json = JSON.stringify(value[i]);
+                    v.string = v.json.replace(/"([^"]*)"/g, "$1");
 
-					if (v.string === "") {
-						continue;
-					}
+                    if (v.string === "") {
+                        continue;
+                    }
 
-					tag = v.string.substr(0, 1);
-
-					var content = "",
-						opt = {
-							"name": "",
-							"value": "",
-							"isRequired": "",
-							"extendType": "",
-							"list": "",
-							"fromAnalyze": "true",
-							"fromArray": "true"
-						};
-
-					if (v.string.indexOf("creative_template_id") === -1) {
-
-						opt.isRequired = "no";
-						opt.name = "filter_struct";
-						opt.extendType = opt.name;
-
-					} else {
-						opt.name = "creative_struct";
-					}
-
-					switch (tag) {
-
-						case "{":
-							content = func.getStructItem(opt);
-							$(content).insertBefore(addParams);
-
-							func.analyzeComplex(addParams.prev(), k, v.json);
-
-							continue;
-
-						case "[":
-
-							break;
-
-						default:
-							opt.value = v.string;
-							opt.list = func.getEnumList(opt.name);
-
-							content = func.getItem(opt);
-
-							$(content).insertBefore(addParams);
-
-							if (opt.list != "") {
-								var selected = addParams.prev().find("select");
-
-								if (opt.value === "") {
-									selected.val("0");
-								} else {
-									selected.val(opt.value);
-								}
-							}
-
-							continue;
-					}
-
-				}
-
-				break;
-
-			default: ;
-		}
-	},
-
-	/**
-	 * 显示解析错误信息
-	 * @return void
-	 */
-	showWarning: function(position, msg) {
-		selector.analyzeWarning.find("strong").html(position);
-		selector.analyzeWarning.find("span").html(msg);
-
-		selector.analyzeWarning
-					.css("right", selector.analyzeUrl.width() + 60 + "px")
-					.css("top", "-" + selector.analyzeUrl.height() * 1.8 + "px")
-					.fadeIn(300);
-	},
-
-	/**
-	 * 显示 token 表单
-	 * @param that {dom object}
-	 * 
-	 */
-	showTokenItem: function(that) {
-		var that = $(that),
-			content = '<input type="text" class="form-control" name="uid" placeholder="Uid"> \
-					   <input type="text" class="form-control" name="appid" placeholder="Appid"> \
-					   <input type="password" class="form-control" name="appkey" placeholder="Appkey"> \
-					   <button class="btn btn-primary" type="button">Get Token</button>';
-
-		selector.tokenItem
-					.html(content)
-					.css("right", that.width() + "px")
-					.css("top", that.height() * 1.9 + "px")
-					.fadeIn(500);
-	},
-
-	/**
-	 * 获取 token
-	 * @return {string}
-	 
-	getToken: function() {
-		return "token=" + selector.token.val();
-
-	},*/
-
-	/**
-	 * 根据用户的 appid 和 appkey 计算 token
-	 * 
-	 */
-	creatToken: function() {
-		var uid = selector.tokenItem.find("input[name='uid']").val(),
-			appid = selector.tokenItem.find("input[name='appid']").val(),
-			appkey = selector.tokenItem.find("input[name='appkey']").val();
-
-		if (uid.trim() === "" || appid.trim() === "" || appkey.trim() === "") {
-			return false;
-		}
-
-		$.ajax({
-			url: '../dist/api/token.php',
-			method: 'post',
-			dataType: 'text',
-			data: { 'key': appkey, 'id': appid, 'uid': uid },
-			success: function(data) {
-				selector.token.val(data);
-				selector.headerList.find("input[value='Authorization']").next().val('Bearer ' + data);
-			}
-		});
-	},
-
-	/**
-	 * 隐藏 token 填写框
-	 * 
-	 */
-	hideTokenItem: function() {
-		selector.tokenItem.hide().html("");
-	},
-
-	/**
-	 * 获得字段的类型
-	 * @param extendMod     {string} 字段名所属模块
-	 * @param interfaceName {string} 字段名所属接口
-	 * @param extendType    {string} 字段名/继承的父字段名
-	 * 
-	 */
-	getType: function(extendMod, interfaceName, extendType) {
-		var modules = idl.mod.filter("[name='" + extendMod + "']"),
-			types = modules.find("interface[service='" + interfaceName + "'] > types"),
-			element = types.find("simpleType[name='" + extendType + "']");
-
-		element = element.length === 0 ? types.find("complexType[name='" + extendType + "']") : element;
-
-		if (element.length === 0) {
-			element = modules.find("types simpleType[name='" + extendType + "']");
-			element = element.length === 0 ? modules.find("types complexType[name='" + extendType + "']") : element;
-		}
-
-		if (element.length === 0) {
-			element = idl.types.find("simpleType[name='" + extendType + "']");
-			element = element.length === 0 ? idl.types.find("complexType[name='" + extendType + "']") : element;
-		}
-
-		return {
-			type: element.attr('extends'),
-		};
-	},
-
-	/**
-	 * 检查 header 填写字段
-	 * @return {number} 0/1
-	 */
-	checkHeaderItems: function() {
-		var maxSize = 10;
-
-		if ($(".header-option").length >= maxSize) {
-			selector.headerWarning.html("最多添加 " + maxSize + " 个选项").show();
-
-			return 0;
-
-		} else {
-			selector.headerWarning.hide().html("");
-
-			return 1;
-		}
-	},
-
-	/**
-	 * 检查 post 填写字段
-	 * @return {number} 0/1
-	 */
-	checkPostItems: function() {
-		var maxSize = 20;
-
-		if ($(".post-option").length >= maxSize) {
-			selector.postWarning.html("最多添加 " + maxSize + " 个选项").show();
-
-			return 0;
-
-		} else {
-			selector.postWarning.hide().html("");
-		
-			return 1;
-		}
-	},
-
-	/**
-	 * 检查 get 填写字段
-	 * @return {number} 0/1
-	 */
-	checkGetItems: function() {
-		var maxSize = 20;
-
-		if ($(".get-option").length >= maxSize) {
-			selector.getWarning.html("最多添加 " + maxSize + " 个选项").show();
-
-			return 0;
-
-		} else {
-			selector.getWarning.hide().html("");
-
-			return 1;
-		}
-	},
-
-	/**
-	 * 显示 SDK
-	 * @return void
-	 */
-	showSDK: function() {
-		func.toggleSDK(0);
-
-		func.creatCurlSDK();
-		func.creatPhpSDK();
-
-		selector.sdk.css("top", "20%");
-	},
-
-	/**
-	 * 隐藏 SDK
-	 * @return void
-	 */
-	hideSDK: function() {
-		selector.sdk.css("top", "-40em");
-	},
-
-	/**
-	 * 切换 SDK
-	 * @return void
-	 */
-	toggleSDK: function(num) {
-		var _this = selector.sdkTab.find("a").eq(num),
-			info = selector.sdkInfo.find("pre").eq(num);
-
-		_this.addClass("selected").siblings().removeClass("selected");
-
-		info.show().siblings().hide();
-	},
-
-	/**
-	 * 生成 php SDK
-	 * @return void
-	 */
-	creatPhpSDK: function() {
-		var mod = selector.modules.val(),
-			act = selector.interfaces.val(),
-			token = selector.token.val(),
-			headers = func.collectParams('header').json,
-			process_params = [],
-			process_headers = [],
-			params = '',
-			code = [];
-
-		switch (selector.method.text()) {
-			case 'POST':
-				params = func.collectParams('post').json;
-				break;
-
-			case 'GET':
-				params = func.collectParams('get').json;
-				break;
-
-			default:
-				return 0;
-		}
-
-		// headers
-		process_headers.push('$headers = array(');
-		for (var k in headers) {
-			var v = headers[k];
-
-			if (typeof v === 'object') {
-				v = JSON.stringify(v);
-			}
-			process_headers.push("    '" + k + "' => '" + v + "',");
-		}
-		process_headers.push(');');
-		process_headers = process_headers.join("\r\n");
-
-		// params
-		process_params.push('$params = array(');
-		for (var k in params) {
-			var v = params[k];
-
-			if (typeof v === 'object') {
-				v = JSON.stringify(v);
-			}
-			process_params.push("    '" + k + "' => '" + v + "',");
-		}
-		process_params.push(');');
-		process_params = process_params.join("\r\n");
-
-		code.push("$module = " + mod + ";");
-		code.push("$interface = " + act + ";");
-		code.push();
-		code.push();
-		code.push();
-		code.push();
-		code.push();
-		code = "$module = " + mod + ";" + "\r\n"
-			   "$interface = " + act + ";" + "\r\n"
-			   "$access_token = Bearer " + token + ";" + "\r\n"
-			   process_params + "\r\n"
-			   process_headers + "\r\n"
-			   "$conf = array(\
-				    'uid'    => 'platform',\
-				    'appid'  => 'platform',\
-				    'appkey' => 'platform'\
-				);\
-\
-				$spa = new Spa\\Spa($conf);\
-\
-				$modules = $spa->getModules();\
-\
-				try {\
-					$response = $modules->$module->$interface->send($params, $headers, $access_token);\
-				} catch (Exception $e) {\
-					$msg = $e->getMessage();\
-					echo json_encode(array('debug message' => $msg));\
-\
-					exit();\
-				}";
-
-		selector.sdkInfo.find("pre:eq(1)").text(code);
-	},
-
-	/**
-	 * 生成 curl SDK
-	 * @return void
-	 */
-	creatCurlSDK: function() {
-		var code, method, params, url, headers,
-			postParams = [],
-			headerParams = [];
-
-		headers = func.collectParams("header").json;
-
-		var k, v;
-		for (k in headers) {
-			v = headers[k];
-
-			headerParams.push("-H '" + k + ": " + v + "'");
-		}
-
-		switch (selector.method.text()) {
-
-			case "GET":
-				method = "-G ";
-				url = func.getUrl();
-
-				break;
-
-			case "POST":
-				method = "";
-				url = func.getBaseUrl();
-				params = func.collectParams("post").json;
-
-				for (k in params) {
-					v = JSON.stringify(params[k]);
-					//v = v.replace(/"([^"]*)"/g, "$1");
-
-					postParams.push("-d '" + k + "=" + v + "'");
-				}
-
-				break;
-
-			default:
-				return 0;
-		}
-
-		code = "curl " + method + url;
-
-		if (headerParams.length != 0) {
-			code = code + " \\\n" + headerParams.join(" \\\n");
-		}
-
-		if (postParams.length != 0) {
-			code = code + " \\\n" + postParams.join(" \\\n");
-		}
-
-		selector.sdkInfo.find("pre:eq(0)").text(code);
-	},
-
-	/**
-	 * 清除响应信息
-	 * @return void
-	 */
-	clearReponse: function() {
-		selector.responseData.html("");
-	},
+                    tag = v.string.substr(0, 1);
+
+                    var content = "",
+                        opt = {
+                            "name": "",
+                            "value": "",
+                            "isRequired": "",
+                            "extendType": "",
+                            "list": "",
+                            "fromAnalyze": "true",
+                            "fromArray": "true"
+                        };
+
+                    if (v.string.indexOf("creative_template_id") === -1) {
+
+                        opt.isRequired = "no";
+                        opt.name = "filter_struct";
+                        opt.extendType = opt.name;
+
+                    } else {
+                        opt.name = "creative_struct";
+                    }
+
+                    switch (tag) {
+
+                        case "{":
+                            content = func.getStructItem(opt);
+                            $(content).insertBefore(addParams);
+
+                            func.analyzeComplex(addParams.prev(), k, v.json);
+
+                            continue;
+
+                        case "[":
+
+                            break;
+
+                        default:
+                            opt.value = v.string;
+                            opt.list = func.getEnumList(opt.name);
+
+                            content = func.getItem(opt);
+
+                            $(content).insertBefore(addParams);
+
+                            if (opt.list != "") {
+                                var selected = addParams.prev().find("select");
+
+                                if (opt.value === "") {
+                                    selected.val("0");
+                                } else {
+                                    selected.val(opt.value);
+                                }
+                            }
+
+                            continue;
+                    }
+
+                }
+
+                break;
+
+            default: ;
+        }
+    },
+
+    /**
+     * 显示解析错误信息
+     * @return void
+     */
+    showWarning: function(position, msg) {
+        selector.analyzeWarning.find("strong").html(position);
+        selector.analyzeWarning.find("span").html(msg);
+
+        selector.analyzeWarning
+                    .css("right", selector.analyzeUrl.width() + 60 + "px")
+                    .css("top", "-" + selector.analyzeUrl.height() * 1.8 + "px")
+                    .fadeIn(300);
+    },
+
+    /**
+     * 显示 token 表单
+     * @param that {dom object}
+     * 
+     */
+    showTokenItem: function(that) {
+        var that = $(that),
+            content = '<input type="text" class="form-control" name="uid" placeholder="Uid"> \
+                       <input type="text" class="form-control" name="appid" placeholder="Appid"> \
+                       <input type="password" class="form-control" name="appkey" placeholder="Appkey"> \
+                       <button class="btn btn-primary" type="button">Get Token</button>';
+
+        selector.tokenItem
+                    .html(content)
+                    .css("right", that.width() + "px")
+                    .css("top", that.height() * 1.9 + "px")
+                    .fadeIn(500);
+    },
+
+    /**
+     * 获取 token
+     * @return {string}
+     
+    getToken: function() {
+        return "token=" + selector.token.val();
+
+    },*/
+
+    /**
+     * 根据用户的 appid 和 appkey 计算 token
+     * 
+     */
+    creatToken: function() {
+        var uid = selector.tokenItem.find("input[name='uid']").val(),
+            appid = selector.tokenItem.find("input[name='appid']").val(),
+            appkey = selector.tokenItem.find("input[name='appkey']").val();
+
+        if (uid.trim() === "" || appid.trim() === "" || appkey.trim() === "") {
+            return false;
+        }
+
+        $.ajax({
+            url: '../dist/api/token.php',
+            method: 'post',
+            dataType: 'text',
+            data: { 'key': appkey, 'id': appid, 'uid': uid },
+            success: function(data) {
+                selector.token.val(data);
+                selector.headerList.find("input[value='Authorization']").next().val('Bearer ' + data);
+            }
+        });
+    },
+
+    /**
+     * 隐藏 token 填写框
+     * 
+     */
+    hideTokenItem: function() {
+        selector.tokenItem.hide().html("");
+    },
+
+    /**
+     * 获得字段的类型
+     * @param extendMod     {string} 字段名所属模块
+     * @param interfaceName {string} 字段名所属接口
+     * @param extendType    {string} 字段名/继承的父字段名
+     * 
+     */
+    getType: function(extendMod, interfaceName, extendType) {
+        var modules = idl.mod.filter("[name='" + extendMod + "']"),
+            types = modules.find("interface[service='" + interfaceName + "'] > types"),
+            element = types.find("simpleType[name='" + extendType + "']");
+
+        element = element.length === 0 ? types.find("complexType[name='" + extendType + "']") : element;
+
+        if (element.length === 0) {
+            element = modules.find("types simpleType[name='" + extendType + "']");
+            element = element.length === 0 ? modules.find("types complexType[name='" + extendType + "']") : element;
+        }
+
+        if (element.length === 0) {
+            element = idl.types.find("simpleType[name='" + extendType + "']");
+            element = element.length === 0 ? idl.types.find("complexType[name='" + extendType + "']") : element;
+        }
+
+        return {
+            type: element.attr('extends'),
+        };
+    },
+
+    /**
+     * 检查 header 填写字段
+     * @return {number} 0/1
+     */
+    checkHeaderItems: function() {
+        var maxSize = 10;
+
+        if ($(".header-option").length >= maxSize) {
+            selector.headerWarning.html("最多添加 " + maxSize + " 个选项").show();
+
+            return 0;
+
+        } else {
+            selector.headerWarning.hide().html("");
+
+            return 1;
+        }
+    },
+
+    /**
+     * 检查 post 填写字段
+     * @return {number} 0/1
+     */
+    checkPostItems: function() {
+        var maxSize = 20;
+
+        if ($(".post-option").length >= maxSize) {
+            selector.postWarning.html("最多添加 " + maxSize + " 个选项").show();
+
+            return 0;
+
+        } else {
+            selector.postWarning.hide().html("");
+        
+            return 1;
+        }
+    },
+
+    /**
+     * 检查 get 填写字段
+     * @return {number} 0/1
+     */
+    checkGetItems: function() {
+        var maxSize = 20;
+
+        if ($(".get-option").length >= maxSize) {
+            selector.getWarning.html("最多添加 " + maxSize + " 个选项").show();
+
+            return 0;
+
+        } else {
+            selector.getWarning.hide().html("");
+
+            return 1;
+        }
+    },
+
+    /**
+     * 显示 SDK
+     * @return void
+     */
+    showSDK: function() {
+        func.toggleSDK(0);
+
+        func.creatCurlSDK();
+        func.creatPhpSDK();
+
+        selector.sdk.css("top", "20%");
+    },
+
+    /**
+     * 隐藏 SDK
+     * @return void
+     */
+    hideSDK: function() {
+        selector.sdk.css("top", "-40em");
+    },
+
+    /**
+     * 切换 SDK
+     * @return void
+     */
+    toggleSDK: function(num) {
+        var _this = selector.sdkTab.find("a").eq(num),
+            info = selector.sdkInfo.find("pre").eq(num);
+
+        _this.addClass("selected").siblings().removeClass("selected");
+
+        info.show().siblings().hide();
+    },
+
+    /**
+     * 生成 php SDK
+     * @return void
+     */
+    creatPhpSDK: function() {
+        var mod = selector.modules.val(),
+            act = selector.interfaces.val(),
+            token = selector.token.val(),
+            headers = func.collectParams('header').json,
+            process_params = [],
+            process_headers = [],
+            params = '',
+            code = [];
+
+        switch (selector.method.text()) {
+            case 'POST':
+                params = func.collectParams('post').json;
+                break;
+
+            case 'GET':
+                params = func.collectParams('get').json;
+                break;
+
+            default:
+                return 0;
+        }
+
+        // headers
+        process_headers.push('$headers = array(');
+        for (var k in headers) {
+            var v = headers[k];
+
+            if (typeof v === 'object') {
+                v = JSON.stringify(v);
+            }
+            process_headers.push("    '" + k + "' => '" + v + "',");
+        }
+        process_headers.push(');');
+        process_headers = process_headers.join("\r\n");
+
+        // params
+        process_params.push('$params = array(');
+        for (var k in params) {
+            var v = params[k];
+
+            if (typeof v === 'object') {
+                v = JSON.stringify(v);
+            }
+            process_params.push("    '" + k + "' => '" + v + "',");
+        }
+        process_params.push(');');
+        process_params = process_params.join("\r\n");
+
+        code.push(process_params);
+        code.push(process_headers);
+        code.push("$conf = array(");
+        code.push("    'uid'    => 'uid',");
+        code.push("    'appid'  => 'appid',");
+        code.push("    'appkey' => 'appkey'");
+        code.push(");");
+        code.push("$spa = new Spa\\Spa($conf);");
+        code.push("$modules = $spa->getModules();");
+        code.push("try {");
+        code.push("    $response = $modules->" + mod + "->" + act + "->send($params, $headers, Bearer '" + token + "');");
+        code.push("} catch (Exception $e) {");
+        code.push("    echo $e->getMessage();");
+        code.push("    exit();");
+        code.push("}");
+
+        code = code.join("\r\n"); 
+
+        selector.sdkInfo.find("pre:eq(1)").text(code);
+    },
+
+    /**
+     * 生成 curl SDK
+     * @return void
+     */
+    creatCurlSDK: function() {
+        var code, method, params, url, headers,
+            postParams = [],
+            headerParams = [];
+
+        headers = func.collectParams("header").json;
+
+        var k, v;
+        for (k in headers) {
+            v = headers[k];
+
+            headerParams.push("-H '" + k + ": " + v + "'");
+        }
+
+        switch (selector.method.text()) {
+
+            case "GET":
+                method = "-G ";
+                url = func.getUrl();
+
+                break;
+
+            case "POST":
+                method = "";
+                url = func.getBaseUrl();
+                params = func.collectParams("post").json;
+
+                for (k in params) {
+                    v = JSON.stringify(params[k]);
+                    //v = v.replace(/"([^"]*)"/g, "$1");
+
+                    postParams.push("-d '" + k + "=" + v + "'");
+                }
+
+                break;
+
+            default:
+                return 0;
+        }
+
+        code = "curl " + method + url;
+
+        if (headerParams.length != 0) {
+            code = code + " \\\n" + headerParams.join(" \\\n");
+        }
+
+        if (postParams.length != 0) {
+            code = code + " \\\n" + postParams.join(" \\\n");
+        }
+
+        selector.sdkInfo.find("pre:eq(0)").text(code);
+    },
+
+    /**
+     * 清除响应信息
+     * @return void
+     */
+    clearReponse: function() {
+        selector.responseData.html("");
+    },
 
 }
 
