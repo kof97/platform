@@ -1,5 +1,5 @@
 <meta charset="utf-8">
-<style>* { padding: 0; margin: 0; }body { width: 90%; margin: 0 auto; padding: 1em 3em 2em; font-family: "Times New Roman"; border: 1px solid #eee; }h1 { border-bottom: 1px solid #eee; }h1, h2, h3, h4, h5 { padding: 0.4em 0; margin-bottom: 0.5em; }p { border-left: 0.4em #DDDDDD solid; padding: 0.1em 1em 0.5em; background: #FEFFFF; font-size: 0.9em; font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace; }hr { background: #E7E7E7; height: 0.2em; border: 0px; margin: 1em 0; }pre { margin: 1em 0; padding-bottom: 1em; background: #F7F7F7; font-size: 0.9em; font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace; word-wrap: break-word; overflow-x: auto; }code { background: #F5F5F5; padding: 0 0.5em; border: #E0E0E0 1px solid; color: #E21149; font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace; }</style>
+<style>* { padding: 0; margin: 0; }body { width: 90%; margin: 0 auto; padding: 1em 2em 2em; font-family: "Times New Roman"; border: 1px solid #eee; }h1 { border-bottom: 1px solid #eee; }h1, h2, h3, h4, h5 { padding: 0.4em 0; margin-bottom: 0.5em; }p { border-left: 0.4em #DDDDDD solid; padding: 0.1em 1em 0.5em; background: #FEFFFF; font-size: 0.9em; font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace; }hr { background: #E7E7E7; height: 0.2em; border: 0px; margin: 1em 0; }pre { margin: 1em 0; padding-bottom: 1em; background: #F7F7F7; font-size: 0.9em; font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace; word-wrap: break-word; overflow-x: auto; }code { background: #F5F5F5; padding: 0 0.5em; border: #E0E0E0 1px solid; color: #E21149; font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace; }</style>
 <body>
 <h1>SPA PHP SDK 主要服务类 Spa\Spa</h1>
 
@@ -153,10 +153,10 @@ Spa\Spa 类提供了主要功能的接口入口
     public Spa\Response get(
         $url,
         $headers = array(), 
-        $accessToken = null
+        $access_token = null
     )
 </codeblock></pre>
-<p><code>$url</code>: {string} 请求的 url，（必填）</p><p><code>$headers</code>: {array|array()} 请求要传的请求头信息，（选填）</p><p><code>$accessToken</code>: {AccessToken|string|null} access token，不填的话自动从 $conf 中的配置信息生成，（选填）</p>
+<p><code>$url</code>: {string} 请求的 url，（必填）</p><p><code>$headers</code>: {array|array()} 请求要传的请求头信息，（选填）</p><p><code>$access_token</code>: {AccessToken|string|null} access token，不填的话自动从 $conf 中的配置信息生成，（选填）</p>
 <br>发起一个 <code>get</code> 请求，返回值为 <code>Spa\Response</code> 对象
 
 <hr>
@@ -168,10 +168,10 @@ Spa\Spa 类提供了主要功能的接口入口
         $url,
         $params = array(), 
         $headers = array(), 
-        $accessToken = null
+        $access_token = null
     )
 </codeblock></pre>
-<p><code>$url</code>: {string} 请求的 url，（必填）</p><p><code>$params</code>: {array|array()} post 请求参数信息，（选填）</p><p><code>$headers</code>: {array|array()} 请求要传的请求头信息，（选填）</p><p><code>$accessToken</code>: {AccessToken|string|null} access token，不填的话自动从 $conf 中的配置信息生成，（选填）</p>
+<p><code>$url</code>: {string} 请求的 url，（必填）</p><p><code>$params</code>: {array|array()} post 请求参数信息，（选填）</p><p><code>$headers</code>: {array|array()} 请求要传的请求头信息，（选填）</p><p><code>$access_token</code>: {AccessToken|string|null} access token，不填的话自动从 $conf 中的配置信息生成，（选填）</p>
 <br>发起一个 <code>post</code> 请求，返回值为 <code>Spa\Response</code> 对象
 
 <hr>
@@ -184,10 +184,10 @@ Spa\Spa 类提供了主要功能的接口入口
         $url,
         $params = array(),
         $headers = array(),
-        $accessToken = null
+        $access_token = null
     )
 </codeblock></pre>
-<p><code>$method</code>: {string} 请求方式 GET/POST</p><p><code>$url</code>: {string} 请求的 url，（必填）</p><p><code>$params</code>: {array|array()} 请求参数信息，（选填）</p><p><code>$headers</code>: {array|array()} 请求要传的请求头信息，（选填）</p><p><code>$accessToken</code>: {AccessToken|string|null} access token，不填的话自动从 $conf 中的配置信息生成，（选填）</p>
+<p><code>$method</code>: {string} 请求方式 GET/POST</p><p><code>$url</code>: {string} 请求的 url，（必填）</p><p><code>$params</code>: {array|array()} 请求参数信息，（选填）</p><p><code>$headers</code>: {array|array()} 请求要传的请求头信息，（选填）</p><p><code>$access_token</code>: {AccessToken|string|null} access token，不填的话自动从 $conf 中的配置信息生成，（选填）</p>
 <br>发送 <code>request</code> 请求，自己指定请求方式，只支持 <code>GET / POST</code>，返回值为 <code>Spa\Response</code> 对象
 
 <hr>
@@ -200,10 +200,10 @@ Spa\Spa 类提供了主要功能的接口入口
         $url,
         $params = array(),
         $headers = array(),
-        $accessToken = null
+        $access_token = null
     )
 </codeblock></pre>
-<p><code>$method</code>: {string} 请求方式 GET/POST</p><p><code>$url</code>: {string} 请求的 url，（必填）</p><p><code>$params</code>: {array|array()} 请求参数信息，（选填）</p><p><code>$headers</code>: {array|array()} 请求要传的请求头信息，（选填）</p><p><code>$accessToken</code>: {AccessToken|string|null} access token，不填的话自动从 $conf 中的配置信息生成，（选填）</p>
+<p><code>$method</code>: {string} 请求方式 GET/POST</p><p><code>$url</code>: {string} 请求的 url，（必填）</p><p><code>$params</code>: {array|array()} 请求参数信息，（选填）</p><p><code>$headers</code>: {array|array()} 请求要传的请求头信息，（选填）</p><p><code>$access_token</code>: {AccessToken|string|null} access token，不填的话自动从 $conf 中的配置信息生成，（选填）</p>
 <br>收集处理 <code>request</code> 请求信息，返回值为 <code>Spa\Request</code> 对象
 
 <hr>

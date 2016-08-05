@@ -9,8 +9,11 @@
 			<a href="docs/Client.md.html" target="docs">\Client</a>
 			<a href="docs/Response.md.html" target="docs">\Response</a>
 
-			<span><strong>Spa\Authentication</strong></span>
+			<span><strong>Spa\Authentication\</strong></span>
 			<a href="docs/AccessToken.md.html" target="docs">\AccessToken</a>
+
+			<span><strong>Spa\Object\Interfaces\</strong></span>
+			<a href="docs/interfaces.md.html" target="docs">\{接口发送实体类}</a>
 		</div>
 		<iframe name="docs" id="docs" src="docs/Spa.md.html"></iframe>
 

@@ -1,0 +1,59 @@
+<meta charset="utf-8">
+<style>* { padding: 0; margin: 0; }body { width: 90%; margin: 0 auto; padding: 1em 2em 2em; font-family: "Times New Roman"; border: 1px solid #eee; }h1 { border-bottom: 1px solid #eee; }h1, h2, h3, h4, h5 { padding: 0.4em 0; margin-bottom: 0.5em; }p { border-left: 0.4em #DDDDDD solid; padding: 0.1em 1em 0.5em; background: #FEFFFF; font-size: 0.9em; font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace; }hr { background: #E7E7E7; height: 0.2em; border: 0px; margin: 1em 0; }pre { margin: 1em 0; padding-bottom: 1em; background: #F7F7F7; font-size: 0.9em; font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace; word-wrap: break-word; overflow-x: auto; }code { background: #F5F5F5; padding: 0 0.5em; border: #E0E0E0 1px solid; color: #E21149; font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace; }</style>
+<body>
+<h1>SPA PHP SDK 接口请求实体类 Spa\Object\Interfaces\</h1>
+
+Spa\Object\Interfaces\ 命名空间下是各个接口的请求实体类
+
+<hr>
+
+<h1>Spa\Object\Interfaces\</h1>
+
+<h2>如何调用</h2>
+
+<pre><codeblock>
+    $conf = array(
+        'uid'    => '{uid}',  
+        'appid'  => '{appid}',
+        'appkey' => '{appkey}'
+    );
+
+    $spa = new Spa\Spa($conf);
+
+    // 获取模块集合
+    $modules = $spa->getModules();
+
+    // 选择模块 -> 选择接口 -> 发送请求
+    $modules->advertiser->signup->send({$params}, {$headers}, {$access_token});
+</codeblock></pre>
+
+<h2>提供的方法</h2>
+
+<h3>send()</h3>
+
+<pre><codeblock>
+    public Spa\Response send(
+        $params = array(),
+        $headers = array(),
+        $access_token = null
+    )
+</codeblock></pre>
+
+<pre><codeblock>
+    // 选择模块 -> 选择接口 -> 发送请求
+    $response = $spa->getModules()->advertiser->signup->send({$params}, {$headers}, ($access_token));
+</codeblock></pre>
+<p>用于快速的构造请求，通过 <code>$spa->getModules()</code> 直接选择 <code>module</code> 和 <code>interface</code> 来进行发送请求</p><p>也可用于使用特定的 <code>access_token</code> 来进行临时请求，若不填，则使用 <code>$conf</code> 中配置的信息生成</p>
+
+<hr>
+
+<h3>fieldInfo()</h3>
+
+<pre><codeblock>
+    public array fieldInfo()
+</codeblock></pre>
+
+用于获取该接口下的所有字段结构以及验证规则，包括 <code>struct</code> 和 <code>array</code> 下的递归嵌套的结构类型
+
+
+</body>

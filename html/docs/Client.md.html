@@ -1,5 +1,5 @@
 <meta charset="utf-8">
-<style>* { padding: 0; margin: 0; }body { width: 90%; margin: 0 auto; padding: 1em 3em 2em; font-family: "Times New Roman"; border: 1px solid #eee; }h1 { border-bottom: 1px solid #eee; }h1, h2, h3, h4, h5 { padding: 0.4em 0; margin-bottom: 0.5em; }p { border-left: 0.4em #DDDDDD solid; padding: 0.1em 1em 0.5em; background: #FEFFFF; font-size: 0.9em; font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace; }hr { background: #E7E7E7; height: 0.2em; border: 0px; margin: 1em 0; }pre { margin: 1em 0; padding-bottom: 1em; background: #F7F7F7; font-size: 0.9em; font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace; word-wrap: break-word; overflow-x: auto; }code { background: #F5F5F5; padding: 0 0.5em; border: #E0E0E0 1px solid; color: #E21149; font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace; }</style>
+<style>* { padding: 0; margin: 0; }body { width: 90%; margin: 0 auto; padding: 1em 2em 2em; font-family: "Times New Roman"; border: 1px solid #eee; }h1 { border-bottom: 1px solid #eee; }h1, h2, h3, h4, h5 { padding: 0.4em 0; margin-bottom: 0.5em; }p { border-left: 0.4em #DDDDDD solid; padding: 0.1em 1em 0.5em; background: #FEFFFF; font-size: 0.9em; font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace; }hr { background: #E7E7E7; height: 0.2em; border: 0px; margin: 1em 0; }pre { margin: 1em 0; padding-bottom: 1em; background: #F7F7F7; font-size: 0.9em; font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace; word-wrap: break-word; overflow-x: auto; }code { background: #F5F5F5; padding: 0 0.5em; border: #E0E0E0 1px solid; color: #E21149; font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace; }</style>
 <body>
 <h1>SPA PHP SDK 请求端实例类 Spa\Client</h1>
 
@@ -15,11 +15,11 @@ Spa\Client 类用于发起请求
 
 <pre><codeblock>
     new Spa\Client(
-        ClientInterface $httpClient = null, 
+        ClientInterface $http_client = null, 
         $version = null
     )
 </codeblock></pre>
-<p><em></em>$httpClient :<em></em> <code>Spa\HttpClients\ClientInterface</code> 的实例，用于发起请求</p><p><em></em>$version :<em></em> 请求的 api 版本，默认 v3，目前只支持 v3</p>
+<p><em></em>$http_client :<em></em> <code>Spa\HttpClients\ClientInterface</code> 的实例，用于发起请求</p><p><em></em>$version :<em></em> 请求的 api 版本，默认 v3，目前只支持 v3</p>
 <br>一般由 <code>Spa\Spa</code> 类初始化，可以直接通过 <code>Spa\Spa</code> 的 <code>getClient()</code> 方法获取实例
 
 例：
@@ -41,7 +41,7 @@ Spa\Client 类用于发起请求
 或是直接创建
 
 <pre><codeblock>
-    $spaClient = new Spa\Client({$httpClient}, {$version});
+    $spaClient = new Spa\Client({$http_client}, {$version});
 </codeblock></pre>
 
 <h2>方法介绍</h2>
@@ -51,10 +51,10 @@ Spa\Client 类用于发起请求
 <h3>setHttpClient()</h3>
 
 <pre><codeblock>
-    public void setHttpClient(Spa\HttpClients\ClientInterface $httpClient)
+    public void setHttpClient(Spa\HttpClients\ClientInterface $http_client)
 </codeblock></pre>
 
-设置 <code>$httpClient</code>，用于发起 http 请求
+设置 <code>$http_client</code>，用于发起 http 请求
 
 <hr>
 
