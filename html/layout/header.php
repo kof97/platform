@@ -21,10 +21,10 @@
 			</a>
 			<a href="">OPEN SDK</a>
 			<a href="./doc.php">文档</a>
-			<a href="./tools.php" class="nav-select">工具</a>
-			<a href="">新闻</a>
-			<a href="">支持中心</a>
-			<a href="">社区</a>
+			<a href="./tools.php" class="">工具</a>
+			<a href="#">新闻</a>
+			<a href="#">支持中心</a>
+			<a href="#">社区</a>
 
 		</header>
 	</nav>
