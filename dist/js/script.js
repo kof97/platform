@@ -11985,8 +11985,12 @@ var func = {
 	creatPhpSDK: function() {
 		var mod = selector.modules.val(),
 			act = selector.interfaces.val(),
+			token = selector.token.val(),
 			headers = func.collectParams('header').json,
-			params = '';
+			process_params = [],
+			process_headers = [],
+			params = '',
+			code = [];
 
 		switch (selector.method.text()) {
 			case 'POST':
@@ -12001,22 +12005,57 @@ var func = {
 				return 0;
 		}
 
-		var process_params = [];
-		process_params.push('array(');
+		// headers
+		process_headers.push('$headers = array(');
+		for (var k in headers) {
+			var v = headers[k];
+
+			if (typeof v === 'object') {
+				v = JSON.stringify(v);
+			}
+			process_headers.push("    '" + k + "' => '" + v + "',");
+		}
+		process_headers.push(');');
+		process_headers = process_headers.join("\r\n");
+
+		// params
+		process_params.push('$params = array(');
 		for (var k in params) {
 			var v = params[k];
 
 			if (typeof v === 'object') {
 				v = JSON.stringify(v);
 			}
-			process_params.push("'" + k + "' => " + v + ",");
-			// console.log(k);
-			// console.log(params[k]);
-
+			process_params.push("    '" + k + "' => '" + v + "',");
 		}
+		process_params.push(');');
+		process_params = process_params.join("\r\n");
 
-		console.log(process_params);
+		code = "$module = " + mod + ";" + "\r\n"
+			   "$interface = " + act + ";" + "\r\n"
+			   "$access_token = Bearer " + token + ";" + "\r\n"
+			   process_params + "\r\n"
+			   process_headers + "\r\n"
+			   "$conf = array(\
+				    'uid'    => 'platform',\
+				    'appid'  => 'platform',\
+				    'appkey' => 'platform'\
+				);\
+\
+				$spa = new Spa\\Spa($conf);\
+\
+				$modules = $spa->getModules();\
+\
+				try {\
+					$response = $modules->$module->$interface->send($params, $headers, $access_token);\
+				} catch (Exception $e) {\
+					$msg = $e->getMessage();\
+					echo json_encode(array('debug message' => $msg));\
+\
+					exit();\
+				}";
 
+		selector.sdkInfo.find("pre:eq(1)").text(code);
 	},
 
 	/**
