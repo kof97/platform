@@ -11046,7 +11046,7 @@ var func = {
 		//console.log(a);
 		//var c = JSON.parse(a);
 		//
-		//$('#response-data').html(JSON.stringify(c, null, 4));
+		//selector.responseData.html(JSON.stringify(c, null, 4));
 
 		return {
 			json: JSON.parse(content),
@@ -11259,7 +11259,7 @@ var func = {
 
 		content += "<br><br><strong>header 信息预览：</strong><br>" + JSON.stringify(func.collectParams("header").json, null, 4);
 
-		selector.reponseData.html(content).show();
+		selector.responseData.html(content).show();
 	},
 
 	checkRequest: function() {
@@ -11275,6 +11275,8 @@ var func = {
 			method = selector.method.text(),
 			headerData,
 			params;
+
+		selector.debugData.hide();
 
 		headerData = func.collectParams("header").json;
 
@@ -11292,7 +11294,7 @@ var func = {
 
 				res = JSON.parse(res);
 
-				$('#response-data').html(JSON.stringify(res, null, 4));
+				selector.responseData.html(JSON.stringify(res, null, 4));
 
 				return 0;
 		}
@@ -11316,11 +11318,11 @@ var func = {
 			//res = JSON.parse(res);
 
 			if (res.hasOwnProperty('debug message')) {
-				$('#response-data').hide();
-				$('#debug-data').html(JSON.stringify(res, null, 4)).show();
+				selector.responseData.hide();
+				selector.debugData.html(JSON.stringify(res, null, 4)).show();
 			} else {
-				$('#debug-data').hide();
-				$('#response-data').html(JSON.stringify(res, null, 4)).show();
+				selector.debugData.hide();
+				selector.responseData.html(JSON.stringify(res, null, 4)).show();
 			}
 		});
 	},
@@ -12037,7 +12039,7 @@ var func = {
 	 * @return void
 	 */
 	clearReponse: function() {
-		selector.reponseData.html("");
+		selector.responseData.html("");
 	},
 
 }
@@ -12154,7 +12156,8 @@ var selector = {
 
 	"noteData": $(".info .note"),
 
-	"reponseData": $("#response-data")
+	"debugData": $("#debug-data"),
+	"responseData": $("#response-data")
 
 }
 
@@ -12824,7 +12827,7 @@ selector.getData.find("span:eq(0) > a").on("click", function() {
 
 // view data
 selector.getData.find("span:eq(1) > a").on("click", function() {
-	selector.reponseData.html("<strong>GET 参数预览：</strong><br>" + JSON.stringify(func.collectParams("get").json, null, 4)).show();
+	selector.responseData.html("<strong>GET 参数预览：</strong><br>" + JSON.stringify(func.collectParams("get").json, null, 4)).show();
 
 });
 
@@ -12882,7 +12885,7 @@ selector.headerData.find("span:eq(0) > a").on("click", function() {
 
 // view data
 selector.headerData.find("span:eq(1) > a").on("click", function() {
-	selector.reponseData.html("<strong>header 头信息预览：</strong><br>" + JSON.stringify(func.collectParams("header").json, null, 4)).show();
+	selector.responseData.html("<strong>header 头信息预览：</strong><br>" + JSON.stringify(func.collectParams("header").json, null, 4)).show();
 });
 
 },{"../common/functions":2,"../common/jquery":5,"../common/selector":6}],16:[function(require,module,exports){
@@ -12906,7 +12909,7 @@ selector.postData.find("span:eq(0) > a").on("click", function() {
 
 // view data
 selector.postData.find("span:eq(1) > a").on("click", function() {
-	selector.reponseData.html("<strong>POST 参数预览：</strong><br>" + JSON.stringify(func.collectParams("post").json, null, 4)).show();
+	selector.responseData.html("<strong>POST 参数预览：</strong><br>" + JSON.stringify(func.collectParams("post").json, null, 4)).show();
 });
 
 // selected
