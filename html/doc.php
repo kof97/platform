@@ -13,7 +13,10 @@
 			<a href="docs/AccessToken.md.html" target="docs">\AccessToken</a>
 
 			<span><strong>Spa\Object\Interfaces\</strong></span>
-			<a href="docs/interfaces.md.html" target="docs">\{接口发送实体类}</a>
+			<a href="docs/Interfaces.md.html" target="docs">\{接口发送实体类}</a>
+
+			<span><strong>Spa\Object\Enum\</strong></span>
+			<a href="docs/Enum.md.html" target="docs">\{接口参数枚举类}</a>
 		</div>
 		<iframe name="docs" id="docs" src="docs/Spa.md.html"></iframe>
 
