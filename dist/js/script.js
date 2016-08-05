@@ -12033,23 +12033,18 @@ var func = {
 
         code.push(process_params);
         code.push(process_headers);
-        code.push("$conf = array(");
-        code.push("    'uid'    => 'uid',");
-        code.push("    'appid'  => 'appid',");
-        code.push("    'appkey' => 'appkey'");
-        code.push(");");
+        code.push("$conf = array('uid' => 'uid', 'appid' => 'appid', 'appkey' => 'appkey');");
         code.push("$spa = new Spa\\Spa($conf);");
-        code.push("$modules = $spa->getModules();");
+        code.push("$modules = $spa->getModules()");
         code.push("try {");
-        code.push("    $response = $modules->" + mod + "->" + act + "->send($params, $headers, Bearer '" + token + "');");
+        code.push("    $response = $modules->" + mod + "->" + act + "->send($params, $headers, 'Bearer " + token + "');");
         code.push("} catch (Exception $e) {");
         code.push("    echo $e->getMessage();");
-        code.push("    exit();");
         code.push("}");
 
         code = code.join("\r\n"); 
 
-        selector.sdkInfo.find("pre:eq(1)").text(code);
+        selector.sdkInfo.find("pre:eq(0)").text(code);
     },
 
     /**
@@ -12106,7 +12101,7 @@ var func = {
             code = code + " \\\n" + postParams.join(" \\\n");
         }
 
-        selector.sdkInfo.find("pre:eq(0)").text(code);
+        selector.sdkInfo.find("pre:eq(1)").text(code);
     },
 
     /**

@@ -89,8 +89,8 @@
 
 		<div class="sdk shadow">
 			<div class="sdk-tab shadow">
-				<a href="javascript:void(0)">CURL</a>
 				<a href="javascript:void(0)">PHP</a>
+				<a href="javascript:void(0)">CURL</a>
 
 				<a href="javascript:void(0)" class="copy-sdk shadow pull-right">复制代码</a>
 			</div>
