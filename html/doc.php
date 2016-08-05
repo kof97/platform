@@ -2,6 +2,9 @@
 
 	<div class="container shadow">
 		<div class="doc-list">
+			<span><strong><a href="docs/introduce.md.html" target="docs">快速使用</a></strong></span>
+
+			<hr>
 			<span><strong>Spa\</strong></span>
 			<a href="docs/Spa.md.html" target="docs">\Spa</a>
 			<a href="docs/App.md.html" target="docs">\App</a>
@@ -18,7 +21,7 @@
 			<span><strong>Spa\Object\Enum\</strong></span>
 			<a href="docs/Enum.md.html" target="docs">\{接口参数枚举类}</a>
 		</div>
-		<iframe name="docs" id="docs" src="docs/Spa.md.html"></iframe>
+		<iframe name="docs" id="docs" src="docs/introduce.md.html"></iframe>
 
 	</div>
 
