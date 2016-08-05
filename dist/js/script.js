@@ -12031,6 +12031,13 @@ var func = {
 		process_params.push(');');
 		process_params = process_params.join("\r\n");
 
+		code.push("$module = " + mod + ";");
+		code.push("$interface = " + act + ";");
+		code.push();
+		code.push();
+		code.push();
+		code.push();
+		code.push();
 		code = "$module = " + mod + ";" + "\r\n"
 			   "$interface = " + act + ";" + "\r\n"
 			   "$access_token = Bearer " + token + ";" + "\r\n"
