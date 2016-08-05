@@ -11952,6 +11952,7 @@ var func = {
 		func.toggleSDK(0);
 
 		func.creatCurlSDK();
+		func.creatPhpSDK();
 
 		selector.sdk.css("top", "20%");
 	},
@@ -11975,6 +11976,32 @@ var func = {
 		_this.addClass("selected").siblings().removeClass("selected");
 
 		info.show().siblings().hide();
+	},
+
+	/**
+	 * 生成 php SDK
+	 * @return void
+	 */
+	creatPhpSDK: function() {
+		var mod = selector.modules.val(),
+			act = selector.interfaces.val(),
+			headers = func.collectParams('header').json,
+			params = '';
+
+		switch (selector.mothod.text()) {
+			case 'POST':
+
+				break;
+
+			case 'GET':
+
+				break;
+
+			default:
+				return 0;
+		}
+
+
 	},
 
 	/**
