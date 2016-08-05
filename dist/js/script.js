@@ -11988,19 +11988,34 @@ var func = {
 			headers = func.collectParams('header').json,
 			params = '';
 
-		switch (selector.mothod.text()) {
+		switch (selector.method.text()) {
 			case 'POST':
-
+				params = func.collectParams('post').json;
 				break;
 
 			case 'GET':
-
+				params = func.collectParams('get').json;
 				break;
 
 			default:
 				return 0;
 		}
 
+		var process_params = [];
+		process_params.push('array(');
+		for (var k in params) {
+			var v = params[k];
+
+			if (typeof v === 'object') {
+				v = JSON.stringify(v);
+			}
+			process_params.push("'" + k + "' => " + v + ",");
+			// console.log(k);
+			// console.log(params[k]);
+
+		}
+
+		console.log(process_params);
 
 	},
 
