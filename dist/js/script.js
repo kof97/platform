@@ -12024,14 +12024,9 @@ var func = {
             var v = params[k];
 
             if (typeof v === 'object') {
-                v = (JSON.stringify(v)).trim();
-
-                if (v.indexOf('[') === 0) {
-                    v = v.substr(1);
-                    v = v.substr(0, v.length - 1);
-                    v = "array(" + v + ")";
-                }
+                v = JSON.stringify(v);
             }
+
             process_params.push("    '" + k + "' => '" + v + "',");
         }
         process_params.push(');');
