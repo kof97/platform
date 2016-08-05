@@ -12024,7 +12024,13 @@ var func = {
             var v = params[k];
 
             if (typeof v === 'object') {
-                v = JSON.stringify(v);
+                v = (JSON.stringify(v)).trim();
+
+                if (v.indexOf('[') === 0) {
+                    v = v.substr(1);
+
+                    console.log(v);
+                }
             }
             process_params.push("    '" + k + "' => '" + v + "',");
         }
@@ -12042,7 +12048,7 @@ var func = {
         code.push("    echo $e->getMessage();");
         code.push("}");
 
-        code = code.join("\r\n"); 
+        code = code.join("\r\n");
 
         selector.sdkInfo.find("pre:eq(0)").text(code);
     },
