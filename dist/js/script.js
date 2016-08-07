@@ -10714,6 +10714,11 @@ var func = {
 
         });
 
+        // sort
+        options.sort(function(a, b) {
+            return ($(a).attr("value") > $(b).attr("value")) ? 1 : -1;
+        });
+
         return {
             items: items.join(""),
             options: options.join("")
