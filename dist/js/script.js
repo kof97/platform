@@ -12613,21 +12613,26 @@ var $ = require("../common/jquery"),
 	selector = require("../common/selector");
 
 // remove the remove
-selector.dom.on("click", "div", function() {
-	$(".array-big-options")
-		.css("border", "1px solid #fff")
-		.find("a").fadeOut(100);
+selector.dom
+	.on("click", "div", function() {
+		$(".array-big-options")
+			.css("border", "1px solid #fff")
+			.find("a").fadeOut(100);
 
-	$(".add-params").slideUp(100);
-});
+		$(".add-params").slideUp(100);
+	})
 
-selector.dom.on("click", "div", function() {
-	$(".struct-big-options")
-		.css("border", "1px solid #fff")
-		.find("a").fadeOut(100);
+	.on("click", "div", function() {
+		$(".struct-big-options")
+			.css("border", "1px solid #fff")
+			.find("a").fadeOut(100);
 
-	$(".add-params").slideUp(100);
-});
+		$(".add-params").slideUp(100);
+	})
+
+	.on("click", "div", function() {
+		$("div.field-note").hide().remove();
+	});
 
 selector.postList
 	/**
