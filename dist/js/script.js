@@ -10926,6 +10926,15 @@ var func = {
     },
 
     /**
+     * 显示 field 的具体信息
+     *
+     *
+     */
+    fieldNote: function() {
+        
+    },
+
+    /**
      * 显示 request-list 中各条目的注释
      * @param that {dom object}
      * 
