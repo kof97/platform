@@ -10930,8 +10930,22 @@ var func = {
      *
      *
      */
-    fieldNote: function() {
-        
+    fieldNote: function(that) {
+        var name = that.prev().val();
+
+        if (name === undefined) {
+            return 0;
+        }
+
+        console.log(name);
+
+        var content = '<div class="note shadow">\
+                        <li><strong>描 述: </strong>' + name + '</li>\
+                        <li><strong>类 型: </strong>' + name + '</li>\
+                        <li><strong>限 制: </strong>' + name + '</li>\
+                       </div>';
+
+        $(content).insertAfter(that);
     },
 
     /**
@@ -12736,7 +12750,8 @@ selector.postList
 	})
 
 	.on("focus", "input[placeholder='Value']", function() {
-		console.log($(this).prev().val());
+		var that = $(this);
+		func.fieldNote(that);
 	});
 
 selector.getList
@@ -12875,8 +12890,9 @@ selector.getList
 	})
 
 	.on("focus", "input[placeholder='Value']", function() {
-		console.log($(this).prev().val());
-	});;
+		var that = $(this);
+		func.fieldNote(that);
+	});
 
 },{"../common/functions":2,"../common/idl-data":3,"../common/jquery":5,"../common/selector":6}],13:[function(require,module,exports){
 var $ = require("../common/jquery"),
