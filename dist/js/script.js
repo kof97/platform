@@ -10937,18 +10937,22 @@ var func = {
             return 0;
         }
 
-        console.log(name);
+        var mod = selector.modules.val(),
+            act = selector.interfaces.val();
+            content = '';
 
-        var content = '<div class="field-note shadow">\
-                        <li><strong>描 述: </strong>' + name + '</li>\
-                        <li><strong>类 型: </strong>' + name + '</li>\
-                        <li><strong>限 制: </strong>' + name + '</li>\
-                       </div>';
+        $.getJSON('../dist/api/fieldinfo.php', {'name': name, 'mod': mod, 'act': act}, function(data, status, xhr) {
+            if (data === '0') {
+                return 0;
+            }
 
-        $(content).insertAfter(that)
-                  .css('top', that.offset().top)
-                  .css('marginLeft', that.width() * 1.3 + 185)
-                  .fadeIn(400);
+            content = '<div class="field-note shadow">' + data + '</div>';
+
+            $(content).insertAfter(that)
+                      .css('top', that.offset().top)
+                      .css('marginLeft', that.width() * 1.3 + 185)
+                      .fadeIn(400);
+        });
     },
 
     removeFieldNote: function(that) {
