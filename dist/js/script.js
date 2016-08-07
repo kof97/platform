@@ -12776,6 +12776,9 @@ selector.postList
 	.on("blur", "input[placeholder='Value']", function() {
 		var that = $(this);
 		func.removeFieldNote(that);
+	})
+	.on("click", "input[placeholder='Value']", function() {
+		event.stopPropagation();
 	});
 
 selector.getList
@@ -12901,7 +12904,6 @@ selector.getList
 
 					default: 
 						content = func.getItem(opt);
-
 				}
 
 				if (dataRepeated != "repeated") {
@@ -12920,6 +12922,9 @@ selector.getList
 	.on("blur", "input[placeholder='Value']", function() {
 		var that = $(this);
 		func.removeFieldNote(that);
+	})
+	.on("click", "input[placeholder='Value']", function() {
+		event.stopPropagation();
 	});
 
 },{"../common/functions":2,"../common/idl-data":3,"../common/jquery":5,"../common/selector":6}],13:[function(require,module,exports){
