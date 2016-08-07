@@ -12736,7 +12736,7 @@ selector.postList
 	})
 
 	.on("focus", "input[placeholder='Value']", function() {
-		console.log($(this))
+		console.log($(this).prev().val());
 	});
 
 selector.getList
@@ -12872,7 +12872,11 @@ selector.getList
 
 		_this.val("0");
 		$(content).insertBefore(_this.parent());
-	});
+	})
+
+	.on("focus", "input[placeholder='Value']", function() {
+		console.log($(this).prev().val());
+	});;
 
 },{"../common/functions":2,"../common/idl-data":3,"../common/jquery":5,"../common/selector":6}],13:[function(require,module,exports){
 var $ = require("../common/jquery"),
