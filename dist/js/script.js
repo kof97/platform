@@ -10945,7 +10945,10 @@ var func = {
                         <li><strong>限 制: </strong>' + name + '</li>\
                        </div>';
 
-        $(content).insertAfter(that);
+        $(content).insertAfter(that)
+                  .css('top', that.offset().top)
+                  .css('marginLeft', that.width() * 1.3 + 185)
+                  .fadeIn(400);
     },
 
     removeFieldNote: function(that) {
