@@ -12733,6 +12733,10 @@ selector.postList
 
 		_this.val("0");
 		$(content).insertBefore(_this.parent());
+	})
+
+	.on("focus", "input[placeholder='Value']", function() {
+		console.log($(this))
 	});
 
 selector.getList
