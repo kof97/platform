@@ -10939,13 +10939,21 @@ var func = {
 
         console.log(name);
 
-        var content = '<div class="note shadow">\
+        var content = '<div class="field-note shadow">\
                         <li><strong>描 述: </strong>' + name + '</li>\
                         <li><strong>类 型: </strong>' + name + '</li>\
                         <li><strong>限 制: </strong>' + name + '</li>\
                        </div>';
 
         $(content).insertAfter(that);
+    },
+
+    removeFieldNote: function(that) {
+        var field = that.next();
+
+        if (field.attr('class') === 'field-note shadow') {
+            field.hide().remove();
+        }
     },
 
     /**
@@ -12752,6 +12760,10 @@ selector.postList
 	.on("focus", "input[placeholder='Value']", function() {
 		var that = $(this);
 		func.fieldNote(that);
+	})
+	.on("blur", "input[placeholder='Value']", function() {
+		var that = $(this);
+		func.removeFieldNote(that);
 	});
 
 selector.getList
@@ -12892,6 +12904,10 @@ selector.getList
 	.on("focus", "input[placeholder='Value']", function() {
 		var that = $(this);
 		func.fieldNote(that);
+	})
+	.on("blur", "input[placeholder='Value']", function() {
+		var that = $(this);
+		func.removeFieldNote(that);
 	});
 
 },{"../common/functions":2,"../common/idl-data":3,"../common/jquery":5,"../common/selector":6}],13:[function(require,module,exports){
