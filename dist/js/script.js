@@ -10942,7 +10942,7 @@ var func = {
             content = '';
 
         $.getJSON('../dist/api/fieldinfo.php', {'name': name, 'mod': mod, 'act': act}, function(data, status, xhr) {
-            if (data === '0') {
+            if (data === '0' || data.trim() === '') {
                 return 0;
             }
 
@@ -10950,8 +10950,8 @@ var func = {
 
             $(content).insertAfter(that)
                       .css('top', that.offset().top)
-                      .css('marginLeft', that.width() * 1.3 + 185)
-                      .fadeIn(400);
+                      .css('marginLeft', that.width() * 1.3 + 160)
+                      .fadeIn(300);
         });
     },
 
