@@ -10645,7 +10645,8 @@ var func = {
                               .find("element"),
 
             items = [],
-            options = [];
+            options = []
+            search = '';
 
         if (elements.length === 0) {
             elements = modules.find("types [name='" + name + "']").eq(0)
@@ -10718,6 +10719,10 @@ var func = {
         options.sort(function(a, b) {
             return ($(a).attr("value") > $(b).attr("value")) ? 1 : -1;
         });
+
+        if (options.length > 5) {
+            search = '';
+        }
 
         return {
             items: items.join(""),
