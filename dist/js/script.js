@@ -12082,11 +12082,11 @@ var func = {
 
         code.push(process_params);
         code.push(process_headers);
-        code.push("$conf = array('uid' => 'uid', 'appid' => 'appid', 'appkey' => 'appkey');");
+        code.push("$conf = array('appid' => 'appid', 'appkey' => 'appkey');");
         code.push("$spa = new Spa\\Spa($conf);");
         code.push("$modules = $spa->getModules();");
         code.push("try {");
-        code.push("    $response = $modules->" + mod + "->" + act + "->send($params, $headers, 'Bearer " + token + "');");
+        code.push("    $response = $modules->" + mod + "->" + act + "->sendWithAccessToken($params, $headers, 'Bearer " + token + "');");
         code.push("} catch (Exception $e) {");
         code.push("    echo $e->getMessage();");
         code.push("}");
