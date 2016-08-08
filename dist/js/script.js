@@ -11069,9 +11069,9 @@ var func = {
                     value = option.find("select:eq(0)").val() || "";
                 }
 
-                if (value === "0") {
-                    value = "";
-                }
+                // if (value === "0") {
+                //     value = "";
+                // }
 
                 value = "\"" + value + "\"";
 
@@ -11133,9 +11133,9 @@ var func = {
                         value = item.find("select:eq(0)").val() || "";
                     }
 
-                    if (value === "0") {
-                        value = "";
-                    }
+                    // if (value === "0") {
+                    //     value = "";
+                    // }
                     
                     value = "\"" + value + "\"";
 
