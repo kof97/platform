@@ -11852,7 +11852,7 @@ var func = {
      */
     showTokenItem: function(that) {
         var that = $(that),
-            content = '<input type="text" class="form-control" name="uid" placeholder="Uid"> \
+            content = '<!--input type="text" class="form-control" name="uid" placeholder="Uid"--> \
                        <input type="text" class="form-control" name="appid" placeholder="Appid"> \
                        <input type="password" class="form-control" name="appkey" placeholder="Appkey"> \
                        <button class="btn btn-primary" type="button">Get Token</button>';
@@ -11878,8 +11878,7 @@ var func = {
      * 
      */
     creatToken: function() {
-        var uid = selector.tokenItem.find("input[name='uid']").val(),
-            appid = selector.tokenItem.find("input[name='appid']").val(),
+        var appid = selector.tokenItem.find("input[name='appid']").val(),
             appkey = selector.tokenItem.find("input[name='appkey']").val();
 
         if (uid.trim() === "" || appid.trim() === "" || appkey.trim() === "") {
@@ -11890,7 +11889,7 @@ var func = {
             url: '../dist/api/token.php',
             method: 'post',
             dataType: 'text',
-            data: { 'key': appkey, 'id': appid, 'uid': uid },
+            data: { 'key': appkey, 'id': appid },
             success: function(data) {
                 selector.token.val(data);
                 selector.headerList.find("input[value='Authorization']").next().val('Bearer ' + data);
