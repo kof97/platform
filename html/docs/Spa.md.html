@@ -15,11 +15,10 @@ Spa\Spa 类提供了主要功能的接口入口
 
 <pre><codeblock>
     $conf = array(
-        'uid'               => '{uid}',     // 必填
-        'appid'             => '{appid}',   // 必填
-        'appkey'            => '{appkey}',  // 必填
-        'http_client_type'  => 'curl',      // 可不填
-        'version'           => 'v3'         // 可不填
+        'appid'            => '{appid}',   // 必填
+        'appkey'           => '{appkey}',  // 必填
+        'http_client_type' => 'curl',      // 可不填
+        'version'          => 'v3'         // 可不填
     );
 
     $spa = new Spa\Spa($conf);
@@ -90,11 +89,10 @@ Spa\Spa 类提供了主要功能的接口入口
 
 <pre><codeblock>
     $conf = array(
-        'uid'               => '{uid}',
-        'appid'             => '{appid}',
-        'appkey'            => '{appkey}',
-        'http_client_type'  => 'curl',
-        'version'           => 'v3'
+        'appid'            => '{appid}',
+        'appkey'           => '{appkey}',
+        'http_client_type' => 'curl',
+        'version'          => 'v3'
     );
 
     $spa = new Spa\Spa($conf);
@@ -121,7 +119,7 @@ Spa\Spa 类提供了主要功能的接口入口
 <h2>详细介绍：</h2>
 
 <h3>初始化配置 $conf</h3>
-<p><code>uid</code>: 授权客户的id（即：若是代理商授权，则此处为代理商账户id，若为广告主授权则为广告主账户id），通常与 <code>appid</code> 一致，在广点通开通账户后获得；</p><p><code>appid</code>: API授权接入方唯一身份标识，目前为申请API接入的直客或代理商id；</p><p><code>appkey</code>: 开通API授权后获得的私钥，在开通授权邮件中会与app_id一块提供；</p><p><code>http_client_type</code>: 选填项，目前只支持 <code>curl</code>，（选填）</p><p><code>version</code>: api 版本，默认 <code>v3</code>，目前只支持 <code>v3</code>，（选填）</p>
+<p><code>appid</code>: API授权接入方唯一身份标识，目前为申请API接入的直客或代理商id；</p><p><code>appkey</code>: 开通API授权后获得的私钥，在开通授权邮件中会与app_id一块提供；</p><p><code>http_client_type</code>: 选填项，目前只支持 <code>curl</code>，（选填）</p><p><code>version</code>: api 版本，默认 <code>v3</code>，目前只支持 <code>v3</code>，（选填）</p>
 
 <h2>Spa 类提供的方法</h2>
 

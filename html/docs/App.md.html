@@ -14,10 +14,10 @@ Spa\App 类存储了应用实例的基本信息
 <h3>Spa\App</h3>
 
 <pre><codeblock>
-    new Spa\App({$uid}, {$appid}, {$appkey})
+    new Spa\App({$appid}, {$appkey})
 </codeblock></pre>
 
-初始化要提供用户的 <code>uid</code> <code>appid</code> <code>appkey</code>
+初始化要提供用户的 <code>appid</code> <code>appkey</code>
 
 一般由 <code>Spa\Spa</code> 类初始化，可以直接通过 <code>Spa\Spa</code> 的 <code>getApp()</code> 方法获取实例
 
@@ -25,11 +25,10 @@ Spa\App 类存储了应用实例的基本信息
 
 <pre><codeblock>
     $conf = array(
-        'uid'               => '{uid}',
-        'appid'             => '{appid}',
-        'appkey'            => '{appkey}',
-        'http_client_type'  => 'curl',
-        'version'           => 'v3'
+        'appid'            => '{appid}',
+        'appkey'           => '{appkey}',
+        'http_client_type' => 'curl',
+        'version'          => 'v3'
     );
 
     $spa = new Spa\Spa($conf);
@@ -40,16 +39,6 @@ Spa\App 类存储了应用实例的基本信息
 <hr>
 
 <h2>方法介绍</h2>
-
-<hr>
-
-<h3>getUid()</h3>
-
-<pre><codeblock>
-    public string getUid()
-</codeblock></pre>
-
-获取用户 <code>uid</code>
 
 <hr>
 
