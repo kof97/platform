@@ -11881,7 +11881,7 @@ var func = {
         var appid = selector.tokenItem.find("input[name='appid']").val(),
             appkey = selector.tokenItem.find("input[name='appkey']").val();
 
-        if (uid.trim() === "" || appid.trim() === "" || appkey.trim() === "") {
+        if (appid.trim() === "" || appkey.trim() === "") {
             return false;
         }
 
