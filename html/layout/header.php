@@ -17,7 +17,7 @@
 	<nav class="navbar navbar-static-top shadow">
 		<header class="container">
 			<a href="./index.php" class="logo">
-				<strong>SPA</strong> for developers |
+				<strong>TSA</strong> for developers |
 			</a>
 			<a href="./index.php">首页</a>
 			<a href="">OPEN SDK</a>
