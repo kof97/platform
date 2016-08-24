@@ -11571,6 +11571,10 @@ var func = {
      *
      */
      analyzePost: function(param) {
+        if (param.trim() === "") {
+            return 0;
+        }
+
         var result;
 
         if (param.trim().substr(0, 1) === "{") {
