@@ -11311,7 +11311,53 @@ var func = {
     },
 
     checkRequest: function() {
+        var url = func.getUrl(),
+            method = selector.method.text(),
+            headerData,
+            params;
 
+        selector.debugData.hide();
+
+        headerData = func.collectParams("header").json;
+
+        switch (method) {
+            case "GET":
+                params = func.collectParams("get").json;
+                break;
+
+            case "POST":
+                params = func.collectParams("post").json;
+                break;
+
+            default:
+                var res = '{"error":"提交方式只支持 GET / POST"}';
+
+                res = JSON.parse(res);
+
+                selector.responseData.html(JSON.stringify(res, null, 4));
+
+                return 0;
+        }
+
+        var data = {
+            'mod': selector.modules.val(),
+            'act': selector.interfaces.val(),
+            'header': headerData,
+            'params': params,
+            'token': selector.token.val()
+        }
+
+        $.post('../dist/api/proxy.php', data, function(res) {
+            //res = JSON.parse(res);
+
+            if (res.hasOwnProperty('debug message')) {
+                selector.responseData.hide();
+                selector.debugData.html(JSON.stringify(res, null, 4)).show();
+            } else {
+                selector.responseData.hide();
+                selector.debugData.html(JSON.stringify({'debug message': '校验通过'}, null, 4)).show();
+            }
+        });
     },
 
     /**
@@ -13193,6 +13239,8 @@ selector.analyzeUrl
 		var token = selector.token.val();
 
 		selector.headerList.find("input[value='Authorization']").next().val('Bearer ' + token);
+
+		func.checkRequest();
 	})
 	.on("click", function(event) {
 		event.stopPropagation();
