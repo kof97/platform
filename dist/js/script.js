@@ -11567,6 +11567,8 @@ var func = {
                 res = [];
             for (var key in obj) {
                 var value = obj[key];
+
+                value = JSON.stringify(value);
                 res.push(key + "=" + value);
             }
 
@@ -11574,8 +11576,101 @@ var func = {
         } else {
             result = param;
         }
-        
-        func.analyzeGet(result);
+
+        var params = result.split("&"),
+            position,
+            msg,
+            item,
+            required,
+            notRequired,
+
+            field,
+            tag,
+            dataType,
+
+            paramsLength = params.length;
+
+        for (var i = 0; i < paramsLength; i++) {
+            item = params[i].split("=");
+
+            if (item[0] === "") {
+                position = item[0];
+                msg = "参数名不能为空";
+
+                func.showWarning(position, msg);
+
+                return 0;
+            }
+
+            if (!item[0].match(/^[a-zA-Z0-9_]{1,}$/)) {
+                position = item[0];
+                msg = "参数名只能包含大小写字母和下划线（a-z, A-Z, 0-9, _）";
+
+                func.showWarning(position, msg);
+
+                return 0;
+            }
+
+            // 必选字段填充
+            required = selector.postList.find("input[name='" + item[0] + "']");
+
+            if ((required.val() || "") != "") {
+                field = required.next();
+                tag = field.prop("tagName").toLowerCase();
+
+                if (tag === "input" || tag === "select") {
+                    field.val(item[1]);
+                } else {
+                    func.analyzeComplex(field, item[0], item[1]);
+                }
+
+                continue;
+            }
+
+            // 非必选字段填充
+            notRequired = selector.requestList.find("li[data-post-name='" + item[0] + "']");
+            dataType = notRequired.attr("data-type");
+
+            var opt = {
+                'name': item[0],
+                'value': item[1],
+                'dataType': dataType,
+                "isRequired": "no"
+            };
+
+            if ((notRequired.attr("data-post-name") || "") != "") {
+
+                if (dataType === "array" || dataType === "struct") {
+                    opt.value = "";
+                }
+                
+                notRequired.addClass("selected").find(".checked").css("visibility", "visible");
+
+            } else {
+                // 自定义字段
+                opt.dataType = "";
+                opt.isRequired = "";
+            }
+
+            func.addPostField(opt);
+
+            // 非必选字段复杂类型解析
+            required = selector.postList.find("input[name='" + item[0] + "']");
+
+            if ((required.val() || "") != "") {
+
+                field = required.next();
+                tag = field.prop("tagName").toLowerCase();
+
+                if (tag != "input" && tag != "select") {
+                    func.analyzeComplex(field, item[0], item[1]);
+                }
+
+            }
+
+        }
+
+        func.checkRequest();
      },
 
     /**
