@@ -1,0 +1,73 @@
+<meta charset="utf-8">
+<style>* { padding: 0; margin: 0; }body { width: 90%; margin: 0 auto; padding: 1em 2em 2em; font-family: "Times New Roman"; border: 1px solid #eee; }h1 { border-bottom: 1px solid #eee; }h1, h2, h3, h4, h5 { padding: 0.4em 0; margin-bottom: 0.5em; }p { border-left: 0.4em #DDDDDD solid; padding: 0.1em 1em 0.5em; background: #FEFFFF; font-size: 0.9em; font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace; }hr { background: #E7E7E7; height: 0.2em; border: 0px; margin: 1em 0; }pre { margin: 1em 0; padding-bottom: 1em; background: #F7F7F7; font-size: 0.9em; font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace; word-wrap: break-word; overflow-x: auto; }code { background: #F5F5F5; padding: 0 0.5em; border: #E0E0E0 1px solid; color: #E21149; font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace; }</style>
+<body>
+<h1>SPA PHP SDK 应用实例类 Tsa\App</h1>
+
+Tsa\App 类存储了应用实例的基本信息
+
+<hr>
+
+<h1>Tsa\App</h1>
+
+<h2>实例介绍</h2>
+
+<h3>Tsa\App</h3>
+
+<pre><codeblock>
+    new Tsa\App({$appid}, {$appkey})
+</codeblock></pre>
+
+初始化要提供用户的 <code>appid</code> <code>appkey</code>
+
+一般由 <code>Tsa\Tsa</code> 类初始化，可以直接通过 <code>Tsa\Tsa</code> 的 <code>getApp()</code> 方法获取实例
+
+例：
+
+<pre><codeblock>
+    $conf = array(
+        'appid'            => '{appid}',
+        'appkey'           => '{appkey}',
+        'http_client_type' => 'curl',
+        'version'          => 'v3'
+    );
+
+    $spa = new Tsa\Tsa($conf);
+
+    $spaApp = $spa->getApp();
+</codeblock></pre>
+
+<hr>
+
+<h2>方法介绍</h2>
+
+<hr>
+
+<h3>getAppid()</h3>
+
+<pre><codeblock>
+    public string getAppid()
+</codeblock></pre>
+
+获取用户 <code>appid</code>
+
+<hr>
+
+<h3>getAppkey()</h3>
+
+<pre><codeblock>
+    public string getAppkey()
+</codeblock></pre>
+
+获取用户 <code>appkey</code>
+
+<hr>
+
+<h3>getAccessToken()</h3>
+
+<pre><codeblock>
+    public Tsa\Authentication\AccessToken getAccessToken()
+</codeblock></pre>
+
+返回 <code>Tsa\Authentication\AccessToken</code> 的实例
+
+</body>
