@@ -21,11 +21,11 @@ Tsa\Authentication\AccessToken 类提供了 access token 相关的操作
         'version'          => 'v3'
     );
 
-    $spa = new Tsa\Tsa($conf);
+    $tsa = new Tsa\Tsa($conf);
 
-    $spaApp = $spa->getApp();
+    $tsa_app = $tsa->getApp();
 
-    $accessToken = $spaApp->getAccessToken();
+    $accessToken = $tsa_app->getAccessToken();
 </codeblock></pre>
 
 或直接创建
