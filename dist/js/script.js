@@ -11536,10 +11536,12 @@ var func = {
                 }
 
                 func.analyzeGet(param);
+
+                func.checkRequest();
                 break;
 
             case "POST":
-
+                selector.analyzePost.show();
                 break;
 
             default:
@@ -11551,6 +11553,30 @@ var func = {
                 return 0;
         }
     },
+
+    /**
+     * 解析 POST 参数
+     * @param param {string} POST 参数
+     *
+     */
+     analyzePost: function(param) {
+        var result;
+
+        if (param.trim().substr(0, 1) === "{") {
+            var obj = JSON.parse(param),
+                res = [];
+            for (var key in obj) {
+                var value = obj[key];
+                res.push(key + "=" + value);
+            }
+
+            result = res.join("&");
+        } else {
+            result = param;
+        }
+        
+        func.analyzeGet(result);
+     },
 
     /**
      * 解析 get 参数
@@ -12295,6 +12321,7 @@ var selector = {
 
 	"showUrl": $("#show-url"),
 	"analyzeUrl": $("#analyze-url"),
+	"analyzePost": $("#analyze-post"),
 	"submitUrl": $("#submit-url"),
 
 	"dataTabOption": $(".data-tab-options"),
@@ -12531,6 +12558,7 @@ selector.modules.on("change", function() {
 		interfaceData = idl.mod.filter("[name='" + moduleName + "']").find("interface");
 
 	selector.interfaces.html('<option selected="selected" value="0">--请选择API--</option>');
+	selector.analyzePost.hide();
 
 	func.initTab();
 	func.clearReponse();
@@ -12572,6 +12600,8 @@ selector.modules.on("change", function() {
 selector.interfaces.on("change", function() {
 	var interfaceName = $(this).val(),
 		moduleName = selector.modules.val();
+
+	selector.analyzePost.hide();
 
 	func.clearReponse();
 
@@ -13239,8 +13269,6 @@ selector.analyzeUrl
 		var token = selector.token.val();
 
 		selector.headerList.find("input[value='Authorization']").next().val('Bearer ' + token);
-
-		func.checkRequest();
 	})
 	.on("click", function(event) {
 		event.stopPropagation();
@@ -13253,6 +13281,14 @@ selector.dom.on("click", function() {
 
 selector.analyzeWarning.on("click", function(event) {
 	event.stopPropagation();
+});
+
+selector.analyzePost.on("click", "button", function() {
+	var field = selector.analyzePost.find("input").val();
+	
+	func.analyzePost(field);
+
+	selector.analyzePost.find("input").val("");
 });
 
 },{"../common/functions":2,"../common/jquery":5,"../common/selector":6}]},{},[10])

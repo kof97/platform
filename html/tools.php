@@ -74,6 +74,16 @@
 					<button class="btn btn-primary" type="button" id="submit-url">Submit</button>
 				</span>
 			</div>
+			<div style="display:none" id="analyze-post">
+				<div class="row"></div>
+				<div class="input-group">
+					<span class="input-group-addon">POST 参数</span>
+					<input type="text" class="form-control" placeholder="支持 json 格式或 URL 格式参数">
+					<span class="input-group-btn">
+						<button class="btn btn-success" type="button">Analyze POST</button>
+					</span>
+				</div>
+			</div>
 		</div>
 
 		<div class="row"></div>
