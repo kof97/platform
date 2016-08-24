@@ -11555,6 +11555,17 @@ var func = {
     },
 
     /**
+     * json 格式不正确
+     *
+     */
+    jsonError: function() {
+        var position = "error";
+            msg = "JSON 格式不正确";
+
+        func.showWarning(position, msg);
+    },
+
+    /**
      * 解析 POST 参数
      * @param param {string} POST 参数
      *
@@ -11563,12 +11574,25 @@ var func = {
         var result;
 
         if (param.trim().substr(0, 1) === "{") {
-            var obj = JSON.parse(param),
-                res = [];
+            var obj, res = [];
+
+            try {
+                obj = JSON.parse(param);
+            } catch (e) {
+                func.jsonError();
+                return 0;
+            }
+
             for (var key in obj) {
                 var value = obj[key];
 
-                value = JSON.stringify(value);
+                try {
+                    value = JSON.stringify(value);
+                } catch (e) {
+                    func.jsonError();
+                    return 0;
+                }
+
                 res.push(key + "=" + value);
             }
 
@@ -11609,6 +11633,15 @@ var func = {
                 func.showWarning(position, msg);
 
                 return 0;
+            }
+
+            var replace = item[1].trim().substr(0, 1);
+            if (replace === "\"") {
+                item[1] = item[1].replace(/\"/g, "");
+            }
+
+            if (replace === "'") {
+                item[1] = item[1].replace(/\'/g, "");
             }
 
             // 必选字段填充
@@ -11712,6 +11745,16 @@ var func = {
 
                 return 0;
             }
+
+            var replace = item[1].trim().substr(0, 1);
+            if (replace === "\"") {
+                item[1] = item[1].replace(/\"/g, "");
+            }
+
+            if (replace === "'") {
+                item[1] = item[1].replace(/\'/g, "");
+            }
+
 /*
             if (item[1] === "") {
                 position = item[0];
@@ -11804,15 +11847,24 @@ var func = {
                 items = that.find("[class='struct-item']:eq(0) > div");
                 addParams = items.filter(".add-params");
 
-                value = JSON.parse(value);
+                try {
+                    value = JSON.parse(value);
+                } catch (e) {
+                    func.jsonError();
+                    return 0;
+                }
 
                 var i = 0,
                     v = {},
                     k, tag, item;
 
                 for (k in value) {
-
-                    v.json = JSON.stringify(value[k]);
+                    try {
+                        v.json = JSON.stringify(value[k]);
+                    } catch (e) {
+                        func.jsonError();
+                        return 0;
+                    }
                     v.string = v.json.replace(/"([^"]*)"/g, "$1");
 
                     item = items.find("input[name='" + k + "']");
@@ -11918,14 +11970,25 @@ var func = {
                 items = that.find("[class='array-item']:eq(0) > div");
                 addParams = items.filter(".add-params");
 
-                value = JSON.parse(value);
+                try {
+                    value = JSON.parse(value);
+                } catch (e) {
+                    func.jsonError();
+                    return 0;
+                }
 
                 var len = value.length,
                     v = {},
                     tag;
 
                 for (var i = 0; i < len; i++) {
-                    v.json = JSON.stringify(value[i]);
+                    try {
+                        v.json = JSON.stringify(value[i]);
+                    } catch (e) {
+                        func.jsonError();
+                        return 0;
+                    }
+
                     v.string = v.json.replace(/"([^"]*)"/g, "$1");
 
                     if (v.string === "") {
@@ -13378,13 +13441,17 @@ selector.analyzeWarning.on("click", function(event) {
 	event.stopPropagation();
 });
 
-selector.analyzePost.on("click", "button", function() {
-	var field = selector.analyzePost.find("input").val();
-	
-	func.analyzePost(field);
+selector.analyzePost
+	.on("click", "button", function() {
+		var field = selector.analyzePost.find("input").val();
+		
+		func.analyzePost(field);
 
-	selector.analyzePost.find("input").val("");
-});
+		selector.analyzePost.find("input").val("");
+	})
+	.on("click", function(event) {
+		event.stopPropagation();
+	});
 
 },{"../common/functions":2,"../common/jquery":5,"../common/selector":6}]},{},[10])
 
