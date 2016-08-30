@@ -11555,7 +11555,7 @@ var func = {
     },
 
     /**
-     * json 格式不正确
+     * Json 格式不正确的 error
      *
      */
     jsonError: function() {
@@ -12314,8 +12314,8 @@ var func = {
         process_params = process_params.join("\r\n");
 
         code.push("$conf = array('appid' => 'appid', 'appkey' => 'appkey');");
-        code.push("$spa = new Spa\\Spa($conf);");
-        code.push("$modules = $spa->getModules();");
+        code.push("$tsa = new Tsa\\Tsa($conf);");
+        code.push("$modules = $tsa->getModules();");
         code.push(process_params);
         code.push(process_headers);
         code.push("try {");
